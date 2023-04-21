@@ -1,0 +1,23 @@
+﻿@page "/register"
+
+@inject UserService userService
+
+<h3>Register</h3>
+
+Username:<input @bind="Username" />
+Password:<input @bind="Password" />
+Email:<input @bind="Email" />
+Phone Number:<input @bind="PhoneNumber" />
+
+<button @onclick="RegisterUser">Register</button>
+
+@code {
+    string Username, Password, Email, PhoneNumber;
+
+    
+    private async void RegisterUser()
+    {
+        await userService.register(Username, Email, Password, PhoneNumber);
+        int a = 0;
+    }
+}

@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32825.248
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarRental.Infrastructure", "CarRental.Infrastructure\CarRental.Infrastructure.csproj", "{F3B729D8-FD37-49EF-8223-1E12697619B5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CarRental.Infrastructure", "CarRental.Infrastructure\CarRental.Infrastructure.csproj", "{F3B729D8-FD37-49EF-8223-1E12697619B5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarRental.Domain", "CarRental.Domain\CarRental.Domain.csproj", "{7798FA99-274B-4877-B5DF-E584F19DB6DA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CarRental.Domain", "CarRental.Domain\CarRental.Domain.csproj", "{7798FA99-274B-4877-B5DF-E584F19DB6DA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarRental.Application", "CarRental.Application\CarRental.Application.csproj", "{87C553B2-727F-49E9-9ED1-6F162EFF8714}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CarRental.Application", "CarRental.Application\CarRental.Application.csproj", "{87C553B2-727F-49E9-9ED1-6F162EFF8714}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarRental.WebAPI", "CarRental.WebAPI\CarRental.WebAPI.csproj", "{32125B03-7E6C-4852-8A99-AB575389ACC2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CarRental.WebAPI", "CarRental.WebAPI\CarRental.WebAPI.csproj", "{32125B03-7E6C-4852-8A99-AB575389ACC2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarRental.BlazorWasm", "CarRental.BlazorWasm\CarRental.BlazorWasm.csproj", "{45247FDC-23D8-4644-BA3E-353F71E4F921}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CarRental.BlazorWasm", "CarRental.BlazorWasm\CarRental.BlazorWasm.csproj", "{45247FDC-23D8-4644-BA3E-353F71E4F921}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
