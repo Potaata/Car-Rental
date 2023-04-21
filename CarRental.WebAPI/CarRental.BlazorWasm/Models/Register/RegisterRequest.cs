@@ -1,4 +1,4 @@
-﻿namespace CarRental.BlazorWasm.Models
+﻿namespace CarRental.BlazorWasm.Models.Register
 {
     public class RegisterRequest
     {

@@ -1,6 +1,6 @@
-﻿namespace CarRental.BlazorWasm.Models
+﻿namespace CarRental.BlazorWasm.Models.Register
 {
-    public class RegisterResponse
+    public class RegisterResponse : SuccessResponse
     {
         public string Email { get; set; }
         public string PhoneNumber { get; set; }

@@ -1,19 +1,19 @@
 ﻿using CarRental.BlazorWasm.Models;
+using CarRental.BlazorWasm.Models.Register;
 using Microsoft.AspNetCore.Components;
 
 namespace CarRental.BlazorWasm.Services
 {
     public class UserService
     {
-        [Inject]
-        public ApiService _apiService { get; set; }
+        private readonly ApiService _apiService;
 
         public UserService(ApiService apiService)
         {
             _apiService = apiService;
         }
 
-        public async Task<RegisterResponse> register(string username, string email, string password, string phoneNum)
+        public async Task<RegisterResponse> Register(string username, string email, string password, string phoneNum)
         {
             RegisterRequest req = new RegisterRequest
             {
@@ -22,8 +22,11 @@ namespace CarRental.BlazorWasm.Services
                 RawPassword = password,
                 PhoneNumber = phoneNum
             };
-            var response = await _apiService.POST<RegisterRequest, RegisterResponse>("/api/users/create-user", req);
-            return response;
+            
+            BaseResponse response = await _apiService.POST<RegisterRequest, RegisterResponse>("/api/users/create-user", req);
+                    
+            return response.GetResponse<RegisterResponse>();
         }
     }
 }
+

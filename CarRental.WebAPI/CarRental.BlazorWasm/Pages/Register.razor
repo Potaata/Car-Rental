@@ -12,12 +12,12 @@ Phone Number:<input @bind="PhoneNumber" />
 <button @onclick="RegisterUser">Register</button>
 
 @code {
-    string Username, Password, Email, PhoneNumber;
+    string Username = "anjel", Password = "alupassword", Email = "validemail@email.com", PhoneNumber = "98989898";
 
     
     private async void RegisterUser()
     {
-        await userService.register(Username, Email, Password, PhoneNumber);
+        await userService.Register(Username, Email, Password, PhoneNumber);
         int a = 0;
     }
 }

@@ -22,7 +22,6 @@ namespace CarRental.WebAPI.Controllers
         {
             var registeredUser = await _users.AddUsers(userRequestDTO);
             return registeredUser;
-
         }
 
     }
