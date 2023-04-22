@@ -1,5 +1,6 @@
 ﻿@page "/register"
 
+
 @inject UserService userService
 
 <h3>Register</h3>
@@ -8,16 +9,21 @@ Username:<input @bind="Username" />
 Password:<input @bind="Password" />
 Email:<input @bind="Email" />
 Phone Number:<input @bind="PhoneNumber" />
-
+<p>@errorMessage</p>
 <button @onclick="RegisterUser">Register</button>
 
 @code {
     string Username = "anjel", Password = "alupassword", Email = "validemail@email.com", PhoneNumber = "98989898";
+    string errorMessage = "";
 
-    
     private async void RegisterUser()
     {
-        await userService.Register(Username, Email, Password, PhoneNumber);
-        int a = 0;
+        try{
+            await userService.Register(Username, Email, Password, PhoneNumber);
+            int a = 0;
+        }catch(ApiException e){
+            errorMessage = e.Message;
+            StateHasChanged();
+        }
     }
 }

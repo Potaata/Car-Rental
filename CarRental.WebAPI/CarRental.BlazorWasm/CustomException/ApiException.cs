@@ -2,11 +2,9 @@
 {
     public class ApiException: Exception
     {
-        public string ErrorMessage { get; set; }
-
-        public ApiException(string errorMessage)
+        public ApiException(string message): base(message)
         {
-            ErrorMessage = errorMessage;
+            
         }
     }
 }

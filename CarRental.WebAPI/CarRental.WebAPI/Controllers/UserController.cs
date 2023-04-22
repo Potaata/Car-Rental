@@ -17,7 +17,7 @@ namespace CarRental.WebAPI.Controllers
 
 
         [HttpPost]
-        [Route("/api/users/create-user")]
+        [Route("/api/users/register")]
         public async Task<UserRegisterRequestDTO> AddUsers(UserRegisterRequestDTO userRequestDTO)
         {
             var registeredUser = await _users.AddUsers(userRequestDTO);

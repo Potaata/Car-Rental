@@ -1,11 +1,13 @@
 ﻿using CarRental.Application.Common.Interface;
 using CarRental.Application.DTOs;
+using CarRental.Infrastructure.Exceptions;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace CarRental.Infrastructure.Services
 {
@@ -21,15 +23,14 @@ namespace CarRental.Infrastructure.Services
         }
         public async Task<UserRegisterRequestDTO> AddUsers(UserRegisterRequestDTO users)
         {
-
-
             var DBUser = new IdentityUser { UserName = users.Username, Email = users.Email };
             var result = await _userManager.CreateAsync(DBUser, users.RawPassword);
             if (!result.Succeeded)
             {
-                Console.WriteLine(result.Errors);
-                throw new Exception("User Creation Failed");
+                string error = result.Errors.ElementAt(0).Description;
+                throw new ApiException(error);
             }
+            throw new Exception("This is a test exception");
             return users;
         }
     }

@@ -1,6 +1,9 @@
 using CarRental.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
 using CarRental.Infrastructure.DI;
+using Microsoft.AspNetCore.Diagnostics;
+using System.Net;
+using CarRental.Infrastructure.Exceptions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,8 +30,6 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Password.RequireUppercase = false;
     options.Password.RequiredLength = 6;
     options.Password.RequiredUniqueChars = 1;
-
-
 });
 
 var app = builder.Build();
@@ -44,6 +45,30 @@ app.UseCors(builder => builder
         .AllowAnyOrigin()
         .AllowAnyMethod()
         .AllowAnyHeader());
+
+app.UseExceptionHandler(options =>
+{
+    options.Run(async context =>
+    {
+        var ex = context.Features.Get<IExceptionHandlerFeature>();
+        context.Response.ContentType = "application/json";
+        try
+        {
+            ApiException apiExc = (ApiException)ex.Error;
+            context.Response.StatusCode = (int)apiExc.StatusCode;
+            string err = "{";
+            err += $"\"errorMessage\":\"{apiExc.Message}\"";
+            err += "}";
+            await context.Response.WriteAsync(err).ConfigureAwait(false);
+        }
+        catch (InvalidCastException e)
+        {
+            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            string err = "{\"errorMessage\":\"The server could not process your request!\"}";
+            await context.Response.WriteAsync(err).ConfigureAwait(false);
+        }
+    });
+});
 
 app.UseHttpsRedirection();
 

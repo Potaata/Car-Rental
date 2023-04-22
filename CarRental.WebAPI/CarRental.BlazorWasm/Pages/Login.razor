@@ -1,0 +1,39 @@
+﻿@page "/login"
+
+@inject UserService userService
+
+<h3>Register</h3>
+
+Email:
+<input @bind="Email" />
+Password:
+<input @bind="Password" />
+<p>@errorMessage</p>
+<button @onclick="LoginUser">Login</button>
+
+@code {
+    string Password = "alupassword", Email = "validemail@email.com";
+    string errorMessage;
+
+    private async void LoginUser()
+    {
+        try
+        {
+            string token = await userService.Login(Email, Password);
+            if (token != null)
+            {
+                // set token in local storage
+                // redirect to home page
+            }
+            else
+            {
+                // this user must have 2FA on.
+                // show a dialog notifying to check their mail.
+            }
+        }
+        catch (ApiException e)
+        {
+            errorMessage = e.Message;
+        }
+    }
+}

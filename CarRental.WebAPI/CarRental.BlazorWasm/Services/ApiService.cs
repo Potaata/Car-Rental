@@ -39,8 +39,7 @@ namespace CarRental.BlazorWasm.Services
                 }
                 else
                 {
-                    ApiError apiError = JsonConvert.DeserializeObject<ApiError>(responseContent);
-                    ErrorResponse errorResponse = new ErrorResponse(apiError.errors);
+                    ErrorResponse errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(responseContent);
                     BaseResponse res = new BaseResponse
                     {
                         ErrorMessage = errorResponse.ErrorMessage
@@ -48,9 +47,9 @@ namespace CarRental.BlazorWasm.Services
                     
                     if(errorResponse != null && errorResponse.ErrorMessage != null)
                     {
-                        return BaseResponse.NoErrorMessage;
+                        return res;
                     }
-                    return res;
+                    return BaseResponse.NoErrorMessage;
                 }
             }
             catch (HttpRequestException e)
