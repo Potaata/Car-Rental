@@ -1,0 +1,47 @@
+﻿@typeparam TItem
+@inject ApiService apiService
+
+<h3>TableTemplate</h3>
+<table>
+    <thead>
+        <tr>
+            @foreach (var propertyInfo in typeof(TItem).GetProperties())
+            {
+                <th>@propertyInfo.Name</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in allItems)
+        {
+            <tr>
+                @foreach (var propertyInfo in typeof(TItem).GetProperties())
+                {
+                    <td>@propertyInfo.GetValue(item)</td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    private IItemService<TItem> _itemService;
+
+    [Parameter]
+    public IItemService<TItem> ItemService
+    {
+        get => _itemService;
+        set
+        {
+            _itemService = value;
+        }
+    }
+
+    List<TItem> allItems;
+
+    protected override async Task OnInitializedAsync(){
+        List<TItem> items = await ItemService.GetItems();
+
+        allItems = items;
+    }
+}

@@ -12,5 +12,6 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 builder.Services.AddTransient<HttpClient>();
 builder.Services.AddSingleton<ApiService>();
 builder.Services.AddSingleton<UserService>();
+builder.Services.AddSingleton<CarService>();
 
 await builder.Build().RunAsync();
