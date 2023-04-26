@@ -30,7 +30,6 @@ namespace CarRental.Infrastructure.Services
                 string error = result.Errors.ElementAt(0).Description;
                 throw new ApiException(error);
             }
-            throw new Exception("This is a test exception");
             return users;
         }
     }

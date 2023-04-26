@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CarRental.Application.Common.Interface;
 using CarRental.Domain.Entities;
+using CarRental.Domain.Shared;
 
 namespace CarRental.Infrastructure.Persistence
 {
@@ -20,6 +21,11 @@ namespace CarRental.Infrastructure.Persistence
             _dateTime = dateTime;
         }
 
-        public DbSet<Users> Users { get; set; }
+        public DbSet<Cars> Cars { get; set; }
+
+        public async Task<int> SaveChangesAsync()
+        {
+            return await base.SaveChangesAsync();
+        }
     }
 }

@@ -24,28 +24,5 @@ namespace CarRental.WebAPI.Controllers
             var registeredUser = await _users.AddUsers(userRequestDTO);
             return registeredUser;
         }
-
-        [HttpPost]
-        [Route("/api/cars")]
-        public async Task<CarResponse> GetCars(UserRegisterRequestDTO userRequestDTO)
-        {
-            List<Cars> cars = new List<Cars>
-            {
-                new Cars
-                {
-                    Color="Red",
-                    Id="ID",
-                    Model="asdf",
-                    NumberPlate="asdf",
-                    Price=123.45f
-                }
-            };
-            CarResponse r = new CarResponse
-            {
-                cars = cars
-            };
-
-            return r;
-        }
     }
 }

@@ -25,8 +25,7 @@ namespace CarRental.Infrastructure.DI
             services.AddScoped<IApplicationDBContext>(provider => provider.GetService<ApplicationDBContext>());
             services.AddTransient<IDateTime, DateTimeServices>();
 
-            //services.AddScoped<IEmployeeDetails, EmployeesDetails>();
-            services.AddScoped<IUsers, UserServices>();
+            services.AddScoped<ICars, CarServices>();
 
             return services;
         }

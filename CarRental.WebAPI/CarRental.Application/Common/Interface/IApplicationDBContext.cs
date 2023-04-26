@@ -10,6 +10,7 @@ namespace CarRental.Application.Common.Interface
 {
     public interface IApplicationDBContext
     {
-        DbSet<Users> Users { get; set; }
+        DbSet<Cars> Cars { get; set; }
+        Task<int> SaveChangesAsync();
     }
 }
