@@ -1,0 +1,38 @@
+﻿<!-- DamageRequest.razor -->
+@page "/damage-request"
+
+<h1>Damage Request Form</h1>
+
+<div class="row">
+    <form>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input type="text" class="form-control" id="title" placeholder="Enter the title of the damage" @bind="@Title">
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea class="form-control" id="description" rows="3" placeholder="Enter the description of the damage" @bind="@Description"></textarea>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <button type="submit" class="btn btn-primary" @onclick="HandleSubmit">Submit</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+@code {
+    private string Title { get; set; }
+    private string Description { get; set; }
+
+    private void HandleSubmit()
+    {
+        // Save the damage request to the system
+    }
+}
