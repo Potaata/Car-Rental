@@ -1,33 +1,96 @@
-﻿@typeparam TItem
-@inject ApiService apiService
+﻿@using System.Reflection
 
-<table class="table table-dark table-striped-columns table-hover">
-    <thead>
-        <tr>
-            @foreach (var propertyInfo in typeof(TItem).GetProperties())
-            {
-                <th>@propertyInfo.Name</th>
-            }
-        </tr>
-    </thead>
-    <tbody class="table-group-divider">
-        @foreach (var item in allItems)
-        {
+@typeparam TItem where TItem : TableItem
+@typeparam TItemRequest where TItemRequest : TableItemRequest
+
+@inject ApiService apiService;
+@inject NavigationManager navManager;
+@inject IJSRuntime jsRuntime;
+
+<div class="modal fade" id="modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div style="display:@showInsert">
+                    <div id="insertion">
+                        @foreach (var property in typeof(TItemRequest).GetProperties())
+                        {
+                            @if (ItemRequestFields.ContainsKey(property.Name))
+                            {
+                                <div>
+                                    <label for="@property.Name">@property.Name:</label>
+                                    <input type="text" id="@property.Name" name="@property.Name" @bind="ItemRequestFields[property.Name]" />
+                                </div>
+                            }
+                        }
+                        <button @onclick="() => InsertItem()">Save</button>
+                    </div>
+                </div>
+                <div style="display:@showEdit">
+                    <div id="insertion">
+                        @foreach (var property in typeof(TItemRequest).GetProperties())
+                        {
+                            @if (ItemRequestFields.ContainsKey(property.Name))
+                            {
+                                <div>
+                                    <label for="@property.Name">@property.Name:</label>
+                                    <input type="text" id="@property.Name" name="@property.Name" @bind="ItemRequestFields[property.Name]" />
+                                </div>
+                            }
+                        }
+                        <button @onclick="() => EditItem()">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<button @onclick='() => showInsertModal()'>Insert</button>
+
+@if (allItems.Count > 0)
+{
+    <table class="table table-dark table-striped-columns table-hover">
+        <thead>
             <tr>
-                @foreach (var propertyInfo in typeof(TItem).GetProperties())
+                @foreach (var property in typeof(TItem).GetProperties())
                 {
-                    <td>@propertyInfo.GetValue(item)</td>
+                    <th>@property.Name</th>
                 }
+                <th></th>
+                <th></th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody class="table-group-divider">
+            @foreach (TItem item in allItems)
+            {
+                <tr>
+                    @foreach (PropertyInfo propertyInfo in typeof(TItem).GetProperties())
+                    {
+                        <td>@propertyInfo.GetValue(item)</td>
+                    }
+                    <td><button @onclick="() => DeleteItem(item.Id)">Delete</button></td>
+                    <td><button @onclick="() => showEditModal(item)">Edit</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <h3>No Items to show.</h3>
+}
+
 
 @code {
-    private IItemService<TItem> _itemService;
+    private IItemService<TItem, TItemRequest> _itemService;
 
     [Parameter]
-    public IItemService<TItem> ItemService
+    public IItemService<TItem, TItemRequest> ItemService
     {
         get => _itemService;
         set
@@ -36,11 +99,150 @@
         }
     }
 
-    List<TItem> allItems;
+    string showInsert { get; set; }
+    string showEdit { get; set; }
 
-    protected override async Task OnInitializedAsync(){
-        List<TItem> items = await ItemService.GetItems();
+    List<TItem> allItems = new List<TItem>();
 
-        allItems = items;
+    Dictionary<string, string> ItemRequestFields = new Dictionary<string, string>();
+
+    private int SelectedItemId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await jsRuntime.InvokeVoidAsync("import", "/js/modalScript.js");
+
+        foreach (var property in typeof(TItemRequest).GetProperties())
+        {
+            ItemRequestFields.Add(property.Name, "");
+        }
+
+        await GetAllItems();
+    }
+
+    private async void DeleteItem(int id)
+    {
+        try
+        {
+            await _itemService.DeleteItem(id);
+            await GetAllItems();
+        }
+        catch (ApiException ex)
+        {
+            // show alert here.
+        }
+    }
+
+    private async Task GetAllItems()
+    {
+        allItems = await ItemService.GetItems();
+        StateHasChanged();
+    }
+
+    private async Task InsertItem()
+    {
+        TItemRequest newItem = _itemService.GetDefaultRequest();
+
+        foreach (var property in typeof(TItemRequest).GetProperties())
+        {
+            string inputId = property.Name;
+            string inputValue = ItemRequestFields[inputId];
+
+            if (string.IsNullOrEmpty(inputValue))
+            {
+                // Handle validation error
+            }
+
+            object value = Convert.ChangeType(inputValue, property.PropertyType);
+            property.SetValue(newItem, value);
+        }
+
+        try
+        {
+            await _itemService.CreateItem(newItem);
+            CloseModal();
+            await GetAllItems();
+        }
+        catch (ApiException ex)
+        {
+            // show alert here.
+        }
+    }
+
+    private async Task EditItem()
+    {
+        TItemRequest newItem = _itemService.GetDefaultRequest();
+
+        foreach (var property in typeof(TItemRequest).GetProperties())
+        {
+            string inputId = property.Name;
+            string inputValue = ItemRequestFields[inputId];
+
+            if (string.IsNullOrEmpty(inputValue))
+            {
+                // Handle validation error
+            }
+
+            object value = Convert.ChangeType(inputValue, property.PropertyType);
+            property.SetValue(newItem, value);
+        }
+
+        try
+        {
+            await _itemService.EditItem(SelectedItemId, newItem);
+            CloseModal();
+            await GetAllItems();
+        }
+        catch (ApiException ex)
+        {
+            // show alert here.
+        }
+    }
+
+    private void showInsertModal()
+    {
+        HideAllModals();
+
+        foreach (var property in typeof(TItemRequest).GetProperties())
+        {
+            ItemRequestFields[property.Name] =  "";
+        }
+
+        ChangeTitle("Insert New");
+        showInsert = "auto";
+        OpenModal();
+    }
+
+    private void showEditModal(TItem item)
+    {
+        SelectedItemId = item.Id;
+
+        foreach (PropertyInfo propertyInfo in typeof(TItem).GetProperties())
+        {
+            ItemRequestFields[propertyInfo.Name] = propertyInfo.GetValue(item).ToString();
+        }
+
+        HideAllModals();
+        ChangeTitle("Edit 🖋");
+        showEdit = "auto";
+        OpenModal();
+    }
+
+    private void HideAllModals()
+    {
+        showEdit = "none";
+        showInsert = "none";
+    }
+
+    private void CloseModal(){
+        jsRuntime.InvokeVoidAsync("hideModal", "modal");
+    }
+
+    private void OpenModal(){
+        jsRuntime.InvokeVoidAsync("showModal", "modal");
+    }
+    
+    private void ChangeTitle(string newTitle){
+        jsRuntime.InvokeVoidAsync("setModalTitle", "modal", newTitle);
     }
 }

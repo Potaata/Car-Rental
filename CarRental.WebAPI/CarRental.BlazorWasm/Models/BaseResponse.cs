@@ -20,7 +20,7 @@ namespace CarRental.BlazorWasm.Models
 
         public Resp GetResponse<Resp> () where Resp : SuccessResponse
         {
-            if (ErrorMessage != null)
+                if (ErrorMessage != null)
             {
                 throw new ApiException(ErrorMessage);
             }

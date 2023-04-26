@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using CarRental.BlazorWasm;
 using CarRental.BlazorWasm.Services;
+using Microsoft.JSInterop;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -13,5 +14,6 @@ builder.Services.AddTransient<HttpClient>();
 builder.Services.AddSingleton<ApiService>();
 builder.Services.AddSingleton<UserService>();
 builder.Services.AddSingleton<CarService>();
+
 
 await builder.Build().RunAsync();

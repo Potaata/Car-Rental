@@ -1,4 +1,6 @@
-﻿namespace CarRental.BlazorWasm.Models.Cars
+﻿using CarRental.BlazorWasm.Models.Items;
+
+namespace CarRental.BlazorWasm.Models.Cars
 {
     public class CarResponse: SuccessResponse
     {
