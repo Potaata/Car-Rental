@@ -5,15 +5,61 @@
 
 <h3>Register</h3>
 
-Username:<input @bind="Username" />
-Password:<input @bind="Password" />
-Email:<input @bind="Email" />
-Phone Number:<input @bind="PhoneNumber" />
-<p>@errorMessage</p>
-<button @onclick="RegisterUser">Register</button>
+<section class="h-custom">
+    <div class="container-fluid">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-md-9 col-lg-6 col-xl-5">
+                <img src="https://img.freepik.com/free-vector/mobile-login-concept-illustration_114360-135.jpg?w=740&t=st=1682421982~exp=1682422582~hmac=ecd1f95204c0f14fad0f75520f7af681d0efd04cf7fc3206e22899cb9518967a"
+                     class="img-fluid" alt="Image">
+            </div>
+            <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+                <form>
+                    <div class="form-outline mb-4">
+                        <label class="form-label" for="form3Example3">Username</label>
+                        <input @bind="Username" type="text" id="form3Example" class="form-control form-control-lg"
+                               placeholder="Please enter a valid username" />
+                    </div>
+                    <div class="form-outline mb-4">
+                        <label class="form-label" for="form3Example3">Password</label>
+                        <input @bind="Password" type="password" id="form3Example" class="form-control form-control-lg"
+                               placeholder="Please enter a valid password" />
+                    </div>
+                    <div class="form-outline mb-4">
+                        <label class="form-label" for="form3Example3">Email Address</label>
+                        <input @bind="Email" type="email" id="form3Example" class="form-control form-control-lg"
+                               placeholder="Please enter a valid email address" />
+                    </div>
+                    <div class="form-outline mb-4">
+                        <label class="form-label" for="form3Example3">Phone Number</label>
+                        <div class="input-group">
+                            <div class="input-group-text">+977 </div>
+                            <input @bind="PhoneNumber" type="text" id="form3Example" class="form-control form-control-lg"
+                               placeholder="Please enter valid phone number" />
+                        </div>
+                    </div>
+                    <div class="text-center text-lg-center mt-4 pt-2">
+                        <button onclick="RegisterUser" type="button" class="btn btn-primary btn-lg"
+                                style="padding-left: 2.5rem; padding-right: 2.5rem;">
+                            Register
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .h-custom {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 83vh;
+    }
+</style>
 
 @code {
-    string Username = "anjel", Password = "alupassword", Email = "validemail@email.com", PhoneNumber = "98989898";
+    string Username = "", Password = "", Email = "", PhoneNumber = "";
     string errorMessage = "";
 
     private async void RegisterUser()
