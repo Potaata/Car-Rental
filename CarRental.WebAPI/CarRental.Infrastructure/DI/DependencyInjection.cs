@@ -29,6 +29,8 @@ namespace CarRental.Infrastructure.DI
 
             services.AddScoped<IFileUpload, FileUploadService>();
 
+            services.AddScoped<IUsers, UserServices>();
+
 
             return services;
         }

@@ -27,5 +27,17 @@ namespace CarRental.Infrastructure.Persistence
         {
             return await base.SaveChangesAsync();
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            
+            modelBuilder.Entity<IdentityRole>().HasData(
+                new IdentityRole { Id = "1", Name = "Admin", NormalizedName = "ADMIN" },
+                new IdentityRole { Id = "2", Name = "Staff", NormalizedName = "STAFF" },
+                new IdentityRole { Id = "3", Name = "User", NormalizedName = "USER" }
+            );
+        }
     }
 }
