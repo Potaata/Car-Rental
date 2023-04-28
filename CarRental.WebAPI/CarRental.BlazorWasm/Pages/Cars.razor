@@ -5,27 +5,7 @@
 
 <h3>Cars</h3>
 
-@*
-<table>
-    <tr>
-        <th>Company</th>
-        <th>Contact</th>
-        <th>Country</th>
-    </tr>
-    <tr>
-        <td>Alfreds Futterkiste</td>
-        <td>Maria Anders</td>
-        <td>Germany</td>
-    </tr>
-    <tr>
-        <td>Centro comercial Moctezuma</td>
-        <td>Francisco Chang</td>
-        <td>Mexico</td>
-    </tr>
-</table>
-*@
-<TableTemplate TItem=Car TItemRequest=CarRequest ItemService="@carService" />
-
+<TableTemplate TItem=Car ItemService=@carService/>
 
 @code {
 
