@@ -1,11 +1,11 @@
-﻿@page "/cars"
+@page "/cars"
 
 
 @inject CarService carService
 
 <h3>Cars</h3>
 
-<TableTemplate TItem=Car ItemService=@carService/>
+<TableTemplate TItem=Car ItemService=@carService TItemRequest=@CarRequest/>
 
 @code {
 
