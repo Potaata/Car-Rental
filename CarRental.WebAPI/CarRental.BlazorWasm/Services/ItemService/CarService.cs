@@ -1,10 +1,8 @@
 ﻿using CarRental.BlazorWasm.Models;
 using CarRental.BlazorWasm.Models.Cars;
 using CarRental.BlazorWasm.Models.Items;
-using CarRental.BlazorWasm.Models.Register;
-using System.Net;
 
-namespace CarRental.BlazorWasm.Services
+namespace CarRental.BlazorWasm.Services.ItemService
 {
     public class CarService : IItemService<Car, CarRequest>
     {

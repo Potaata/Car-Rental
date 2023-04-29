@@ -5,11 +5,11 @@ using System.Formats.Asn1;
 
 namespace CarRental.BlazorWasm.Services
 {
-    public class UserService
+    public class AuthService
     {
         private readonly ApiService _apiService;
 
-        public UserService(ApiService apiService)
+        public AuthService(ApiService apiService)
         {
             _apiService = apiService;
         }
