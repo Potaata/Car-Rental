@@ -5,8 +5,8 @@
 @inject CarService carService
 
 <h3>Cars</h3>
-
-<TableTemplate TItem=Car ItemService=@carService TItemRequest=@CarRequest/>
+@*TODO: Make insertion modal here @Baibhab*@
+<TableTemplate TItem=Car ItemService=@carService TItemRequest=@CarRequest Editable=true Deletable=true Insertable=false/>
 
 @code {
 

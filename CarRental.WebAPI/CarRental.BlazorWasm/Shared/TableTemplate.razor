@@ -50,7 +50,9 @@
     </div>
 </div>
 
-<button @onclick='() => showInsertModal()'>Insert</button>
+@if(Insertable){
+    <button @onclick='() => showInsertModal()'>Insert</button>
+}
 
 @if (allItems.Count > 0)
 {
@@ -73,8 +75,13 @@
                     {
                         <td>@propertyInfo.GetValue(item)</td>
                     }
-                    <td><button @onclick="() => DeleteItem(item.Id)">Delete</button></td>
-                    <td><button @onclick="() => showEditModal(item)">Edit</button></td>
+                    @if(Deletable){
+                        <td><button @onclick="() => DeleteItem(item.Id)">Delete</button></td>
+                    }
+
+                    @if(Editable){
+                        <td><button @onclick="() => showEditModal(item)">Edit</button></td>
+                    }
                 </tr>
             }
         </tbody>
@@ -88,6 +95,16 @@ else
 
 @code {
     private IItemService<TItem, TItemRequest> _itemService;
+
+    [Parameter]
+    public bool Editable { get; set; }
+    
+    [Parameter]
+    public bool Deletable{ get; set; }
+    
+    [Parameter]
+    public bool Insertable { get; set; }
+
 
     [Parameter]
     public IItemService<TItem, TItemRequest> ItemService
@@ -205,7 +222,7 @@ else
 
         foreach (var property in typeof(TItemRequest).GetProperties())
         {
-            ItemRequestFields[property.Name] =  "";
+            ItemRequestFields[property.Name] = "";
         }
 
         ChangeTitle("Insert New");
@@ -234,15 +251,18 @@ else
         showInsert = "none";
     }
 
-    private void CloseModal(){
+    private void CloseModal()
+    {
         jsRuntime.InvokeVoidAsync("hideModal", "modal");
     }
 
-    private void OpenModal(){
+    private void OpenModal()
+    {
         jsRuntime.InvokeVoidAsync("showModal", "modal");
     }
-    
-    private void ChangeTitle(string newTitle){
+
+    private void ChangeTitle(string newTitle)
+    {
         jsRuntime.InvokeVoidAsync("setModalTitle", "modal", newTitle);
     }
 }
