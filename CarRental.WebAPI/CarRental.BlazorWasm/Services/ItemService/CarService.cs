@@ -16,35 +16,27 @@ namespace CarRental.BlazorWasm.Services.ItemService
         }
         public async Task<List<Car>> GetItems()
         {
-            BaseResponse carRes = await _apiService.GET<CarResponse>(EndPoint);
-
-            CarResponse cars = carRes.GetResponse<CarResponse>();
+            CarResponse cars = await _apiService.GET<CarResponse>(EndPoint);
 
             return cars.cars;
         }
 
         public async Task<string> DeleteItem(int id)
         {
-            BaseResponse carRes = await _apiService.DELETE<MessageResponse>(EndPoint + '/' + id);
-
-            MessageResponse message = carRes.GetResponse<MessageResponse>();
+            MessageResponse message = await _apiService.DELETE<MessageResponse>(EndPoint + '/' + id);
 
             return message.message;
         }
         public async Task<string> CreateItem(CarRequest car)
         {
-            BaseResponse carRes = await _apiService.POST<CarRequest, MessageResponse>(EndPoint, car);
-
-            MessageResponse message = carRes.GetResponse<MessageResponse>();
+            MessageResponse message = await _apiService.POST<CarRequest, MessageResponse>(EndPoint, car);
 
             return message.message;
         }
 
         public async Task<string> EditItem(int id, CarRequest car)
         {
-            BaseResponse carRes = await _apiService.PUT<CarRequest, MessageResponse>(EndPoint + '/' + id, car);
-
-            MessageResponse message = carRes.GetResponse<MessageResponse>();
+            MessageResponse message = await _apiService.PUT<CarRequest, MessageResponse>(EndPoint + '/' + id, car);
 
             return message.message;
         }

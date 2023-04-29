@@ -4,6 +4,7 @@ using CarRental.BlazorWasm;
 using CarRental.BlazorWasm.Services;
 using Microsoft.JSInterop;
 using Syncfusion.Blazor;
+using Microsoft.AspNetCore.Components;
 using CarRental.BlazorWasm.Services.ItemService;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);

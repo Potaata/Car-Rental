@@ -1,4 +1,5 @@
 ﻿using CarRental.Application.DTOs;
+using CarRental.Application.DTOs.CarDTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +10,7 @@ namespace CarRental.Application.Common.Interface
 {
     public interface IUsers
     {
-        public Task<UserRegisterRequestDTO> AddUsers(UserRegisterRequestDTO user);
-
-
-
+        public Task<MessageResponse> RegisterUser(UserRegisterRequestDTO user);
+        public Task<UserLoginResponseDTO> LoginUser(UserLoginRequestDTO user);
     }
 }

@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CarRental.Infrastructure.Services;
+using Microsoft.AspNetCore.Identity;
 
 namespace CarRental.Infrastructure.DI
 {
@@ -25,12 +26,10 @@ namespace CarRental.Infrastructure.DI
             services.AddScoped<IApplicationDBContext>(provider => provider.GetService<ApplicationDBContext>());
             services.AddTransient<IDateTime, DateTimeServices>();
 
-            services.AddScoped<ICars, CarServices>();
-
-            services.AddScoped<IFileUpload, FileUploadService>();
-
             services.AddScoped<IUsers, UserServices>();
-
+            
+            services.AddScoped<ICars, CarServices>();
+            services.AddScoped<IFileUpload, FileUploadService>();
 
             return services;
         }

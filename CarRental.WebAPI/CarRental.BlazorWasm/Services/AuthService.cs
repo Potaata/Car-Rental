@@ -24,12 +24,10 @@ namespace CarRental.BlazorWasm.Services
                 PhoneNumber = phoneNum
             };
             
-            BaseResponse response = await _apiService.POST<RegisterRequest, RegisterResponse>("/api/users/register", req);
-                    
-            return response.GetResponse<RegisterResponse>();
+            return await _apiService.POST<RegisterRequest, RegisterResponse>("/api/users/register", req);
         }
 
-        public async Task<string> Login(string email, string password)
+        public async Task<bool> Login(string email, string password)
         {
             LoginRequest req = new LoginRequest
             {
@@ -37,10 +35,8 @@ namespace CarRental.BlazorWasm.Services
                 RawPassword = password
             };
 
-            BaseResponse br = await _apiService.POST<LoginRequest, LoginResponse>("/api/users/login", req);
-            LoginResponse resp = br.GetResponse<LoginResponse>();
-
-            return resp.Token;
+            LoginResponse resp = await _apiService.POST<LoginRequest, LoginResponse>("/api/users/login", req);
+            return true;
         }
     }
 }

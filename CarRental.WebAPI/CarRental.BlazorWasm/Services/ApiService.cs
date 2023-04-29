@@ -2,6 +2,8 @@
 using Microsoft.JSInterop;
 using Newtonsoft.Json;
 using System.Text;
+using CarRental.BlazorWasm.CustomException;
+using Microsoft.AspNetCore.Components;
 
 namespace CarRental.BlazorWasm.Services
 {
@@ -9,46 +11,55 @@ namespace CarRental.BlazorWasm.Services
     {
 
         private readonly HttpClient _httpClient;
+        private readonly NavigationManager _navManager;
         private static string API_URL = "https://localhost:7007";
 
-        public ApiService(HttpClient httpClient)
+
+        // Failed To Fetch API. Make sure API project is running and the endpoint is accessible.
+        public static string FailedToFetchError = "Failed to access server!";
+
+        // The API did not return 200 OK but did not send any errorMessage either. Please check the endpoint.
+        public static string NoErrorMessage = "Something went wrong!";
+
+        public ApiService(HttpClient httpClient, NavigationManager navManager)
         {
             _httpClient = httpClient;
+            _navManager = navManager;
         }
 
-        public async Task<BaseResponse> GET<ResponseDTO>(string endpoint) where ResponseDTO : SuccessResponse
+        public async Task<ResponseDTO> GET<ResponseDTO>(string endpoint) where ResponseDTO : SuccessResponse
         {
             string fullQualifiedEndpoint = API_URL + endpoint;
             var response = await _httpClient.GetAsync(fullQualifiedEndpoint);
-            return await parseResponse<ResponseDTO>(response);
+            return await ParseResponse<ResponseDTO>(response);
         }
 
-        public async Task<BaseResponse> POST<RequestDTO, ResponseDTO>(string endpoint, RequestDTO body) where ResponseDTO : SuccessResponse
+        public async Task<ResponseDTO> POST<RequestDTO, ResponseDTO>(string endpoint, RequestDTO body) where ResponseDTO : SuccessResponse
         {
             string fullQualifiedEndpoint = API_URL + endpoint;
             var bodyJSON = JsonConvert.SerializeObject(body);
             var content = new StringContent(bodyJSON, Encoding.UTF8, "application/json");
             var response = await _httpClient.PostAsync(fullQualifiedEndpoint, content);
-            return await parseResponse<ResponseDTO>(response);
+            return await ParseResponse<ResponseDTO>(response);
         }
 
-        public async Task<BaseResponse> DELETE<ResponseDTO>(string endpoint) where ResponseDTO : SuccessResponse
+        public async Task<ResponseDTO> DELETE<ResponseDTO>(string endpoint) where ResponseDTO : SuccessResponse
         {
             string fullQualifiedEndpoint = API_URL + endpoint;
             var response = await _httpClient.DeleteAsync(fullQualifiedEndpoint);
-            return await parseResponse<ResponseDTO>(response);
+            return await ParseResponse<ResponseDTO>(response);
         }
 
-        public async Task<BaseResponse> PUT<RequestDTO, ResponseDTO>(string endpoint, RequestDTO body) where ResponseDTO : SuccessResponse
+        public async Task<ResponseDTO> PUT<RequestDTO, ResponseDTO>(string endpoint, RequestDTO body) where ResponseDTO : SuccessResponse
         {
             string fullQualifiedEndpoint = API_URL + endpoint;
             var bodyJSON = JsonConvert.SerializeObject(body);
             var content = new StringContent(bodyJSON, Encoding.UTF8, "application/json");
             var response = await _httpClient.PutAsync(fullQualifiedEndpoint, content);
-            return await parseResponse<ResponseDTO>(response);
+            return await ParseResponse<ResponseDTO>(response);
         }
 
-        public async Task<BaseResponse> parseResponse<ResponseDTO>(HttpResponseMessage response) where ResponseDTO : SuccessResponse
+        public async Task<ResponseDTO> ParseResponse<ResponseDTO>(HttpResponseMessage response) where ResponseDTO : SuccessResponse
         {
             try
             {
@@ -56,33 +67,24 @@ namespace CarRental.BlazorWasm.Services
 
                 if (response.IsSuccessStatusCode)
                 {
+                    _navManager.NavigateTo("Login");
                     var responseParsed = JsonConvert.DeserializeObject<ResponseDTO>(responseContent);
-
-                    // TODO: Refactor and remove unnecessary classes: BaseResponse, ErrorResponse
-                    BaseResponse res = new BaseResponse
-                    {
-                        Response = responseParsed
-                    };
-                    return res;
+                    return responseParsed;
                 }
                 else
                 {
                     ErrorResponse errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(responseContent);
-                    BaseResponse res = new BaseResponse
-                    {
-                        ErrorMessage = errorResponse.ErrorMessage
-                    };
 
                     if (errorResponse != null && errorResponse.ErrorMessage != null)
                     {
-                        return res;
+                        throw new ApiException(errorResponse.ErrorMessage);
                     }
-                    return BaseResponse.NoErrorMessage;
+                    throw new ApiException(NoErrorMessage);
                 }
             }
             catch (HttpRequestException e)
             {
-                return BaseResponse.FailedToFetchError;
+                throw new ApiException(FailedToFetchError);
             }
         }
     }

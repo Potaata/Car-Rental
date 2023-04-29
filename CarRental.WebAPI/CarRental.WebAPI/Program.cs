@@ -16,7 +16,9 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddInfrastructure(builder.Configuration);
 
-builder.Services.AddIdentityCore<IdentityUser>().AddEntityFrameworkStores<ApplicationDBContext>();
+builder.Services.AddIdentityCore<IdentityUser>().AddRoles<IdentityRole>().AddEntityFrameworkStores<ApplicationDBContext>();
+
+builder.Services.AddAuthorization();
 
 builder.Services.Configure<IdentityOptions>(options =>
 {
