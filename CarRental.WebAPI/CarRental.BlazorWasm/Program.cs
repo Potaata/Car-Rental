@@ -19,5 +19,6 @@ builder.Services.AddSingleton<SessionService>();
 builder.Services.AddSingleton<AuthService>();
 builder.Services.AddSingleton<CarService>();
 builder.Services.AddSyncfusionBlazor();
+builder.Services.AddSingleton<SessionService>();
 
 await builder.Build().RunAsync();

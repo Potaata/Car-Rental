@@ -1,0 +1,105 @@
+﻿@page "/profile"
+
+@inject AuthService userService
+
+@inject SessionService sessService
+
+<section class="h-custom">
+    <div class="container-fluidprofile">
+        <div class="d-flex justify-content-center align-items-center h-100 profileclass">
+
+            <div class="col profilediv">
+                <h5 style="padding: 10px;text-align: center;">Your Profile</h5>
+                <div class="row" style="margin-top: 10px;">
+                    <div class="col-3">
+                        Username: 
+                    </div>
+                    <div class="col-3">
+                        @sessService.Username
+                    </div>
+                    <div class="col-3">
+                        Email Address: 
+                    </div>
+                    <div class="col-3">
+                        bullshit1
+                    </div>
+                </div>
+                <div class="row" style="margin-top: 20px;">
+                    <div class="col-3">
+                        Phone Number:
+                    </div>
+                    <div class="col-3">
+                        bullshit2
+                    </div>
+                    <div class="col-3">
+                        Upload Doc:
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluidpwd">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col formdiv">
+                <h5 style="padding: 10px;text-align: center;">Change Password</h5>
+                <form>
+                    <div class="form-outline mb-4">
+                        <label class="form-label" for="form3Example3">New Password</label>
+                        <input type="text" id="form3Example" class="form-control form-control-lg"
+                                placeholder="Please enter a valid password" />
+                    </div>
+                    <div class="form-outline mb-4">
+                        <label class="form-label" for="form3Example3">Re-enter Password</label>
+                        <input type="text" id="form3Example" class="form-control form-control-lg"
+                                placeholder="Please re-enter your new password" />
+                    </div>
+                    <button onclick="RegisterUser" type="button" class="btn btn-primary btn-lg"
+                            style="padding-left: 2.5rem; padding-right: 2.5rem; display: block; margin-left: auto; margin-right: auto;">
+                        Change
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    th, td {
+        border: 1px solid black;
+    }
+    button {
+        display: felx;
+        align-items: center;
+    }
+    .profilediv {
+        padding-bottom: 20px;
+        padding-inline-start: 10px;
+        padding-inline-end: 10px;
+        background: whitesmoke;
+        border-radius: 15px;
+        width: 550px;
+    }
+    .formdiv {
+        padding-bottom: 20px;
+        background: whitesmoke;
+        border-radius: 15px;
+        width: 550px;
+    }
+
+    .container-fluidprofile {
+        margin-top: 20px;
+        display: flex;
+        justify-content: center;
+        height: 30vh;
+    }
+
+    .container-fluidpwd {
+        display: flex;
+        justify-content: center;
+        height: 50vh;
+    }
+</style>
+
+@code {
+
+}

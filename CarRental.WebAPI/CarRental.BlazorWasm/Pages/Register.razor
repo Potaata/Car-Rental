@@ -37,11 +37,21 @@
                                placeholder="Please enter valid phone number" />
                         </div>
                     </div>
-                    <div class="text-center text-lg-center mt-4 pt-2">
-                        <button onclick="RegisterUser" type="button" class="btn btn-primary btn-lg"
-                                style="padding-left: 2.5rem; padding-right: 2.5rem;">
-                            Register
-                        </button>
+                    <div class="text-center text-lg-center mt-4 pt-2 container">
+                        <div class="row">
+                            <div class="col-sm">
+                                <button onclick="RegisterUser" type="button" class="btn btn-primary btn-lg"
+                                        style="padding-left: 2.5rem; padding-right: 2.5rem;">
+                                    Register
+                                </button>
+                            </div>
+                            <div class="col-sm">
+                                <p class="small fw-bold mt-2 pt-1 mb-0">
+                                    Already a member? <a href="/login"
+                                                         class="link-info">Login</a>
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -54,7 +64,11 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 83vh;
+        height: 80vh;
+    }
+
+    h3 {
+        font-family: Calibri;
     }
 </style>
 
