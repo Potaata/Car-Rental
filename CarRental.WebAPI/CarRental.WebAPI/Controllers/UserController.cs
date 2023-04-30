@@ -38,10 +38,10 @@ namespace CarRental.WebAPI.Controllers
 
         [HttpPost]
         [Route("/api/users/verify")]
-        public async Task<MessageResponse> VerifyToken()
+        public async Task<UserLoginResponseDTO> VerifyToken(TokenRequestDTO tokenReq)
         {
-            Users user = await _authService.ValidateToken();
-            return new MessageResponse { message = "Token is valid" };
+            UserLoginResponseDTO user = await _authService.ValidateToken(tokenReq.Token);
+            return user;
         }
     }
 }

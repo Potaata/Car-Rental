@@ -11,14 +11,15 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+//builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
-builder.Services.AddTransient<HttpClient>();
+builder.Services.AddSingleton<HttpClient>();
 builder.Services.AddSingleton<ApiService>();
 builder.Services.AddSingleton<SessionService>();
+builder.Services.AddSingleton<LoginService>();
 builder.Services.AddSingleton<AuthService>();
 builder.Services.AddSingleton<CarService>();
+
 builder.Services.AddSyncfusionBlazor();
-builder.Services.AddSingleton<SessionService>();
 
 await builder.Build().RunAsync();

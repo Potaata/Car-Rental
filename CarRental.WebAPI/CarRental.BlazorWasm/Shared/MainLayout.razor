@@ -30,6 +30,11 @@
     {
         "login", "register", "home"
     };
+
+    List<string> pagesInaccessibleAfterLogin = new List<string>{
+        "login", "register"
+    };
+
     bool checkShowNavBar()
     {
         foreach (string page in pagesWithoutNavBar)
@@ -44,14 +49,24 @@
 
     protected async override Task OnInitializedAsync()
     {
-        
-        if (checkRedirectToLogin())
+
+        if (await checkRedirectToLogin())
         {
-            navManager.NavigateTo("/login");
+            navManager.NavigateTo("/login", true);
+        }
+        else if (sessService.Token != null)
+        {
+            foreach (string page in pagesInaccessibleAfterLogin)
+            {
+                if (navManager.Uri.ToLower().EndsWith(page))
+                {
+                    navManager.NavigateTo("/cars", true);
+                }
+            }
         }
     }
 
-    bool checkRedirectToLogin()
+    async Task<bool> checkRedirectToLogin()
     {
         foreach (string page in pagesWithoutLogin)
         {
@@ -60,7 +75,7 @@
                 return false;
             }
         }
-        if (sessService.Token == "" || sessService.Token == null)
+        if (!(await sessService.IsAuthenticated()))
         {
             return true;
         }

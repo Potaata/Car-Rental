@@ -1,7 +1,8 @@
 ﻿@page "/login"
 
-@inject AuthService userService
+@inject AuthService authService;
 @inject NavigationManager navManager;
+@inject SessionService sessService;
 
 <section class="h-custom">
     <div class="container-fluid">
@@ -75,8 +76,8 @@
     {
         try
         {
-            bool login = await userService.Login(Email, Password);
-            navManager.NavigateTo("Cars");
+            bool login = await authService.Login(Email, Password);
+            navManager.NavigateTo("/Cars", true);
 
         }
         catch (ApiException e)

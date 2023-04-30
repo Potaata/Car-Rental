@@ -8,10 +8,12 @@ namespace CarRental.BlazorWasm.Services
     public class AuthService
     {
         private readonly ApiService _apiService;
+        private readonly SessionService _sessionService;
 
-        public AuthService(ApiService apiService)
+        public AuthService(ApiService apiService, SessionService sessService)
         {
             _apiService = apiService;
+            _sessionService = sessService;
         }
 
         public async Task<RegisterResponse> Register(string username, string email, string password, string phoneNum)
@@ -36,6 +38,8 @@ namespace CarRental.BlazorWasm.Services
             };
 
             LoginResponse resp = await _apiService.POST<LoginRequest, LoginResponse>("/api/users/login", req);
+
+            _sessionService.SetSession(resp.Token, resp.Username, resp.Role);
             return true;
         }
     }
