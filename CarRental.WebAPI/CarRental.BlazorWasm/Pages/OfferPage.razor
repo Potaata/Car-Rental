@@ -7,20 +7,28 @@
 @using System.Threading.Tasks
 @using System.Net.Http
 
-<h1>Publish Offer</h1>
+<div class="container">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-lg-8 mb-5 mb-lg-0 text-center">
+            <h1 style="font-family: Arial Rounded MT; padding: 10px 24px;">Publish Offers</h1>
+        </div>
+    </div>
+</div>
 
 <EditForm Model="@model" OnValidSubmit="HandleValidSubmit">
     <div class="form-group">
-        <label for="offerTitle">Offer Title</label>
-        <InputText id="offerTitle" class="form-control" @bind-Value="model.Title" />
+        <label class="form-label" for="offerTitle">Offer Title</label>
+        <InputText class="form-control" id="offerTitle" placeholder="Title" @bind-Value="model.Title" />
         <ValidationMessage For="@(() => model.Title)" />
     </div>
     <div class="form-group">
-        <label for="offerDescription">Offer Description</label>
-        <InputTextArea id="offerDescription" class="form-control" @bind-Value="model.Description" />
+        <label class="form-label" for="offerDescription">Offer Description</label>
+        <InputTextArea class="form-control" id="offerDescription" @bind-Value="model.Description" />
         <ValidationMessage For="@(() => model.Description)" />
     </div>
-    <button type="submit" class="btn btn-primary">Publish</button>
+     <div class="form-group py-3"> 
+    <button type="submit" class="btn btn-dark">Publish</button>
+    </div>
 </EditForm>
 
 @code {

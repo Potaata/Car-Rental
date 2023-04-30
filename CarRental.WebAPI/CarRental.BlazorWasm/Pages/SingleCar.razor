@@ -1,0 +1,66 @@
+﻿@page "/car/{Id:int}"
+
+  <div class="container">
+      <section class="mx-auto hv-80" style="max-width: 25rem;">
+      
+           <div class="card">
+                  <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
+                    <img src="https://www.freepnglogos.com/uploads/honda-car-png/honda-car-upcoming-new-honda-cars-india-new-honda-3.png" class="img-fluid" />
+       
+                  </div>
+                  <hr/>
+                  <div class="card-body">
+                         <div class="container">
+                              <div class="row d-flex namediv justify-content-center align-items-center h-40">
+                                   <div class="col-lg-6 mb-3 mb-lg-0 text-center">
+                                        <p class="h3"><span>Car @Id</span></p>
+                                   </div>
+                               </div>
+                         </div>
+                         <hr class="my-3"/>
+                         <div class="d-flex align-items-end mt-4 mb-2">
+                               <p class="h4 m-0"><span class="pe-1">ZAZ</span></p>
+                         </div>
+                         <div class="d-flex justify-content-between mb-2">
+                               <p class="textmuted">Color</p>
+                               <p class="fs-14 fw-bold"><span class="fas fa-dollar-sign pe-1"></span>Pink</p>
+                         </div>
+                         <div class="d-flex justify-content-between mb-2">
+                               <p class="textmuted">Number Plate</p>
+                               <p class="fs-14 fw-bold">44000</p>
+                         </div>
+                      
+                         <div class="d-flex justify-content-between mb-3">
+                               <p class="textmuted fw-bold">Price</p>
+                               <div class="d-flex align-text-top ">
+                               <span class="fas fa-dollar-sign mt-1 pe-1 fs-14 "></span><span class="h4">50000</span>
+                               </div>
+                         </div>
+       
+                         <div class="row m-0">
+                             <div class="col-12  mb-4 p-0">
+                                 <div class="btn btn-primary">Rent<span class="fas fa-arrow-right ps-2"></span>
+                                 </div>
+                             </div>
+                         </div>
+                    </div>
+           </div>
+    
+       </section>
+</div>
+
+<style>
+    .namediv {
+        display:flex;
+        align-content: center;
+        text-align:center;
+        justify-content:center;
+      
+    }
+</style>
+
+@code {
+	[Parameter]
+	public int Id { get; set; }
+	int a = 0;
+}

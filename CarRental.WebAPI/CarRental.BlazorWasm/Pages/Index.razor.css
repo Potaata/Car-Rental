@@ -25,11 +25,10 @@ a {
 .btn {
     border: 2px solid;
     border-radius: 2em;
-    height: 50px;
     font-family: 'Arial Rounded MT';
     font-weight: bold;
     text-align: center;
-    padding: 12px 28px;
+    padding: 10px 24px;
     letter-spacing: 2px;
     color: #373B44;
 }
@@ -45,7 +44,7 @@ a {
 }
 
 .button-container {
-    padding: 50px;
+    padding: 40px;
     align-content: center;
     vertical-align: middle;
     display: block;
@@ -151,7 +150,7 @@ font-weight: 300;
 color: #FFFFFF;
 user-select: none;
 text-align: center;
-margin: 0;
+margin: 10px;
 position: relative;
- top: 20px;
+top: 20px;
 }

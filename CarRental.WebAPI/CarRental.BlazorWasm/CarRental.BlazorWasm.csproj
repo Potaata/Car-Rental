@@ -7,15 +7,23 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Pages\Cars.razor.css" />
+    <None Remove="Pages\DamageForm.razor.css" />
     <None Remove="Pages\Index.razor.css" />
+    <None Remove="Pages\SingleCar.razor.css" />
     <None Remove="Shared\MainLayout.razor.css" />
     <None Remove="Shared\NavMenu.razor.css" />
+    <None Remove="Shared\TableTemplate.razor.css" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Pages\Cars.razor.css" />
+    <Content Include="Pages\DamageForm.razor.css" />
     <Content Include="Pages\Index.razor.css" />
+    <Content Include="Pages\SingleCar.razor.css" />
     <Content Include="Shared\MainLayout.razor.css" />
     <Content Include="Shared\NavMenu.razor.css" />
+    <Content Include="Shared\TableTemplate.razor.css" />
   </ItemGroup>
 
   <ItemGroup>

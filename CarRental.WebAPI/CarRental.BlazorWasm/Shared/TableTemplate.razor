@@ -7,12 +7,12 @@
 @inject NavigationManager navManager;
 @inject IJSRuntime jsRuntime;
 
-<div class="modal fade" id="modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+<div class="modal" id="modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
             </div>
             <div class="modal-body">
                 <div style="display:@showInsert">
@@ -21,13 +21,13 @@
                         {
                             @if (ItemRequestFields.ContainsKey(property.Name))
                             {
-                                <div>
-                                    <label for="@property.Name">@property.Name:</label>
-                                    <input type="text" id="@property.Name" name="@property.Name" @bind="ItemRequestFields[property.Name]" />
+                                <div class="form-group">
+                                    <label class="col-form-label mt-4" for="@property.Name">@property.Name:</label>
+                                    <input type="text" class="form-control" id="@property.Name" name="@property.Name" @bind="ItemRequestFields[property.Name]" />
                                 </div>
                             }
                         }
-                        <button @onclick="() => InsertItem()">Save</button>
+                        <button class="btn btn btn-outline-success" @onclick="() => InsertItem()">Save</button>
                     </div>
                 </div>
                 <div style="display:@showEdit">
@@ -45,20 +45,27 @@
                         <button @onclick="() => EditItem()">Save</button>
                     </div>
                 </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" @onclick="() => InsertItem()">Save changes</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
+      
 @if(Insertable){
-    <button @onclick='() => showInsertModal()'>Insert</button>
-}
-
+    <div class="empty-container">
+      <button class="btn btn-dark" @onclick='() => showInsertModal()'>Insert</button>
+</div>
+    }
+   
 @if (allItems.Count > 0)
 {
     <table class="table table-dark table-striped-columns table-hover">
         <thead>
-            <tr>
+            <tr class="table-dark">
                 @foreach (var property in typeof(TItem).GetProperties())
                 {
                     <th>@property.Name</th>
@@ -70,17 +77,17 @@
         <tbody class="table-group-divider">
             @foreach (TItem item in allItems)
             {
-                <tr>
+                <tr class="table-light">
                     @foreach (PropertyInfo propertyInfo in typeof(TItem).GetProperties())
                     {
                         <td>@propertyInfo.GetValue(item)</td>
                     }
                     @if(Deletable){
-                        <td><button @onclick="() => DeleteItem(item.Id)">Delete</button></td>
+                        <td><button class = "btn btn-dark" @onclick="() => DeleteItem(item.Id)">Delete</button></td>
                     }
 
                     @if(Editable){
-                        <td><button @onclick="() => showEditModal(item)">Edit</button></td>
+                        <td><button class="btn btn-dark" @onclick="() => showEditModal(item)">Edit</button></td>
                     }
                 </tr>
             }
@@ -89,7 +96,14 @@
 }
 else
 {
-    <h3>No Items to show.</h3>
+    <div class="empty-container">
+		<div class="row d-flex justify-content-center align-items-center h-100">
+			<div class="col-lg-8 mb-5 mb-lg-0 text-center">
+            <h3>No Items to show.</h3>
+    </div>
+    </div>
+    </div>
+   
 }
 
 
