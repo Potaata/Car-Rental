@@ -1,8 +1,69 @@
 ﻿@inherits LayoutComponentBase
 
-<NavMenu />
+@inject NavigationManager navManager;
+@inject SessionService sessService;
 
-<main class="container" style="max-width:100%">
-    @Body
-</main>
+<div class="page">
+    @if (checkShowNavBar())
+    {
+        //if true, we show navbar
+        <div class="sidebar">
+            <NavMenu />
+        </div>
+    }
 
+    <!--Render the rest of the body of the current URI!-->
+    <main>
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+
+</div>
+
+@code {
+    List<string> pagesWithoutNavBar = new List<string>
+    {
+        "login", "register"
+    };
+    List<string> pagesWithoutLogin = new List<string>
+    {
+        "login", "register", "home"
+    };
+    bool checkShowNavBar()
+    {
+        foreach (string page in pagesWithoutNavBar)
+        {
+            if (navManager.Uri.ToLower().EndsWith(page))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    protected async override Task OnInitializedAsync()
+    {
+        
+        if (checkRedirectToLogin())
+        {
+            navManager.NavigateTo("/login");
+        }
+    }
+
+    bool checkRedirectToLogin()
+    {
+        foreach (string page in pagesWithoutLogin)
+        {
+            if (navManager.Uri.ToLower().EndsWith(page))
+            {
+                return false;
+            }
+        }
+        if (sessService.Token == "" || sessService.Token == null)
+        {
+            return true;
+        }
+        return false;
+    }
+}

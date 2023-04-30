@@ -42,9 +42,6 @@ namespace CarRental.BlazorWasm.Services
             string fullQualifiedEndpoint = API_URL + endpoint;
             var bodyJSON = JsonConvert.SerializeObject(body);
             var content = new StringContent(bodyJSON, Encoding.UTF8, "application/json");
-
-
-            _httpClient.DefaultRequestHeaders.Authorization = _sessService.Token;
             var response = await _httpClient.PostAsync(fullQualifiedEndpoint, content);
             return await ParseResponse<ResponseDTO>(response);
         }
@@ -79,7 +76,6 @@ namespace CarRental.BlazorWasm.Services
 
                 if (response.IsSuccessStatusCode)
                 {
-                   // _navManager.NavigateTo("Login");
                     var responseParsed = JsonConvert.DeserializeObject<ResponseDTO>(responseContent);
                     return responseParsed;
                 }
