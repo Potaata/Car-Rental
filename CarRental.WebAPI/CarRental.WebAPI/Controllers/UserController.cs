@@ -12,10 +12,12 @@ namespace CarRental.WebAPI.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUsers _users;
+        private readonly IAuthService _authService;
 
-        public UserController(IUsers users)
+        public UserController(IUsers users, IAuthService authService)
         {
             _users = users;
+            _authService = authService;
         }
 
         [HttpPost]
@@ -25,13 +27,21 @@ namespace CarRental.WebAPI.Controllers
             var registeredUser = await _users.RegisterUser(userRequestDTO);
             return registeredUser;
         }
-        
+
         [HttpPost]
         [Route("/api/users/login")]
         public async Task<UserLoginResponseDTO> LoginUser(UserLoginRequestDTO userRequestDTO)
         {
             UserLoginResponseDTO res = await _users.LoginUser(userRequestDTO);
             return res;
+        }
+
+        [HttpPost]
+        [Route("/api/users/verify")]
+        public async Task<MessageResponse> VerifyToken()
+        {
+            Users user = await _authService.ValidateToken();
+            return new MessageResponse { message = "Token is valid" };
         }
     }
 }
