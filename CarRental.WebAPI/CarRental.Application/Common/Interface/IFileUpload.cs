@@ -1,4 +1,5 @@
-﻿using CarRental.Application.DTOs.CarDTOs;
+﻿using CarRental.Application.DTOs;
+using CarRental.Application.DTOs.CarDTOs;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,6 @@ namespace CarRental.Application.Common.Interface
 {
     public interface IFileUpload
     {
-        Task<MessageResponse> UploadFileAsync(IFormFile file);
+        Task<UrlResponse> UploadFileAsync(IFormFile file);
     }
 }

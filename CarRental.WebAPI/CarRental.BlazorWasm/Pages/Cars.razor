@@ -1,13 +1,115 @@
 @page "/cars"
 @using CarRental.BlazorWasm.Services.ItemService
-
+@using System.Net.Http.Headers
+@using Models.Cars
 
 @inject CarService carService
+@inject ApiService apiService
+@inject IJSRuntime jsRuntime;
 
 <h3>Cars</h3>
-@*TODO: Make insertion modal here @Baibhab*@
-<TableTemplate TItem=Car ItemService=@carService TItemRequest=@CarRequest Editable=true Deletable=true Insertable=false/>
+
+<button @onclick='() => showInsertModal()'>Insert</button>
+
+<div class="modal fade" id="carInsertionModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div style="display:@showInsert">
+                    <div id="insertion">
+                        <div class="form-outline mb-4">
+                            <label class="form-label" for="form3Example3">Car Model</label>
+                            <input @bind="InsertionModel" type="text" id="form3Example" class="form-control form-control-lg"
+                                   placeholder="Please enter a model name" />
+                        </div><div class="form-outline mb-4">
+                            <label class="form-label" for="form3Example3">Number Plate</label>
+                            <input @bind="InsertionNumberPlate" type="text" id="form3Example" class="form-control form-control-lg"
+                                   placeholder="Please enter a number plate" />
+                        </div><div class="form-outline mb-4">
+                            <label class="form-label" for="form3Example3">Rent Price</label>
+                            <input @bind="InsertionRentPrice" type="text" id="form3Example" class="form-control form-control-lg"
+                                   placeholder="Please enter a rent price" />
+                        </div>
+                        <div class="form-outline mb-4">
+                            <label class="form-label" for="form3Example3">Color</label>
+                            <input @bind="InsertionColor" type="text" id="form3Example" class="form-control form-control-lg"
+                                   placeholder="Please choose a color" />
+                        </div>
+                        <div style="display: none">
+                            <label class="form-label" for="form3Example3">Color</label>
+                            <input @bind="InsertionPhotoUrl" type="text" id="form3Example" class="form-control form-control-lg"
+                                   placeholder="Please choose a color" />
+                        </div>
+                        <div class="form-outline mb-4">
+                            <label class="form-label" for="form3Example3">Upload Car Photo</label>
+                            <InputFile max-file-size="1536000" accept=".png,.jpg,.jpeg" OnChange="@UploadCarPhoto" single />
+                        </div>
+
+                        <button @onclick="() => InsertCar()">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<TableTemplate TItem=Car ItemService=@carService TItemRequest=@CarRequest Editable=true Deletable=true Insertable=false />
 
 @code {
+    bool showInsert = false;
+
+    string InsertionModel = "", InsertionNumberPlate = "", InsertionRentPrice = "", InsertionColor = "", InsertionPhotoUrl = "";
+
+    public async void InsertCar()
+    {
+        await carService.InsertItem(new CarInsertRequest
+            {
+                Color = InsertionColor,
+                Model = InsertionModel,
+                NumberPlate = InsertionNumberPlate,
+                PhotoUrl = InsertionPhotoUrl,
+                Price = float.Parse(InsertionRentPrice)
+            });
+    }
+
+    public async void UploadCarPhoto(InputFileChangeEventArgs e)
+    {
+        try
+        {
+            var file = e.File;
+            var filename = file.Name;
+            var fileContent = new StreamContent(file.OpenReadStream(maxAllowedSize: 1024 * 1000));
+            fileContent.Headers.ContentDisposition = new("form-data") { Name = "file", FileName = filename };
+            fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
+
+            using var content = new MultipartFormDataContent();
+            content.Add(content: fileContent, name: "image");
+
+            var response = await apiService.FileUpload(content);
+            Console.WriteLine(response.Url);
+            InsertionPhotoUrl = response.Url;
+        }
+        catch (Exception ex)
+        {
+            //ErrorMessage = ex.Message;
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await jsRuntime.InvokeVoidAsync("import", "/js/modalScript.js");
+
+
+    }
+
+    private void showInsertModal()
+    {
+        jsRuntime.InvokeVoidAsync("showModal", "carInsertionModal");
+    }
+
 
 }

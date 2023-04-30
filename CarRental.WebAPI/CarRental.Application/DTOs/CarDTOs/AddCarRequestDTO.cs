@@ -8,5 +8,6 @@ namespace CarRental.Application.DTOs.CarDTOs
         public float Price { get; set; }
         public string NumberPlate { get; set; }
         public string Color { get; set; }
+        public string? PhotoUrl { get; set; }
     }
 }

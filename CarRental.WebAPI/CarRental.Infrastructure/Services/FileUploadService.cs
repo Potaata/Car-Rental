@@ -1,4 +1,5 @@
 ﻿using CarRental.Application.Common.Interface;
+using CarRental.Application.DTOs;
 using CarRental.Application.DTOs.CarDTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -12,7 +13,7 @@ namespace CarRental.Infrastructure.Services
 {
     public class FileUploadService : IFileUpload
     {
-        public async Task<MessageResponse> UploadFileAsync(IFormFile file)
+        public async Task<UrlResponse> UploadFileAsync(IFormFile file)
         {
             // create random file name
 
@@ -30,7 +31,7 @@ namespace CarRental.Infrastructure.Services
             await file.CopyToAsync(fileStream);
 
 
-            return new MessageResponse { message = "File added successfully." };
+            return new UrlResponse { Url = "http://localhost:8000/" + fileName };
         }
     }
 }

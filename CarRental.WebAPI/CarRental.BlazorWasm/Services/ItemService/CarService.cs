@@ -26,12 +26,16 @@ namespace CarRental.BlazorWasm.Services.ItemService
             MessageResponse message = await _apiService.DELETE<MessageResponse>(EndPoint + '/' + id);
 
             return message.message;
-        }
+        }           
         public async Task<string> CreateItem(CarRequest car)
         {
-            MessageResponse message = await _apiService.POST<CarRequest, MessageResponse>(EndPoint, car);
+            throw new Exception("shouldn't have been called");
+        }
 
-            return message.message;
+        public async Task<string> InsertItem(CarInsertRequest car)
+        {
+            MessageResponse messageResponse = await _apiService.POST<CarInsertRequest, MessageResponse>(EndPoint, car);
+            return messageResponse.message;
         }
 
         public async Task<string> EditItem(int id, CarRequest car)

@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using System.Text;
 using CarRental.BlazorWasm.CustomException;
 using Microsoft.AspNetCore.Components;
+using System.Net;
 
 namespace CarRental.BlazorWasm.Services
 {
@@ -12,6 +13,7 @@ namespace CarRental.BlazorWasm.Services
 
         private readonly HttpClient _httpClient;
         private readonly NavigationManager _navManager;
+        private readonly SessionService _sessService;
         private static string API_URL = "https://localhost:7007";
 
 
@@ -21,10 +23,11 @@ namespace CarRental.BlazorWasm.Services
         // The API did not return 200 OK but did not send any errorMessage either. Please check the endpoint.
         public static string NoErrorMessage = "Something went wrong!";
 
-        public ApiService(HttpClient httpClient, NavigationManager navManager)
+        public ApiService(HttpClient httpClient, NavigationManager navManager, SessionService sessionService)
         {
             _httpClient = httpClient;
             _navManager = navManager;
+            _sessService = sessionService;
         }
 
         public async Task<ResponseDTO> GET<ResponseDTO>(string endpoint) where ResponseDTO : SuccessResponse
@@ -39,6 +42,9 @@ namespace CarRental.BlazorWasm.Services
             string fullQualifiedEndpoint = API_URL + endpoint;
             var bodyJSON = JsonConvert.SerializeObject(body);
             var content = new StringContent(bodyJSON, Encoding.UTF8, "application/json");
+
+
+            _httpClient.DefaultRequestHeaders.Authorization = _sessService.Token;
             var response = await _httpClient.PostAsync(fullQualifiedEndpoint, content);
             return await ParseResponse<ResponseDTO>(response);
         }
@@ -59,6 +65,12 @@ namespace CarRental.BlazorWasm.Services
             return await ParseResponse<ResponseDTO>(response);
         }
 
+        public async Task<UrlResponse> FileUpload(MultipartFormDataContent content) {
+            string fullQualifiedEndpoint = API_URL + "/api/FileUpload";
+            var response = await _httpClient.PostAsync(fullQualifiedEndpoint, content);
+            return await ParseResponse<UrlResponse>(response);
+        }
+
         public async Task<ResponseDTO> ParseResponse<ResponseDTO>(HttpResponseMessage response) where ResponseDTO : SuccessResponse
         {
             try
@@ -67,7 +79,7 @@ namespace CarRental.BlazorWasm.Services
 
                 if (response.IsSuccessStatusCode)
                 {
-                    _navManager.NavigateTo("Login");
+                   // _navManager.NavigateTo("Login");
                     var responseParsed = JsonConvert.DeserializeObject<ResponseDTO>(responseContent);
                     return responseParsed;
                 }

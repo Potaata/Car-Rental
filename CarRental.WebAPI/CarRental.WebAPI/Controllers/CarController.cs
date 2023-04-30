@@ -18,6 +18,7 @@ namespace CarRental.WebAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "User")]
         [Route("/api/cars")]
         public async Task<ListCarResponse> GetCars()
         {

@@ -1,4 +1,5 @@
 ﻿using CarRental.Application.Common.Interface;
+using CarRental.Application.DTOs;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CarRental.WebAPI.Controllers
@@ -15,7 +16,7 @@ namespace CarRental.WebAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> UploadFile(IFormFile file)
+        public async Task<UrlResponse> UploadFile(IFormFile file)
         {
             //if (file == null || file.Length == 0)
             //    return BadRequest("No file selected.");
@@ -38,7 +39,7 @@ namespace CarRental.WebAPI.Controllers
             //var fileName = file.FileName;
             var url = await _fileUploadService.UploadFileAsync(file);
 
-            return Ok(new { url });
+            return url;
         }
     }
 }

@@ -9,6 +9,8 @@ using CarRental.Application.DTOs.CarDTOs;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using CarRental.Infrastructure.Exceptions;
+using System.Runtime.InteropServices;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CarRental.Infrastructure.Services
 {
@@ -55,9 +57,10 @@ namespace CarRental.Infrastructure.Services
                 Model = car.Model,
                 Price = car.Price,
                 NumberPlate = car.NumberPlate,
-                Color = car.Color
+                Color = car.Color,
+                PhotoUrl = car.PhotoUrl
             };
-
+                
             _dbcontext.Cars.Add(newCar);
             await _dbcontext.SaveChangesAsync();
 
