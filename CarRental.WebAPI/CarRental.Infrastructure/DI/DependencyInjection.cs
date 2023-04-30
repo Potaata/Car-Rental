@@ -30,6 +30,7 @@ namespace CarRental.Infrastructure.DI
             
             services.AddScoped<ICars, CarServices>();
             services.AddScoped<IFileUpload, FileUploadService>();
+            services.AddScoped<IRentHistory, RentHistoryService>();
 
             return services;
         }

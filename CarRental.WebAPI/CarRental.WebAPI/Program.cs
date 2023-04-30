@@ -4,6 +4,7 @@ using CarRental.Infrastructure.DI;
 using Microsoft.AspNetCore.Diagnostics;
 using System.Net;
 using CarRental.Infrastructure.Exceptions;
+using CarRental.Domain.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,7 +17,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddInfrastructure(builder.Configuration);
 
-builder.Services.AddIdentityCore<IdentityUser>().AddRoles<IdentityRole>().AddEntityFrameworkStores<ApplicationDBContext>();
+builder.Services.AddIdentityCore<Users>().AddRoles<IdentityRole>().AddEntityFrameworkStores<ApplicationDBContext>();
 
 builder.Services.AddAuthorization();
 

@@ -13,5 +13,7 @@ namespace CarRental.Application.Common.Interface
         DbSet<Cars> Cars { get; set; }
         Task<int> SaveChangesAsync();
         DbSet<Notification> Notification { get; set; }
+        DbSet<RentHistory> RentHistory { get; set; }
+        DbSet<Users> Users { get; set; }
     }
 }

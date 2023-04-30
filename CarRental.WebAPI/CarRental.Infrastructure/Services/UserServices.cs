@@ -20,23 +20,23 @@ namespace CarRental.Infrastructure.Services
     public class UserServices : IUsers
     {
         private readonly IApplicationDBContext _dbcontext;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<Users> _userManager;
 
-        public UserServices(IApplicationDBContext dbContext, UserManager<IdentityUser> userManager)
+        public UserServices(IApplicationDBContext dbContext, UserManager<Users> userManager)
         {
             _dbcontext = dbContext;
             _userManager = userManager;
         }
         public async Task<MessageResponse> RegisterUser(UserRegisterRequestDTO users)
         {
-            var DBUser = new IdentityUser { UserName = users.Username, Email = users.Email };
+            var DBUser = new Users { UserName = users.Username, Email = users.Email, Address = users.Address, Name = users.Name,  };
             var result = await _userManager.CreateAsync(DBUser, users.RawPassword);
             if (!result.Succeeded)
             {
                 string error = result.Errors.ElementAt(0).Description;
                 throw new ApiException(error);
             }
-
+            
             await _userManager.AddToRoleAsync(DBUser, "User");
             return new MessageResponse { message = "Registration succeessful!" };
         }

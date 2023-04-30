@@ -12,7 +12,7 @@ using CarRental.Domain.Shared;
 
 namespace CarRental.Infrastructure.Persistence
 {
-    public class ApplicationDBContext : IdentityDbContext<IdentityUser, IdentityRole, string>, IApplicationDBContext
+    public class ApplicationDBContext : IdentityDbContext<Users, IdentityRole, string>, IApplicationDBContext
     {
         private readonly IDateTime _dateTime;
 
@@ -23,7 +23,9 @@ namespace CarRental.Infrastructure.Persistence
 
         public DbSet<Cars> Cars { get; set; }
         public DbSet<Notification> Notification { get; set; }
-
+        public DbSet<RentHistory> RentHistory { get; set; }
+        public DbSet<Users> Users { get; set; }
+        
         public async Task<int> SaveChangesAsync()
         {
             return await base.SaveChangesAsync();
