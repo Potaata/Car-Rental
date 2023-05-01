@@ -3,6 +3,7 @@ using System;
 using CarRental.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CarRental.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20230501112903_WIP")]
+    partial class WIP
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -193,6 +196,7 @@ namespace CarRental.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("DocumentUrl")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Email")
@@ -280,21 +284,21 @@ namespace CarRental.Infrastructure.Migrations
                         new
                         {
                             Id = "1",
-                            ConcurrencyStamp = "f89ca7fd-d3af-488e-b5bf-7d16402b3b36",
+                            ConcurrencyStamp = "2170cc81-c4ef-4792-b1fa-67eea1313d1d",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = "2",
-                            ConcurrencyStamp = "cd96c51d-4a02-4868-956a-6a11a7498bc5",
+                            ConcurrencyStamp = "d9858aaf-756f-4eba-ba86-46a51018024f",
                             Name = "Staff",
                             NormalizedName = "STAFF"
                         },
                         new
                         {
                             Id = "3",
-                            ConcurrencyStamp = "20b4b42c-d594-4a00-a64c-978f05bcc34f",
+                            ConcurrencyStamp = "fa2f8485-ee4c-4131-bcad-103bc5152359",
                             Name = "User",
                             NormalizedName = "USER"
                         });

@@ -29,7 +29,7 @@ namespace CarRental.Infrastructure.Services
         }
         public async Task<MessageResponse> RegisterUser(UserRegisterRequestDTO users)
         {
-            var DBUser = new Users { UserName = users.Username, Email = users.Email, Address = users.Address, Name = users.Name,  };
+            var DBUser = new Users { UserName = users.Username, Email = users.Email, Address = users.Address, Name = users.Name};
             var result = await _userManager.CreateAsync(DBUser, users.RawPassword);
             if (!result.Succeeded)
             {

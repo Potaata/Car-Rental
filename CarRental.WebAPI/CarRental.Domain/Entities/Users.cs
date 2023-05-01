@@ -8,9 +8,11 @@ using System.Threading.Tasks;
 
 namespace CarRental.Domain.Entities
 {
+    
     public class Users : IdentityUser
     {
         public string Name {get; set;}
         public string Address {get; set;}
+        public string? DocumentUrl { get; set; }
     }
 }

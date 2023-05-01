@@ -18,25 +18,7 @@ namespace CarRental.WebAPI.Controllers
         [HttpPost]
         public async Task<UrlResponse> UploadFile(IFormFile file)
         {
-            //if (file == null || file.Length == 0)
-            //    return BadRequest("No file selected.");
-
-            //await using var fileStream = new FileStream(file.FileName, FileMode.Create, FileAccess.Write);
-            //await file.CopyToAsync(fileStream);
-
-
-            //using var memoryStream = new MemoryStream();
-            //try
-            //{
-            //    await file.CopyToAsync(memoryStream);
-            //}
-            //catch (Exception ex)
-            //{
-            //    // Log or handle the exception
-            //    return BadRequest("Error copying file to memory stream.");
-            //}
-
-            //var fileName = file.FileName;
+           
             var url = await _fileUploadService.UploadFileAsync(file);
 
             return url;

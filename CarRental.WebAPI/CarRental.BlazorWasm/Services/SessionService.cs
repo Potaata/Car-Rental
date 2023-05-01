@@ -7,6 +7,7 @@ using CarRental.BlazorWasm.Pages;
 using Newtonsoft.Json;
 using System.Text;
 using CarRental.BlazorWasm.Models;
+using System.Net.Http.Headers;
 
 namespace CarRental.BlazorWasm.Services
 {
@@ -33,6 +34,9 @@ namespace CarRental.BlazorWasm.Services
             Role = role;
 
             await _jsRuntime.InvokeVoidAsync("localStorage.setItem", "$$token$$" ,Token);
+
+
+             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("", token);
         }
 
         public async Task Logout()

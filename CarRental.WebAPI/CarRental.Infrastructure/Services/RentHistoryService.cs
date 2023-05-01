@@ -31,6 +31,10 @@ namespace CarRental.Infrastructure.Services
 
         public async Task<MessageResponse> AddRentHistory(RentHistory newRent)
         {
+            if (DateTime.Compare(newRent.ToDate, newRent.FromDate) < 0)
+            {
+                throw new ApiException("To Date is earlier than From Date");
+            }
             bool isOverlap = await _dbcontext.RentHistory
                          .Where(rh => rh.CarId == newRent.CarId &&
                                       (rh.Status == StatusEnums.Approved || rh.Status == StatusEnums.Rented) &&
@@ -44,6 +48,8 @@ namespace CarRental.Infrastructure.Services
             }
             else
             {
+                
+
                 _dbcontext.RentHistory.Add(newRent);
                 await _dbcontext.SaveChangesAsync();
                 return new MessageResponse { message = "Rent history added successfully." };
