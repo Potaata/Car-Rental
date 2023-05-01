@@ -33,6 +33,7 @@ namespace CarRental.WebAPI.Controllers
         [Route("api/user/add-rent")]
         public async Task<MessageResponse> AddRentHistory(RentHistory newRent)
         {
+            newRent.UserId = (await _authService.GetSessionUser()).Id;
             return await _rentHistory.AddRentHistory(newRent);
         }
 

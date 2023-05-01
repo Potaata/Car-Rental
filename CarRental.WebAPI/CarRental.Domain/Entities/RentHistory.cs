@@ -13,7 +13,7 @@ namespace CarRental.Domain.Entities
         public int Id { get; set; }
 
         [ForeignKey("User")]
-        public string UserId { get; set; }
+        public string? UserId { get; set; }
 
         [ForeignKey("User")]
         public string? ApprovedBy { get; set; }

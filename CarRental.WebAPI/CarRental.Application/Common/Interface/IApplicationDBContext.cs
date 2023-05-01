@@ -15,5 +15,6 @@ namespace CarRental.Application.Common.Interface
         DbSet<Notification> Notification { get; set; }
         DbSet<RentHistory> RentHistory { get; set; }
         DbSet<Users> Users { get; set; }
+        DbSet<DamageRequest> DamageRequest { get; set; }
     }
 }

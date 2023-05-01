@@ -6,6 +6,7 @@ using Microsoft.JSInterop;
 using Syncfusion.Blazor;
 using Microsoft.AspNetCore.Components;
 using CarRental.BlazorWasm.Services.ItemService;
+using CarRental.BlazorWasm.Pages;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -19,6 +20,7 @@ builder.Services.AddSingleton<SessionService>();
 builder.Services.AddSingleton<LoginService>();
 builder.Services.AddSingleton<AuthService>();
 builder.Services.AddSingleton<CarService>();
+
 
 builder.Services.AddSyncfusionBlazor();
 

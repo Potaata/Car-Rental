@@ -25,6 +25,7 @@ namespace CarRental.Infrastructure.Persistence
         public DbSet<Notification> Notification { get; set; }
         public DbSet<RentHistory> RentHistory { get; set; }
         public DbSet<Users> Users { get; set; }
+        public DbSet<DamageRequest> DamageRequest { get; set; }
         
         public async Task<int> SaveChangesAsync()
         {

@@ -7,6 +7,7 @@ using CarRental.Infrastructure.Exceptions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,6 +36,7 @@ namespace CarRental.Infrastructure.Services
             {
                 throw new ApiException("To Date is earlier than From Date");
             }
+            
             bool isOverlap = await _dbcontext.RentHistory
                          .Where(rh => rh.CarId == newRent.CarId &&
                                       (rh.Status == StatusEnums.Approved || rh.Status == StatusEnums.Rented) &&
@@ -42,6 +44,24 @@ namespace CarRental.Infrastructure.Services
                                       rh.ToDate >= newRent.FromDate)
                          .AnyAsync();
 
+            var unpaidDamage = from rh in _dbcontext.RentHistory
+                           join dr in _dbcontext.DamageRequest on rh.Id equals dr.RentID
+                           where (dr.isPaid == false && rh.UserId == newRent.UserId)
+                           select new DamageRequest
+                           {
+                               Id = dr.Id,
+                               Description = dr.Description,
+                               RentID = dr.RentID,
+                               Cost = dr.Cost,
+                               isPaid = dr.isPaid
+
+
+                           };
+
+            if (unpaidDamage.Count() > 0) {
+                throw new ApiException("Pay your damage cost first");
+            }
+            
             if (isOverlap)
             {
                 return new MessageResponse { message = "Rent history overlaps with existing entries." };
