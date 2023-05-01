@@ -21,6 +21,14 @@ namespace CarRental.BlazorWasm.Services.ItemService
             return cars.cars;
         }
 
+        public async Task<List<CarInsertRequest>> GetCarsWithFile()
+        {
+
+            CarListWithFileResponse cars = await _apiService.GET<CarListWithFileResponse>(EndPoint);
+
+            return cars.cars;
+        }
+
         public async Task<string> DeleteItem(int id)
         {
             MessageResponse message = await _apiService.DELETE<MessageResponse>(EndPoint + '/' + id);

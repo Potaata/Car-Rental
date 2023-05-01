@@ -1,73 +1,93 @@
 ﻿@page "/Home"
 @using System.Web
 @using System.Text.RegularExpressions;
+@using CarRental.BlazorWasm.Services.ItemService
+@using CarRental.BlazorWasm.Models.Cars;
+@inject CarService carService
+
 
 <PageTitle>हजुरको Car Rental</PageTitle>
 
 
 
 <div class="bg-image"
-	 style="
+     style="
             background-image: url('https://cdni.autocarindia.com/utils/imageresizer.ashx?n=https://cms.haymarketindia.net/model/uploads/modelimages/Hyundai-Grand-i10-Nios-200120231541.jpg');
             height: 70vh; max-width:100%;
             ">
-	<div class="mask" style="background-color: rgba(0, 0, 0, 0.6); height: 70vh;">
-		<div class="row">
-			<div class="mask-text">
-				<div class="col-md-12 col-lg-7 offset-lg-1 offset-xl-2">
+    <div class="mask" style="background-color: rgba(0, 0, 0, 0.6); height: 70vh;">
+        <div class="row">
+            <div class="mask-text">
+                <div class="col-md-12 col-lg-7 offset-lg-1 offset-xl-2">
 
-					<h1 class="text-white mb-0">Welcome to हजुरको Car Rental Services</h1>
-					<a href="/cars" class="btn btn-outline-info">View Cars</a>
-				</div>
+                    <h1 class="text-white mb-0">Welcome to हजुरको Car Rental Services</h1>
+                </div>
 
-			</div>
+            </div>
 
-		</div>
+        </div>
 
-	</div>
+    </div>
 </div>
 
 
 <div class="button-container">
-	<a href="/login" class="btn btn-outline-secondary me-3">Login</a>
-	<a href="/register" class="btn btn-outline-secondary">Register</a>
+    <a href="/login" class="btn btn-outline-secondary me-3">Login</a>
+    <a href="/register" class="btn btn-outline-secondary">Register</a>
 </div>
 
 
- <div class="container">
-		<div class="row">
-			<div class="col-lg-8 offset-lg-2 text-center">
-				<div class="section-title">
-					<h3>Suggestions for You</h3>
-				</div>
-			</div>
-		</div>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 offset-lg-2 text-center">
+            <div class="section-title">
+                <h3>Suggestions for You</h3>
+
+            </div>
+        </div>
+    </div>
 </div>
-<div class="row">
-	<div class="col-lg-4 col-md-6 text-center">
-		<section id="gallery">
-			<div class="container">
-				<div class="row">
-					<div class="single-product-item">
-						<img src="https://imgd-ct.aeplcdn.com/664x415/n/vjruesa_1463332.jpg?q=75" alt="" class="card-img-top">
-						<div class="card-body">	
-							<h3 class="card-title">Model</h3>	
-						</div>	
-						<ul class="list-group list-group-flush">
-							<li class="card-text list-group-item">Color</li>
-							<li class="card-text list-group-item">Plate</li>
-							<h3 class="card-subtitle mb-2 text-muted ">Price</h3>
-						</ul>
-						<hr/>
-						<a href="" class="btn btn-outline-success btn-sm">View</a>		
-					</div>
-				</div>	
-			</div>
-		</section>
-	</div>
-</div>
+@for (int i = 0; i <= allCars.Count / 3; i ++)
+{
+    <div class="row">
+        @for (int j = 0; j < 3; j++)
+        {
+            int ind = j + i * 3;
+            @if(ind >= allCars.Count){
+                continue;
+            }
+            CarInsertRequest curCar = allCars[ind];
+            <div class="col-lg-4 col-md-6 text-center">
+                <section id="gallery">
+                    <div class="container">
+                        <div class="row">
+                            <div class="single-product-item">
+                                <img src="@curCar.PhotoUrl" alt="" class="card-img-top">
+                                <div class="card-body">
+                                    <h3 class="card-title">@curCar.Model</h3>
+                                </div>
+                                <ul class="list-group list-group-flush">
+                                    <li class="card-text list-group-item">@curCar.Color</li>
+                                    <li class="card-text list-group-item">@curCar.NumberPlate</li>
+                                    <h3 class="card-subtitle mb-2 text-muted ">@curCar.Price</h3>
+                                </ul>
+                                <hr />
+                                <a href="" class="btn btn-outline-success btn-sm">View</a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        }
+    </div>
+}
 
 
+@code {
+    private List<CarInsertRequest> allCars = new List<CarInsertRequest>();
 
-
-
+    protected override async Task OnInitializedAsync()
+    {
+        allCars = await carService.GetCarsWithFile();
+    }
+}

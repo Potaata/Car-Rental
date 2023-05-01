@@ -61,8 +61,7 @@
             </div>
         </div>
     </div>
-</div>
-
+    </div>
 <TableTemplate TItem=Car ItemService=@carService TItemRequest=@CarRequest Editable=true Deletable=true Insertable=false />
 
 <style>
@@ -87,6 +86,8 @@
                 Price = float.Parse(InsertionRentPrice)
             });
     }
+
+    List<Car> allCars = new List<Car>(); 
 
     public async void UploadCarPhoto(InputFileChangeEventArgs e)
     {
@@ -114,7 +115,6 @@
     protected override async Task OnInitializedAsync()
     {
         await jsRuntime.InvokeVoidAsync("import", "/js/modalScript.js");
-
 
     }
 

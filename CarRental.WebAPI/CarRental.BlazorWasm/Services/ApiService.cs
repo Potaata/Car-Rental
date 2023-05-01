@@ -92,7 +92,9 @@ namespace CarRental.BlazorWasm.Services
             }
             catch (HttpRequestException e)
             {
-                throw new ApiException(FailedToFetchError);
+                //throw new ApiException(FailedToFetchError);
+                _navManager.NavigateTo("404", true);
+                throw new Exception("This exception should not occur.");
             }
         }
     }
