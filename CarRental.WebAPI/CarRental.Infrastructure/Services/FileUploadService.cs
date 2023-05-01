@@ -1,6 +1,7 @@
 ﻿using CarRental.Application.Common.Interface;
 using CarRental.Application.DTOs;
 using CarRental.Application.DTOs.CarDTOs;
+using CarRental.Infrastructure.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -17,6 +18,10 @@ namespace CarRental.Infrastructure.Services
         {
             // create random file name
 
+            if (file.Length > 1572864)
+            {
+                throw new ApiException("The file size is greater than 1.5 MB.");
+            }
 
             var randomFileName = $"{Path.GetRandomFileName()}{Path.GetRandomFileName()}";
 
