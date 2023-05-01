@@ -1,13 +1,10 @@
 ﻿@page "/car-requests"
 
-<div class="container">
-    <div class="row d-flex justify-content-center align-items-center h-100">
-        <div class="col-lg-8 mb-5 mb-lg-0 text-center">
-            <h3 style="font-family: Arial Rounded MT; padding: 10px 24px;">Car Request</h3>
-        </div>
-    </div>
-</div>
+@using CarRental.BlazorWasm.Services.ItemService;
 
+@inject PendingHistoryService pendingHistoryService
+
+<h3>Car Request</h3>
 
 <table class="table table-striped table-dark">
     <thead>
@@ -21,20 +18,38 @@
         </tr>
     </thead>
     <tbody>
-        <tr>
-            <td>John Doe</td>
-            <td>Hyundai Ioniq</td>
-            <td>$75</td>
-            <td>3rd May, 2023</td>
-            <td>10th May, 2023</td>
-            <td>
-                <button class="btn btn-success">Approve</button>
-                <button class="btn btn-danger">Deny</button>
-            </td>
-        </tr>
+        @foreach (var request in allPendingRequest)
+        {
+            <tr>
+                <td>@request.UserName</td>
+                <td>@request.CarModel</td>
+                <td>@request.Price</td>
+                <td>@request.FromDate.ToShortDateString()</td>
+                <td>@request.ToDate.ToShortDateString()</td>
+                <td>
+                    <button class="btn btn-success" @onclick="() => ApproveRequest(request.Id)">Approve</button>
+                    <button class="btn btn-danger" @onclick="() => DenyRequest(request.Id)">Deny</button>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
 
 @code {
+    List<PendingHistory> allPendingRequest = new List<PendingHistory>();
 
+    protected override async Task OnInitializedAsync()
+    {
+        allPendingRequest = await pendingHistoryService.GetAll();
+    }
+
+    private async Task ApproveRequest(int id)
+    {
+        await pendingHistoryService.ApproveRequest(id);
+    }
+
+    private async Task DenyRequest(int id)
+    {
+        await pendingHistoryService.DenyRequest(id);
+    }
 }

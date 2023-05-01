@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CarRental.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20230501112903_WIP")]
-    partial class WIP
+    [Migration("20230501152244_removeURL")]
+    partial class removeURL
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -195,10 +195,6 @@ namespace CarRental.Infrastructure.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("text");
 
-                    b.Property<string>("DocumentUrl")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
@@ -284,21 +280,21 @@ namespace CarRental.Infrastructure.Migrations
                         new
                         {
                             Id = "1",
-                            ConcurrencyStamp = "2170cc81-c4ef-4792-b1fa-67eea1313d1d",
+                            ConcurrencyStamp = "d80be2ac-3eb1-4f9c-bde4-bb98aae1e636",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = "2",
-                            ConcurrencyStamp = "d9858aaf-756f-4eba-ba86-46a51018024f",
+                            ConcurrencyStamp = "0adad5d3-d0fa-4dad-80dc-65c9f195527a",
                             Name = "Staff",
                             NormalizedName = "STAFF"
                         },
                         new
                         {
                             Id = "3",
-                            ConcurrencyStamp = "fa2f8485-ee4c-4131-bcad-103bc5152359",
+                            ConcurrencyStamp = "e3917271-6cb1-499c-a988-3100350d76a9",
                             Name = "User",
                             NormalizedName = "USER"
                         });

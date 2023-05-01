@@ -13,6 +13,6 @@ namespace CarRental.Domain.Entities
     {
         public string Name {get; set;}
         public string Address {get; set;}
-        public string? DocumentUrl { get; set; }
+        public string? Documenturl { get; set; }
     }
 }

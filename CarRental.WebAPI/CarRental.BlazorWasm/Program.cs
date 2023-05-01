@@ -19,6 +19,8 @@ builder.Services.AddSingleton<ApiService>();
 builder.Services.AddSingleton<SessionService>();
 builder.Services.AddSingleton<LoginService>();
 builder.Services.AddSingleton<AuthService>();
+builder.Services.AddSingleton<RentService>();
+builder.Services.AddSingleton<PendingHistoryService>();
 builder.Services.AddSingleton<CarService>();
 
 

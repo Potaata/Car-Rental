@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CarRental.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20230501142048_WIP2")]
-    partial class WIP2
+    [Migration("20230501152154_NewUpdate")]
+    partial class NewUpdate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -283,21 +283,21 @@ namespace CarRental.Infrastructure.Migrations
                         new
                         {
                             Id = "1",
-                            ConcurrencyStamp = "f89ca7fd-d3af-488e-b5bf-7d16402b3b36",
+                            ConcurrencyStamp = "138b980b-f8ab-4b61-805c-05d2bb0590d1",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = "2",
-                            ConcurrencyStamp = "cd96c51d-4a02-4868-956a-6a11a7498bc5",
+                            ConcurrencyStamp = "de387920-abad-40d8-8e51-43aa35f12959",
                             Name = "Staff",
                             NormalizedName = "STAFF"
                         },
                         new
                         {
                             Id = "3",
-                            ConcurrencyStamp = "20b4b42c-d594-4a00-a64c-978f05bcc34f",
+                            ConcurrencyStamp = "5a60455d-c12a-4984-b98e-7d5f7639a338",
                             Name = "User",
                             NormalizedName = "USER"
                         });

@@ -3,23 +3,30 @@
 @inject NavigationManager navManager;
 @inject SessionService sessService;
 
-<div class="page">
-    @if (checkShowNavBar())
-    {
-        //if true, we show navbar
-        <div class="sidebar">
-            <NavMenu />
-        </div>
-    }
+@try
+{
 
-    <!--Render the rest of the body of the current URI!-->
-    <main>
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
+    <div class="page">
+        @if (checkShowNavBar())
+        {
+            //if true, we show navbar
+            <div class="sidebar">
+                <NavMenu />
+            </div>
+        }
 
-</div>
+        <!--Render the rest of the body of the current URI!-->
+        <main>
+            <article class="content px-4">
+                @Body
+            </article>
+        </main>
+
+    </div>
+}
+catch (HttpRequestException e){
+    navManager.NavigateTo("404", true);
+}
 
 @code {
     List<string> pagesWithoutNavBar = new List<string>
@@ -52,7 +59,7 @@
 
         if (await checkRedirectToLogin())
         {
-            navManager.NavigateTo("/login", true);
+            //navManager.NavigateTo("/login", true);
         }
         else if (sessService.Token != null)
         {

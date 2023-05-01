@@ -1,66 +1,140 @@
 ﻿@page "/car/{Id:int}"
+@using CarRental.BlazorWasm.Services.ItemService
+@using CarRental.BlazorWasm.Models.Cars
 
-  <div class="container">
-      <section class="mx-auto hv-80" style="max-width: 25rem;">
-      
-           <div class="card">
-                  <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
-                    <img src="https://www.freepnglogos.com/uploads/honda-car-png/honda-car-upcoming-new-honda-cars-india-new-honda-3.png" class="img-fluid" />
-       
-                  </div>
-                  <hr/>
-                  <div class="card-body">
-                         <div class="container">
-                              <div class="row d-flex namediv justify-content-center align-items-center h-40">
-                                   <div class="col-lg-6 mb-3 mb-lg-0 text-center">
-                                        <p class="h3"><span>Car @Id</span></p>
-                                   </div>
-                               </div>
-                         </div>
-                         <hr class="my-3"/>
-                         <div class="d-flex align-items-end mt-4 mb-2">
-                               <p class="h4 m-0"><span class="pe-1">ZAZ</span></p>
-                         </div>
-                         <div class="d-flex justify-content-between mb-2">
-                               <p class="textmuted">Color</p>
-                               <p class="fs-14 fw-bold"><span class="fas fa-dollar-sign pe-1"></span>Pink</p>
-                         </div>
-                         <div class="d-flex justify-content-between mb-2">
-                               <p class="textmuted">Number Plate</p>
-                               <p class="fs-14 fw-bold">44000</p>
-                         </div>
-                      
-                         <div class="d-flex justify-content-between mb-3">
-                               <p class="textmuted fw-bold">Price</p>
-                               <div class="d-flex align-text-top ">
-                               <span class="fas fa-dollar-sign mt-1 pe-1 fs-14 "></span><span class="h4">50000</span>
-                               </div>
-                         </div>
-       
-                         <div class="row m-0">
-                             <div class="col-12  mb-4 p-0">
-                                 <div class="btn btn-primary">Rent<span class="fas fa-arrow-right ps-2"></span>
-                                 </div>
-                             </div>
-                         </div>
+@inject CarService carService
+@inject NavigationManager navManager
+@inject IJSRuntime jsRuntime
+@inject RentService rentService;
+
+@if (currCar != null)
+{
+
+    <div class="container">
+        <section class="mx-auto hv-80" style="max-width: 25rem;">
+
+            <div class="card">
+                <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
+                    <img src="@currCar.PhotoUrl" class="img-fluid" />
+
+                </div>
+                <hr />
+                <div class="card-body">
+                    <div class="container">
+                        <div class="row d-flex namediv justify-content-center align-items-center h-40">
+                            <div class="col-lg-6 mb-3 mb-lg-0 text-center">
+                                <p class="h3"><span>Car @Id</span></p>
+                            </div>
+                        </div>
                     </div>
-           </div>
-    
-       </section>
+                    <hr class="my-3" />
+                    <div class="d-flex align-items-end mt-4 mb-2">
+                        <p class="h4 m-0"><span class="pe-1">@currCar.Model</span></p>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <p class="textmuted">Color</p>
+                        <p class="fs-14 fw-bold"><span class="fas fa-dollar-sign pe-1"></span>@currCar.Color</p>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <p class="textmuted">Number Plate</p>
+                        <p class="fs-14 fw-bold">@currCar.NumberPlate</p>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-3">
+                        <p class="textmuted fw-bold">Price</p>
+                        <div class="d-flex align-text-top ">
+                            <span class="fas fa-dollar-sign mt-1 pe-1 fs-14 "></span><span class="h4">@currCar.Price / Day</span>
+                        </div>
+                    </div>
+
+                    <div class="row m-0">
+                        <div class="col-12  mb-4 p-0">
+                            <button @onclick="()=> showRentModal()" class="btn btn-primary" data-toggle="modal" data-target="#rentModal">Rent<span class="fas fa-arrow-right ps-2"></span></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </div>
+
+}
+<div class="modal fade" id="rentModal" tabindex="-1" aria-labelledby="rentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="rentModalLabel">Rent</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="rentFrom" class="form-label">Rent From</label>
+                        <input type='date' @onchange="(ChangeEventArgs e) => setFromDate(e.Value.ToString())" id="rentFrom" placeholder="Select Date" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="rentTo" class="form-label">Rent To</label>
+                        <input type='date' @onchange="(ChangeEventArgs e) => setToDate(e.Value.ToString())" id="rentTo" placeholder="Select Date" />
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button @onclick = "SubmitRentForm" type="button" class="btn btn-primary">Rent</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <style>
     .namediv {
-        display:flex;
+        display: flex;
         align-content: center;
-        text-align:center;
-        justify-content:center;
-      
+        text-align: center;
+        justify-content: center;
     }
 </style>
 
 @code {
-	[Parameter]
-	public int Id { get; set; }
-	int a = 0;
+    [Parameter]
+    public int Id { get; set; }
+    int a = 0;
+
+    private CarInsertRequest currCar;
+
+    DateTime from, to;
+
+    protected override async Task OnInitializedAsync()
+    {
+        currCar = (await carService.GetCarsWithFile()).FirstOrDefault(x => x.Id == Id);
+        if (currCar == null)
+        {
+            navManager.NavigateTo("/home", true);
+        }
+        await jsRuntime.InvokeVoidAsync("import", "/js/modalScript.js");
+    }
+
+    private void showRentModal()
+    {
+        jsRuntime.InvokeVoidAsync("showModal", "rentModal");
+
+    }
+
+    private void setFromDate(string date)
+    {
+        from = DateTime.Parse(date);
+    }
+
+    private void setToDate(string date)
+    {
+        to = DateTime.Parse(date);
+    }
+
+    private async void SubmitRentForm()
+    {
+        try{
+            await rentService.RentCar(Id, from, to, currCar.Price);
+        }catch(ApiException ex){
+
+        }
+    }
 }

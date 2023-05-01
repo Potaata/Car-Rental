@@ -17,10 +17,12 @@ namespace CarRental.Infrastructure.Services
     public class CarServices: ICars
     {
         private readonly IApplicationDBContext _dbcontext;
+        private readonly IAuthService _authService;
 
-        public CarServices(IApplicationDBContext dbContext)
+        public CarServices(IApplicationDBContext dbContext, IAuthService authService)
         {
             _dbcontext = dbContext;
+            _authService = authService;
         }
 
         public async Task<ListCarResponse> GetCars()
@@ -69,6 +71,7 @@ namespace CarRental.Infrastructure.Services
 
         public async Task<MessageResponse> UpdateCar(int id, AddCarRequestDTO car)
         {
+            await _authService.GetSessionUser(new List<string>{ "Admin"});
             Cars carToUpdate = await _dbcontext.Cars.FindAsync(id);
 
             if (carToUpdate == null)

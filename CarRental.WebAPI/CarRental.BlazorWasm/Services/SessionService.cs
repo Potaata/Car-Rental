@@ -8,6 +8,8 @@ using Newtonsoft.Json;
 using System.Text;
 using CarRental.BlazorWasm.Models;
 using System.Net.Http.Headers;
+using Microsoft.AspNetCore.Components;
+using System.Net;
 
 namespace CarRental.BlazorWasm.Services
 {
@@ -19,24 +21,24 @@ namespace CarRental.BlazorWasm.Services
 
         private readonly IJSRuntime _jsRuntime;
         private readonly HttpClient _httpClient;
-
-        public SessionService(IJSRuntime jsRuntime, HttpClient httpClient)
+        private readonly NavigationManager _navManager;
+        public SessionService(IJSRuntime jsRuntime, HttpClient httpClient, NavigationManager navManager)
         {
             _jsRuntime = jsRuntime;
             _httpClient = httpClient;
+            _navManager = navManager;
         }
 
 
-        public async void SetSession(string token, string username, string role)
+        public async Task SetSession(string token, string username, string role)
         {
             Token = token;
             Username = username;
             Role = role;
 
             await _jsRuntime.InvokeVoidAsync("localStorage.setItem", "$$token$$" ,Token);
-
-
-             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("", token);
+             AuthenticationHeaderValue v = new AuthenticationHeaderValue("Bearer", token ?? "NOTOKEN");
+            _httpClient.DefaultRequestHeaders.Authorization = v;
         }
 
         public async Task Logout()
@@ -52,11 +54,11 @@ namespace CarRental.BlazorWasm.Services
             string token = await _jsRuntime.InvokeAsync<string>("localStorage.getItem", "$$token$$");
             try
             {
-                var bodyJSON = JsonConvert.SerializeObject(new TokenRequest { Token = token });
+                var bodyJSON = JsonConvert.SerializeObject(new TokenRequest { Token = token ?? "NOTOKEN" });
                 var content = new StringContent(bodyJSON, Encoding.UTF8, "application/json");
                 var response = await _httpClient.PostAsync("https://localhost:7007/api/users/verify", content);
                 LoginResponse loginResp = await ParseResponse<LoginResponse>(response);
-                SetSession(loginResp.Token, loginResp.Username, loginResp.Role);
+                await SetSession(loginResp.Token, loginResp.Username, loginResp.Role);
                 return true;
             }
             catch (ApiException)
@@ -85,6 +87,11 @@ namespace CarRental.BlazorWasm.Services
                 }
                 else
                 {
+                    if (response.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        _navManager.NavigateTo("404", true);
+                        throw new Exception("This exception should not occur.");
+                    }
                     ErrorResponse errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(responseContent);
 
                     if (errorResponse != null && errorResponse.ErrorMessage != null)
@@ -96,7 +103,8 @@ namespace CarRental.BlazorWasm.Services
             }
             catch (HttpRequestException)
             {
-                throw new ApiException("");
+                _navManager.NavigateTo("404", true);
+                throw new Exception("This exception should not occur.");
             }
         }
     }

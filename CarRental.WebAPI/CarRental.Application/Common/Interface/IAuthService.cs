@@ -12,6 +12,6 @@ namespace CarRental.Application.Common.Interface
     public interface IAuthService
     {
         public Task<UserLoginResponseDTO> ValidateToken(string token);
-        public Task<Users> GetSessionUser();
+        public Task<Users> GetSessionUser(List<string> Roles);
     }
 }

@@ -5,74 +5,56 @@
 namespace CarRental.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class WIP2 : Migration
+    public partial class NewUpdate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterColumn<string>(
-                name: "DocumentUrl",
-                table: "AspNetUsers",
-                type: "text",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "text");
-
             migrationBuilder.UpdateData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
                 keyValue: "1",
                 column: "ConcurrencyStamp",
-                value: "f89ca7fd-d3af-488e-b5bf-7d16402b3b36");
+                value: "138b980b-f8ab-4b61-805c-05d2bb0590d1");
 
             migrationBuilder.UpdateData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
                 keyValue: "2",
                 column: "ConcurrencyStamp",
-                value: "cd96c51d-4a02-4868-956a-6a11a7498bc5");
+                value: "de387920-abad-40d8-8e51-43aa35f12959");
 
             migrationBuilder.UpdateData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
                 keyValue: "3",
                 column: "ConcurrencyStamp",
-                value: "20b4b42c-d594-4a00-a64c-978f05bcc34f");
+                value: "5a60455d-c12a-4984-b98e-7d5f7639a338");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterColumn<string>(
-                name: "DocumentUrl",
-                table: "AspNetUsers",
-                type: "text",
-                nullable: false,
-                defaultValue: "",
-                oldClrType: typeof(string),
-                oldType: "text",
-                oldNullable: true);
-
             migrationBuilder.UpdateData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
                 keyValue: "1",
                 column: "ConcurrencyStamp",
-                value: "2170cc81-c4ef-4792-b1fa-67eea1313d1d");
+                value: "8d64f6e6-89e3-4783-896a-4b866b62a3fa");
 
             migrationBuilder.UpdateData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
                 keyValue: "2",
                 column: "ConcurrencyStamp",
-                value: "d9858aaf-756f-4eba-ba86-46a51018024f");
+                value: "715e2c79-fdec-4769-a88d-827548f21399");
 
             migrationBuilder.UpdateData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
                 keyValue: "3",
                 column: "ConcurrencyStamp",
-                value: "fa2f8485-ee4c-4131-bcad-103bc5152359");
+                value: "64aac240-df85-457d-9348-a632aa5ae5f8");
         }
     }
 }

@@ -82,6 +82,11 @@ namespace CarRental.BlazorWasm.Services
                 }
                 else
                 {
+                    if(response.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        _navManager.NavigateTo("404", true);
+                        throw new Exception("This exception should not occur.");
+                    }
                     ErrorResponse errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(responseContent);
 
                     if (errorResponse != null && errorResponse.ErrorMessage != null)

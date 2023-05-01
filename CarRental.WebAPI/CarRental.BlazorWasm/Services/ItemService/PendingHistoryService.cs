@@ -7,7 +7,7 @@ namespace CarRental.BlazorWasm.Services.ItemService
     {
         private readonly ApiService _apiService;
 
-        public string EndPoint = "/api/pending-requests";
+        public string EndPoint = "/api/admin/renthistory";
         public PendingHistoryService(ApiService apiService)
         {
             _apiService = apiService;
@@ -15,8 +15,8 @@ namespace CarRental.BlazorWasm.Services.ItemService
         public async Task<List<PendingHistory>> GetAll()
         {
             PendingHistoryResponse pendingHistories = await _apiService.GET<PendingHistoryResponse>(EndPoint);
-
-            return pendingHistories.pendingHistories;
+            List<PendingHistory> pendingHistoryList = pendingHistories.pendingHistories.Where(x => x.Status == "Pending").ToList();
+            return pendingHistoryList;
         }
         public async Task<string> ApproveRequest(int id)
         {

@@ -2,10 +2,15 @@
 {
     public class PendingHistory
     {
-        public string CustomerName { get; set; }
+
+        public int Id { get; set; }
+        public string UserName { get; set; }
+        public string? ApprovedBy { get; set; }
         public string CarModel { get; set; }
-        public DateOnly RentDate { get; set; } 
-        public DateOnly ReturnDate  { get; set; }
-        public float RentPrice { get; set; }
+        public string CarNumberPlate { get; set; }
+        public DateTime FromDate { get; set; }
+        public DateTime ToDate { get; set; }
+        public string Status;
+        public int Price { get; set; }
     }
 }
