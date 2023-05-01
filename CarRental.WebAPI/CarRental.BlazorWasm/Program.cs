@@ -22,4 +22,5 @@ builder.Services.AddSingleton<CarService>();
 
 builder.Services.AddSyncfusionBlazor();
 
+
 await builder.Build().RunAsync();

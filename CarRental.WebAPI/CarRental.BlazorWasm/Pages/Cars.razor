@@ -7,10 +7,16 @@
 @inject ApiService apiService
 @inject IJSRuntime jsRuntime;
 
-<h3>Cars</h3>
-
-<button @onclick='() => showInsertModal()'>Insert</button>
-
+<div class="container">
+	<div class="row">
+		<div class="col-lg-8 offset-lg-2 text-center">
+            <h3 style="font-family:'Arial Rounded MT';">Cars</h3>
+        </div>
+    </div>
+</div>
+<div class="button-container">
+<button class ="btn btn-dark" @onclick='() => showInsertModal()'>Insert</button>
+</div>
 <div class="modal fade" id="carInsertionModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -49,7 +55,7 @@
                             <InputFile max-file-size="1536000" accept=".png,.jpg,.jpeg" OnChange="@UploadCarPhoto" single />
                         </div>
 
-                        <button @onclick="() => InsertCar()">Save</button>
+                        <button class="btn btn-light" @onclick="() => InsertCar()">Save</button>
                     </div>
                 </div>
             </div>
@@ -58,6 +64,12 @@
 </div>
 
 <TableTemplate TItem=Car ItemService=@carService TItemRequest=@CarRequest Editable=true Deletable=true Insertable=false />
+
+<style>
+    .button-container {
+        padding: 12px 28px;
+    }
+</style>
 
 @code {
     bool showInsert = false;
