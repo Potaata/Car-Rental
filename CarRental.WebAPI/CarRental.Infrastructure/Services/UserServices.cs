@@ -14,6 +14,7 @@ using System.Web;
 using Nanoid;
 using CarRental.Application.DTOs.CarDTOs;
 using System.Security.Cryptography.Xml;
+using Microsoft.EntityFrameworkCore;
 
 namespace CarRental.Infrastructure.Services
 {
@@ -29,14 +30,14 @@ namespace CarRental.Infrastructure.Services
         }
         public async Task<MessageResponse> RegisterUser(UserRegisterRequestDTO users)
         {
-            var DBUser = new Users { UserName = users.Username, Email = users.Email, Address = users.Address, Name = users.Name};
+            var DBUser = new Users { UserName = users.Username, Email = users.Email, Address = users.Address, Name = users.Name };
             var result = await _userManager.CreateAsync(DBUser, users.RawPassword);
             if (!result.Succeeded)
             {
                 string error = result.Errors.ElementAt(0).Description;
                 throw new ApiException(error);
             }
-            
+
             await _userManager.AddToRoleAsync(DBUser, "User");
             return new MessageResponse { message = "Registration succeessful!" };
         }
@@ -76,6 +77,57 @@ namespace CarRental.Infrastructure.Services
             };
 
             return resp;
+        }
+
+        public async Task<UserListResponseDTO> GetRegularUsers()
+        {
+            DateTime oneMonthAgo = DateTime.Now.AddDays(-30);
+            var regularUsers = from u in _dbcontext.Users
+                               join rh in _dbcontext.RentHistory
+                               on u.Id equals rh.UserId
+                               where rh.ToDate >= oneMonthAgo
+                               select new Users
+                               {
+                                   Address = u.Address,
+                                   Name = u.Name,
+                                   PhoneNumber = u.PhoneNumber,
+                                   Email = u.Email
+                               };
+            return new UserListResponseDTO { users = (await regularUsers.ToListAsync()) };
+        }
+
+        public async Task<UserListResponseDTO> GetAllUsers()
+        {
+            var regularUsers = from u in _dbcontext.Users
+                               select new Users
+                               {
+                                   Address = u.Address,
+                                   Name = u.Name,
+                                   PhoneNumber = u.PhoneNumber,
+                                   Email = u.Email
+                               };
+            return new UserListResponseDTO { users = (await regularUsers.ToListAsync()) };
+        }
+
+        public async Task<UserListResponseDTO> GetInactiveUsers()
+        {
+            DateTime threeMonthsAgo = DateTime.Now.AddDays(-90);
+            var threeeMonthsRentingUsers = from u in _dbcontext.Users
+                                           join rh in _dbcontext.RentHistory
+                                           on u.Id equals rh.UserId
+                                           where rh.ToDate >= threeMonthsAgo
+                                           select new Users
+                                           {
+                                               Address = u.Address,
+                                               Name = u.Name,
+                                               PhoneNumber = u.PhoneNumber,
+                                               Email = u.Email
+                                           };
+
+            UserListResponseDTO regularUsers = await GetRegularUsers();
+
+            var inactiveUsers = regularUsers.users.Except(await threeeMonthsRentingUsers.ToListAsync());
+            return new UserListResponseDTO { users = (inactiveUsers.ToList()) };
         }
     }
 }

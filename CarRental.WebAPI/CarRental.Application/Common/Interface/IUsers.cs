@@ -12,5 +12,8 @@ namespace CarRental.Application.Common.Interface
     {
         public Task<MessageResponse> RegisterUser(UserRegisterRequestDTO user);
         public Task<UserLoginResponseDTO> LoginUser(UserLoginRequestDTO user);
+        public Task<UserListResponseDTO> GetRegularUsers();
+        public Task<UserListResponseDTO> GetAllUsers();
+        public Task<UserListResponseDTO> GetInactiveUsers();
     }
 }

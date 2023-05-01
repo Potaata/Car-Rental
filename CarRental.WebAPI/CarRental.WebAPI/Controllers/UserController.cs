@@ -43,5 +43,28 @@ namespace CarRental.WebAPI.Controllers
             UserLoginResponseDTO user = await _authService.ValidateToken(tokenReq.Token);
             return user;
         }
+
+        [HttpGet]
+        [Route("/api/users/regular")]
+        public async Task<UserListResponseDTO> GetRegularUsers()
+        {
+            return await _users.GetRegularUsers();
+        }
+
+        [HttpGet]
+        [Route("/api/users/inactive")]
+        public async Task<UserListResponseDTO> GetInactiveUsers()
+        {
+            return await _users.GetInactiveUsers();
+        }
+
+
+        [HttpGet]
+        [Route("/api/users/")]
+        public async Task<UserListResponseDTO> GetAllUsers()
+        {
+            return await _users.GetAllUsers();
+        }
     }
 }
+
