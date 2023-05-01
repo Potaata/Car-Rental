@@ -12,6 +12,7 @@ namespace CarRental.Domain.Enums
         Approved,
         Rented,
         Returned,
-        Denied
+        Denied,
+        Canceled
     }
 }

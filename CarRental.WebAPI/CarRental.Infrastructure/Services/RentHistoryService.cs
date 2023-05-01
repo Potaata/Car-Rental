@@ -20,28 +20,34 @@ namespace CarRental.Infrastructure.Services
     public class RentHistoryService : IRentHistory
     {
         private readonly IApplicationDBContext _dbcontext;
+        private readonly IAuthService _authService;
 
-        public RentHistoryService(IApplicationDBContext dbContext, UserManager<Users> userManager)
+
+        public RentHistoryService(IApplicationDBContext dbContext, UserManager<Users> userManager, IAuthService authService)
         {
             _dbcontext = dbContext;
+            _authService = authService;
         }
 
-        public async Task<MessageResponse> AddRentHistory(RentHistory rentHistory)
+        public async Task<MessageResponse> AddRentHistory(RentHistory newRent)
         {
-            RentHistory newRentHistory = new RentHistory
+            bool isOverlap = await _dbcontext.RentHistory
+                         .Where(rh => rh.CarId == newRent.CarId &&
+                                      (rh.Status == StatusEnums.Approved || rh.Status == StatusEnums.Rented) &&
+                                      rh.FromDate <= newRent.ToDate &&
+                                      rh.ToDate >= newRent.FromDate)
+                         .AnyAsync();
+
+            if (isOverlap)
             {
-                UserId = rentHistory.UserId,
-                CarId = rentHistory.CarId,
-                FromDate = rentHistory.FromDate,
-                ToDate = rentHistory.ToDate,
-                Price = rentHistory.Price
-                
-            };
-
-            _dbcontext.RentHistory.Add(newRentHistory);
-            await _dbcontext.SaveChangesAsync();
-
-            return new MessageResponse { message = "Request added successfully." };
+                return new MessageResponse { message = "Rent history overlaps with existing entries." };
+            }
+            else
+            {
+                _dbcontext.RentHistory.Add(newRent);
+                await _dbcontext.SaveChangesAsync();
+                return new MessageResponse { message = "Rent history added successfully." };
+            }
         }
         
         public async Task<List<RentHistoryResponseDTO>> GetRentHistories()
@@ -70,19 +76,25 @@ namespace CarRental.Infrastructure.Services
 
         public async Task<MessageResponse> ApproveRequest(int rentId) 
         {
+            var sessionUser = await _authService.GetSessionUser();
             var rentHistory = await _dbcontext.RentHistory.FindAsync(rentId);
-
             if (rentHistory == null)
             {
-                return new MessageResponse {message = "Rent history not found" };
+                return new MessageResponse { message = "Rent request not found." };
             }
 
-            rentHistory.Status = StatusEnums.Approved;
-            
+            if (rentHistory.Status != StatusEnums.Pending)
+            {
+                return new MessageResponse { message = "Rent request not pending." };
+            }
 
+
+            rentHistory.Status = StatusEnums.Approved;
+            rentHistory.ApprovedBy = sessionUser.Id;
+            _dbcontext.RentHistory.Update(rentHistory);
             await _dbcontext.SaveChangesAsync();
 
-            return new MessageResponse { message = "Rent history approved" };
+            return new MessageResponse { message = "Rent request approved successfully." };
 
 
         }
@@ -106,37 +118,67 @@ namespace CarRental.Infrastructure.Services
         
         public async Task<MessageResponse> DeclineRequest(int id) 
         {
+            var sessionUser = await _authService.GetSessionUser();
             var rentHistory = await _dbcontext.RentHistory.FindAsync(id);
-
             if (rentHistory == null)
             {
-                return new MessageResponse { message = "Rent history not found" };
+                return new MessageResponse { message = "Rent request not found." };
             }
 
+            if (rentHistory.Status != StatusEnums.Pending)
+            {
+                return new MessageResponse { message = "Rent request not pending." };
+            }
+
+
+
             rentHistory.Status = StatusEnums.Denied;
-
-
+            rentHistory.ApprovedBy = sessionUser.Id;
+            _dbcontext.RentHistory.Update(rentHistory);
             await _dbcontext.SaveChangesAsync();
 
-            return new MessageResponse { message = "Rent history approved" };
+            return new MessageResponse { message = "Rent request denied successfully." };
         }
 
         public async Task<MessageResponse> CarTaken(int rentId)
         {
             var rentHistory = await _dbcontext.RentHistory.FindAsync(rentId);
-
             if (rentHistory == null)
             {
-                return new MessageResponse { message = "Rent history not found" };
+                return new MessageResponse { message = "Rent request not found." };
+            }
+
+            if (rentHistory.Status != StatusEnums.Approved)
+            {
+                return new MessageResponse { message = "Rent request not approved yet." };
             }
 
             rentHistory.Status = StatusEnums.Rented;
-
+            _dbcontext.RentHistory.Update(rentHistory);
             await _dbcontext.SaveChangesAsync();
 
-            return new MessageResponse { message = "Rent history approved" };
+            return new MessageResponse { message = "Car marked taken." };
         }
 
+        public async Task<MessageResponse> CancelCarRequest(int rentId) {
+
+            var rentHistory = await _dbcontext.RentHistory.FindAsync(rentId);
+            if (rentHistory == null)
+            {
+                return new MessageResponse { message = "Rent request not found." };
+            }
+
+            if (rentHistory.Status == StatusEnums.Rented || rentHistory.Status == StatusEnums.Returned)
+            {
+                return new MessageResponse { message = "Rent request cannot be canceled." };
+            }
+
+            rentHistory.Status = StatusEnums.Canceled;
+            _dbcontext.RentHistory.Update(rentHistory);
+            await _dbcontext.SaveChangesAsync();
+
+            return new MessageResponse { message = "Rent request cancelled successfully." };
+        }
     }
     
 }

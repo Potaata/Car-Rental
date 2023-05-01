@@ -19,10 +19,12 @@ namespace CarRental.Application.Common.Interface
         
         public Task<List<RentHistoryResponseDTO>> GetRentHistories();
 
-        public Task<RentHistory> GetRentHistoryById(int id);
+      //  public Task<RentHistory> GetRentHistoryById(int id);
 
         public Task<List<RentHistory>> GetRentHistoriesByUserId(string id);
 
         public Task<MessageResponse> CarTaken(int rentId);
+
+        public Task<MessageResponse> CancelCarRequest(int rentId);
     }
 }

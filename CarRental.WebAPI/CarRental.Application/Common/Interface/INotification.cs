@@ -13,8 +13,8 @@ namespace CarRental.Application.Common.Interface
         
         public Task<MessageResponse> AddNotification(Notification notification);
 
-        public Task<MessageResponse> ReadNotification(int id);
+        public Task<MessageResponse> ReadNotification(string id);
 
-        public Task<List<Notification>> GetNotificationsByUserId(int id);
+        public Task<List<Notification>> GetNotificationsByUserId(string id);
     }
 }
