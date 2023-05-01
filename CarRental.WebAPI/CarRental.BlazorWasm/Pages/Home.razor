@@ -62,7 +62,9 @@
                     <div class="container">
                         <div class="row">
                             <div class="single-product-item">
-                                <img src="@curCar.PhotoUrl" alt="" class="card-img-top">
+                                <div class="imgdiv">
+                                    <img src="@curCar.PhotoUrl" alt="" class="card-img-top">
+                                </div>
                                 <div class="card-body">
                                     <h3 class="card-title">@curCar.Model</h3>
                                 </div>
@@ -82,6 +84,11 @@
     </div>
 }
 
+<style>
+    .imgdiv {
+        height: 400px;
+    }
+</style>
 
 @code {
     private List<CarInsertRequest> allCars = new List<CarInsertRequest>();

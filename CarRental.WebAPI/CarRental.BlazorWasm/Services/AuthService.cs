@@ -16,11 +16,13 @@ namespace CarRental.BlazorWasm.Services
             _sessionService = sessService;
         }
 
-        public async Task<RegisterResponse> Register(string username, string email, string password, string phoneNum)
+        public async Task<RegisterResponse> Register(string name, string username, string email, string address, string password, string phoneNum)
         {
             RegisterRequest req = new RegisterRequest
             {
+                Name = name,
                 Email = email,
+                Address = address,
                 Username = username,
                 RawPassword = password,
                 PhoneNumber = phoneNum

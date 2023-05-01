@@ -13,6 +13,11 @@
             <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
                 <form>
                     <div class="form-outline mb-4">
+                        <label class="form-label" for="form3Example3">Full Name</label>
+                        <input @bind="Name" type="text" id="form3Example" class="form-control form-control-lg"
+                               placeholder="Please enter your full name" />
+                    </div>
+                    <div class="form-outline mb-4">
                         <label class="form-label" for="form3Example3">Username</label>
                         <input @bind="Username" type="text" id="form3Example" class="form-control form-control-lg"
                                placeholder="Please enter a valid username" />
@@ -26,6 +31,11 @@
                         <label class="form-label" for="form3Example3">Email Address</label>
                         <input @bind="Email" type="email" id="form3Example" class="form-control form-control-lg"
                                placeholder="Please enter a valid email address" />
+                    </div>
+                    <div class="form-outline mb-4">
+                        <label class="form-label" for="form3Example3">Address</label>
+                        <input @bind="Address" type="email" id="form3Example" class="form-control form-control-lg"
+                               placeholder="Please enter your location" />
                     </div>
                     <div class="form-outline mb-4">
                         <label class="form-label" for="form3Example3">Phone Number</label>
@@ -62,7 +72,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 80vh;
+        height:95vh;
     }
 
     h3 {
@@ -71,13 +81,13 @@
 </style>
 
 @code {
-    string Username = "", Password = "", Email = "", PhoneNumber = "";
+    string Name = "", Username = "", Password = "", Email = "", Address = "", PhoneNumber = "";
     string errorMessage = "";
 
     private async void RegisterUser()
     {
         try{
-            await userService.Register(Username, Email, Password, PhoneNumber);
+            await userService.Register(Name, Username, Email, Address, Password, PhoneNumber);
             int a = 0;
         }catch(ApiException e){
             errorMessage = e.Message;
