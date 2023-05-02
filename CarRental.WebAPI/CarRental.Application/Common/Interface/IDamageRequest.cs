@@ -16,6 +16,8 @@ namespace CarRental.Application.Common.Interface
         public Task<MessageResponse> QuoteCost(QuoteCostDTO cost);
 
         public Task<MessageResponse> MarkPaid(int id);
+        
+        public Task<DamageRequestListDTO> GetAllRequests();
 
     }
 }

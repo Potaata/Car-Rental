@@ -53,6 +53,7 @@ namespace CarRental.Infrastructure.Services
         }
 
         public async Task<DamageRequestListDTO> GetAllRequests() {
+
             var requests = await _dbcontext.DamageRequest.ToListAsync();
 
             return new DamageRequestListDTO { damageRequests = requests };

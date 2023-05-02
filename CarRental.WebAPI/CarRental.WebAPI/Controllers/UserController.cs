@@ -48,6 +48,7 @@ namespace CarRental.WebAPI.Controllers
         [Route("/api/users/regular")]
         public async Task<UserListResponseDTO> GetRegularUsers()
         {
+            await _authService.GetSessionUser(new List<string> { "Admin", "Staff" });
             return await _users.GetRegularUsers();
         }
 
@@ -55,6 +56,7 @@ namespace CarRental.WebAPI.Controllers
         [Route("/api/users/inactive")]
         public async Task<UserListResponseDTO> GetInactiveUsers()
         {
+            await _authService.GetSessionUser(new List<string> { "Admin", "Staff" });
             return await _users.GetInactiveUsers();
         }
 
@@ -63,6 +65,7 @@ namespace CarRental.WebAPI.Controllers
         [Route("/api/users/")]
         public async Task<UserListResponseDTO> GetAllUsers()
         {
+            await _authService.GetSessionUser(new List<string> { "Admin", "Staff" });
             return await _users.GetAllUsers();
         }
 
@@ -70,6 +73,7 @@ namespace CarRental.WebAPI.Controllers
         [Route("/api/users/change-password")]
         public async Task<MessageResponse> ChangePassword(ChangePasswordDTO passwords)
         {
+            await _authService.GetSessionUser(new List<string> { "Admin", "Staff" , "User" });
             return await _users.ChangePassword(passwords);
         }
 
@@ -88,9 +92,14 @@ namespace CarRental.WebAPI.Controllers
         [Route("/api/users/role")]
         public async Task<UserRoleResponseDTO> GetUserRole()
         {
+            await _authService.GetSessionUser(new List<string> { "Admin", "Staff", "User" });
             string role = await _authService.GetUserRole();
             return new UserRoleResponseDTO { Role = role };
         }
+
+        
+
+        
     }
 }
 

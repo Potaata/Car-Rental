@@ -26,6 +26,7 @@ namespace CarRental.WebAPI.Controllers
         [Route("/api/users/damage-request")]
         public async Task<MessageResponse> AddDamageRequest(DamageRequest newDamageRequest)
         {
+            await _authService.GetSessionUser(new List<string> { "Admin", "Staff", "User" });
             return await _damageRequest.AddDamageRequest(newDamageRequest);
         }
 
@@ -33,6 +34,7 @@ namespace CarRental.WebAPI.Controllers
         [Route("/api/admin/quote-price")]
         public async Task<MessageResponse> QuoteCost(QuoteCostDTO quoteCost)
         {
+            await _authService.GetSessionUser(new List<string> { "Admin", "Staff" });
             return await _damageRequest.QuoteCost(quoteCost);
         }
         
@@ -40,7 +42,15 @@ namespace CarRental.WebAPI.Controllers
         [Route("/api/admin/mark-paid/{damageID}")]
         public async Task<MessageResponse> MarkPaid(int id)
         {
+            await _authService.GetSessionUser(new List<string> { "Admin", "Staff" });
             return await _damageRequest.MarkPaid(id);
+        }
+
+        public async Task<DamageRequestListDTO> GetDamageRequests()
+        {
+            await _authService.GetSessionUser(new List<string> { "Admin", "Staff" });
+            
+            return await _damageRequest.GetAllRequests();
         }
 
 

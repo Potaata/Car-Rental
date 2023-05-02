@@ -11,16 +11,19 @@ namespace CarRental.WebAPI.Controllers
     public class CarController : Controller
     {
         private readonly ICars _cars;
+        private readonly IAuthService _authService;
 
-        public CarController(ICars cars)
+        public CarController(ICars cars, IAuthService authService)
         {
             _cars = cars;
+            _authService = authService;
         }
 
         [HttpGet]
         [Route("/api/cars")]
         public async Task<ListCarResponse> GetCars()
         {
+            await _authService.GetSessionUser(new List<string> { "Admin", "Staff", "User" });
             var cars = await _cars.GetCars();
             return cars;
         }
@@ -29,6 +32,7 @@ namespace CarRental.WebAPI.Controllers
         [Route("/api/cars/{id}")]
         public async Task<SingleCarResponse> GetCarById(int id)
         {
+            await _authService.GetSessionUser(new List<string> { "Admin", "Staff", "User" });
             var car = await _cars.GetCarById(id);
             return car;
         }
@@ -37,6 +41,7 @@ namespace CarRental.WebAPI.Controllers
         [Route("/api/cars")]
         public async Task<MessageResponse> AddCar(AddCarRequestDTO car)
         {
+            await _authService.GetSessionUser(new List<string> { "Admin", "Staff" });
             var message = await _cars.AddCar(car);
             return message;
         }
@@ -45,6 +50,7 @@ namespace CarRental.WebAPI.Controllers
         [Route("/api/cars/{id}")]
         public async Task<MessageResponse> UpdateCar(int id, AddCarRequestDTO car)
         {
+            await _authService.GetSessionUser(new List<string> { "Admin", "Staff" });
             var message = await _cars.UpdateCar(id, car);
             return message;
         }
@@ -53,6 +59,7 @@ namespace CarRental.WebAPI.Controllers
         [Route("/api/cars/{id}")]
         public async Task<MessageResponse> DeleteCar(int id)
         {
+            await _authService.GetSessionUser(new List<string> { "Admin", "Staff" });
             var message = await _cars.DeleteCar(id);
             return message;
         }

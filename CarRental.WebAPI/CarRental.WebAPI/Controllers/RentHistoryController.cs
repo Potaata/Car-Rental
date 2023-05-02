@@ -29,6 +29,7 @@ namespace CarRental.WebAPI.Controllers
         [Route("/api/admin/renthistory")]
         public async Task<RentHistoryListResponseDTO> GetRentHistories()
         {
+            await _authService.GetSessionUser(new List<string> { "Admin", "Staff" });
             var allHistories = await _rentHistory.GetRentHistories();
             var response = new RentHistoryListResponseDTO { rents = allHistories };
             return response;
@@ -51,6 +52,7 @@ namespace CarRental.WebAPI.Controllers
         [Route("api/admin/approve-request/{rentId}")]
         public async Task<MessageResponse> ApproveRequest(int rentId)
         {
+            await _authService.GetSessionUser(new List<string> { "Admin", "Staff" });
             return await _rentHistory.ApproveRequest(rentId);
         }
 
@@ -58,6 +60,7 @@ namespace CarRental.WebAPI.Controllers
         [Route("api/admin/deny-request/{rentId}")]
         public async Task<MessageResponse> DenyRequest(int rentId)
         {
+            await _authService.GetSessionUser(new List<string> { "Admin", "Staff" });
             return await _rentHistory.DeclineRequest(rentId);
         }
 
@@ -65,6 +68,7 @@ namespace CarRental.WebAPI.Controllers
         [Route("api/user/rent-history/{userId}")]
         public async Task<UserRentHistoryListResponse> GetRentHistoriesByUserId(string userId)
         {
+            await _authService.GetSessionUser(new List<string> { "Admin", "Staff", "User" });
             return new UserRentHistoryListResponse { rents = await _rentHistory.GetRentHistoriesByUserId(userId) };
         }
 
@@ -72,6 +76,7 @@ namespace CarRental.WebAPI.Controllers
         [Route("api/admin/car-taken/{rentId}")]
         public async Task<MessageResponse> MarkCarTaken(int rentId)
         {
+            await _authService.GetSessionUser(new List<string> { "Admin", "Staff" });
             return await _rentHistory.CarTaken(rentId);
         }
 
@@ -79,6 +84,7 @@ namespace CarRental.WebAPI.Controllers
         [Route("/api/users/discount")]
         public async Task<DiscountOfferResponse> GetDiscounts()
         {
+            await _authService.GetSessionUser(new List<string> { "Admin", "Staff", "User" });
             return new DiscountOfferResponse { offer = await _rentHistory.GetValidDiscount() };
         }
 
@@ -87,6 +93,7 @@ namespace CarRental.WebAPI.Controllers
 
         public async Task<MessageResponse> CreateDiscountOffer(DiscountOfferResponse offer)
         {
+            await _authService.GetSessionUser(new List<string> { "Admin", "Staff" });
             Offers o = await _rentHistory.GetValidDiscount();
             if (o != null)
             {
