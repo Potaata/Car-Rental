@@ -1,43 +1,31 @@
 ﻿@using BootstrapBlazor
+@using CarRental.BlazorWasm.Models.Users
 
-    <nav class="navbar navbar-expand-md py-3 navbar-dark bg-dark">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="">हजुरको Car rental</a>
-             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample05" aria-controls="navbarsExample05" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+@inject ApiService apiService
+
+<nav class="navbar navbar-expand-md py-3 navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="">हजुरको Car rental</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample05" aria-controls="navbarsExample05" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
         <div class="collapse navbar-collapse @NavBarCssClass" id="navbarsExample05" @onclick="ToggleNav">
-                <ul class="navbar-nav mx-auto pl-lg-5 pl-0">
-                    
-                     <li class="nav-item">
+            <ul class="navbar-nav mx-auto pl-lg-5 pl-0">
+                <li class="nav-item">
                     <NavLink class="nav-link custom-nav-item" href="profile">
                         <span aria-hidden="true"></span> Profile
-                        </NavLink>
-                    </li>
-                    
-                     <li class="nav-item">
-                    <NavLink class="nav-link custom-nav-item" href="publish-offer">
-                        <span aria-hidden="true"></span> Offers
-                        </NavLink>
-                    </li>
-                    <li class="nav-item">
-                        <NavLink class="nav-link" href="car-requests">
-                        <span aria-hidden="true"></span> Car Requests
-                        </NavLink>
-                    </li>
-           
-                     <li class="nav-item">
-                        <NavLink class="nav-link" href="notification">
+                    </NavLink>
+                </li>
+                <li class="nav-item">
+                    <NavLink class="nav-link" href="notification">
                         <span aria-hidden="true"></span> Notifications
-                        </NavLink>
-                    </li>
-                     <li class="nav-item">
-                        <NavLink class="nav-link" href="rent-history">
-                            <span aria-hidden="true"></span> Rent History    
-                        </NavLink>
-                    </li>
-   
-
+                    </NavLink>
+                </li>
+                <li class="nav-item">
+                    <NavLink class="nav-link" href="my-rent-history">
+                        <span aria-hidden="true"></span> My Rents
+                    </NavLink>
+                </li>
                 <li class="nav-item dropdown show">
                     <NavLink class="nav-link dropdown-toggle" @onclick="() => expandSubNavSettings = !expandSubNavSettings" id="navbarDropdown">
                         <span aria-hidden="true"></span> Car
@@ -61,19 +49,55 @@
                         </NavLink>
                     </li>
                     <li class="nav-item">
-                        <NavLink class="nav-link text-dark" href="home">
+                        <NavLink class="nav-link text-dark" href="my-damage-history">
                             <span aria-hidden="true"></span> Damage Info
                         </NavLink>
                     </li>
-                  </li>
+                    </li>
                     }
                 </li>
-                </ul>
-            </div>
+
+                @if (role == "Admin" && role == "Staff")
+                {
+
+                    <li class="nav-item">
+                        <NavLink class="nav-link custom-nav-item" href="publish-offer">
+                            <span aria-hidden="true"></span> Offers
+                        </NavLink>
+                    </li>
+                    <li class="nav-item">
+                        <NavLink class="nav-link custom-nav-item" href="users">
+                            <span aria-hidden="true"></span> Users
+                        </NavLink>
+                    </li>
+                    <li class="nav-item">
+                        <NavLink class="nav-link custom-nav-item" href="damage-history">
+                            <span aria-hidden="true"></span> Damage History
+                        </NavLink>
+                    </li>
+                    <li class="nav-item">
+                        <NavLink class="nav-link custom-nav-item" href="staffs">
+                            <span aria-hidden="true"></span> Staffs
+                        </NavLink>
+                    </li>
+                    <li class="nav-item">
+                        <NavLink class="nav-link custom-nav-item" href="car-requests">
+                            <span aria-hidden="true"></span> Car Requests
+                        </NavLink>
+                    </li>
+                    <li class="nav-item">
+                        <NavLink class="nav-link custom-nav-item" href="rent-history">
+                            <span aria-hidden="true"></span> Rents
+                        </NavLink>
+                    </li>
+                }
+            </ul>
         </div>
-    </nav>
+    </div>
+</nav>
 
 @code {
+    string role;
     private bool collapseNavMenu = true;
     private string? NavBarCssClass => collapseNavMenu ? null : "show";
     private string? NavButtonCssClass => collapseNavMenu ? "collapsed" : null;
@@ -96,10 +120,15 @@
 
     }
 
-
     private void ToggleNav()
     {
         collapseNavMenu = !collapseNavMenu;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await apiService.GET<UserRoleResponse>("/api/user/role");
+        role = response.Role;
     }
 
 }
