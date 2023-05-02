@@ -1,4 +1,6 @@
-﻿namespace CarRental.BlazorWasm.Models.Items
+﻿using CarRental.BlazorWasm.Models.Enums;
+
+namespace CarRental.BlazorWasm.Models.Items
 {
     public class PendingHistory
     {
@@ -10,7 +12,7 @@
         public string CarNumberPlate { get; set; }
         public DateTime FromDate { get; set; }
         public DateTime ToDate { get; set; }
-        public string Status;
+        public StatusEnums Status;
         public int Price { get; set; }
     }
 }

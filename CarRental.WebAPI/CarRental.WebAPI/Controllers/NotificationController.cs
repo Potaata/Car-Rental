@@ -9,26 +9,22 @@ namespace CarRental.WebAPI.Controllers
     public class NotificationController : Controller
     {
         private readonly INotification _notification;
+        private readonly IAuthService _authService;
 
-        public NotificationController(INotification notification)
+        public NotificationController(INotification notification, IAuthService authService)
         {
             _notification = notification;
+            _authService = authService;
         }
 
 
         [HttpGet]
-        [Route("/api/user/notifications/{userId}")]
-        public async Task<List<Notification>> GetNotifications(string userId)
+        [Route("/api/user/notifications/")]
+        public async Task<List<Notification>> GetNotifications()
         {
-            return await _notification.GetNotificationsByUserId(userId);
+            Users user = await _authService.GetSessionUser(new List<string> { "User", "Admin", "Staff" });
+            await _notification.ReadNotification(user.Id);
+            return await _notification.GetNotificationsByUserId(user.Id);
         }
-
-        [HttpPost]
-        [Route("/api/user/notifications/{userId}")]
-        public async Task<MessageResponse> ReadNotifications(string userId)
-        {
-            return await _notification.ReadNotification(userId);
-        }
-
     }
 }

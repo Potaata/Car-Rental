@@ -1,0 +1,59 @@
+﻿@page "/users"
+@using CarRental.BlazorWasm.Models.Users
+@using CarRental.BlazorWasm.Services.ItemService
+
+@inject UserService userService
+
+<div class="container">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-lg-8 mb-5 mb-lg-0 text-center">
+            <h3 style="font-family: Arial Rounded MT; padding: 10px 24px;">Users</h3>
+        </div>
+    </div>
+</div>
+
+<button @onclick="() => showRegularUsers()">Show Regular Users</button>
+<button @onclick="() => showInactiveUsers()">Show Inactive Users</button>
+
+<table class="table table-striped table-dark">
+    <thead>
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Phone Number</th>
+            <th scope="col">Email</th>
+            <th scope="col">Address</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var request in allUsers)
+        {
+
+            <tr>
+                <td>@request.UserName</td>
+                <td>@request.MobileNumber</td>
+                <td>@request.Email</td>
+                <td>@request.Address</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+@code {
+    List<User> allUsers = new List<User>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        allUsers = await userService.GetItems();
+    }
+
+    public async Task showRegularUsers() 
+    {
+        allUsers = await userService.GetRegularUsers();
+    }
+
+    public async Task showInactiveUsers()
+    {
+        allUsers = await userService.GetInactiveUsers();
+    }
+}

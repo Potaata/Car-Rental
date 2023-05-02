@@ -1,5 +1,6 @@
 ﻿using CarRental.BlazorWasm.Models;
 using CarRental.BlazorWasm.Models.Items;
+using CarRental.BlazorWasm.Models.Enums;
 
 namespace CarRental.BlazorWasm.Services.ItemService
 {
@@ -15,18 +16,18 @@ namespace CarRental.BlazorWasm.Services.ItemService
         public async Task<List<PendingHistory>> GetAll()
         {
             PendingHistoryResponse pendingHistories = await _apiService.GET<PendingHistoryResponse>(EndPoint);
-            List<PendingHistory> pendingHistoryList = pendingHistories.pendingHistories.Where(x => x.Status == "Pending").ToList();
+            List<PendingHistory> pendingHistoryList = pendingHistories.rents.Where(x => x.Status == StatusEnums.Pending).ToList();
             return pendingHistoryList;
         }
         public async Task<string> ApproveRequest(int id)
         {
-            MessageResponse message = await _apiService.PUT<EmptyRequest, MessageResponse>(EndPoint + '/' + id, null);
+            MessageResponse message = await _apiService.POST<EmptyRequest, MessageResponse>("/api/admin/approve-request" + '/' + id, new EmptyRequest { });
 
             return message.message;
         }
         public async Task<string> DenyRequest(int id)
         {
-            MessageResponse message = await _apiService.PUT<EmptyRequest, MessageResponse>(EndPoint + '/' + id, null);
+            MessageResponse message = await _apiService.POST<EmptyRequest, MessageResponse>("/api/admin/deny-request" + '/' + id, new EmptyRequest { });
 
             return message.message;
         }

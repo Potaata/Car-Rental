@@ -1,4 +1,4 @@
-﻿@page "/publish-offer"
+﻿@*@page "/publish-offer"
 
 <div class="container mt-4">
     <h1 class="mb-4">Publish an Offer</h1>
@@ -44,10 +44,8 @@
 
 @code{
 
-        [Required(ErrorMessage = "Description is required")]
         public string Description { get; set; }
 
-        [Required(ErrorMessage = "Discount is required")]
         public string Discount { get; set; }
     }
-}
+}*@

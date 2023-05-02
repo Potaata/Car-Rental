@@ -40,16 +40,26 @@
 
     protected override async Task OnInitializedAsync()
     {
-        allPendingRequest = await pendingHistoryService.GetAll();
+        await FetchAllPending();
     }
 
     private async Task ApproveRequest(int id)
     {
         await pendingHistoryService.ApproveRequest(id);
+        await FetchAllPending();
+
     }
 
     private async Task DenyRequest(int id)
     {
         await pendingHistoryService.DenyRequest(id);
+        await FetchAllPending();
+
+    }
+
+    private async Task FetchAllPending()
+    {
+        allPendingRequest = await pendingHistoryService.GetAll();
+        StateHasChanged();
     }
 }

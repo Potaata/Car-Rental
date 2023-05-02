@@ -59,9 +59,9 @@ catch (HttpRequestException e){
 
         if (await checkRedirectToLogin())
         {
-            //navManager.NavigateTo("/login", true);
+            navManager.NavigateTo("/login", true);
         }
-        else if (sessService.Token != null)
+        else if (string.IsNullOrEmpty(await sessService.getTokenFromLocalStorage()))
         {
             foreach (string page in pagesInaccessibleAfterLogin)
             {
@@ -75,6 +75,7 @@ catch (HttpRequestException e){
 
     async Task<bool> checkRedirectToLogin()
     {
+        //return false;
         foreach (string page in pagesWithoutLogin)
         {
             if (navManager.Uri.ToLower().EndsWith(page))
@@ -82,7 +83,7 @@ catch (HttpRequestException e){
                 return false;
             }
         }
-        if (!(await sessService.IsAuthenticated()))
+        if (string.IsNullOrEmpty(await sessService.getTokenFromLocalStorage()))
         {
             return true;
         }

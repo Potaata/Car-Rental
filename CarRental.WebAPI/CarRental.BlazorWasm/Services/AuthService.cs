@@ -41,7 +41,7 @@ namespace CarRental.BlazorWasm.Services
 
             LoginResponse resp = await _apiService.POST<LoginRequest, LoginResponse>("/api/users/login", req);
 
-            _sessionService.SetSession(resp.Token, resp.Username, resp.Role);
+            await _sessionService.SetSession(resp.Token, resp.Username, resp.Role);
             return true;
         }
     }

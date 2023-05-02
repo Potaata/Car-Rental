@@ -61,6 +61,11 @@ namespace CarRental.Infrastructure.Services
         public async Task<Users> GetSessionUser(List<string> allowedRoles)
         {
             string token = _httpContext.Request.Headers.Authorization;
+            
+            if(token != null)
+            {
+                token = token.Split(" ").ElementAt(1);
+            }
 
             if (string.IsNullOrEmpty(token))
                 throw new ApiException("Invalid Token!", System.Net.HttpStatusCode.Unauthorized);
@@ -88,7 +93,7 @@ namespace CarRental.Infrastructure.Services
             var roles = await _userManager.GetRolesAsync(user);
             if (!allowedRoles.Contains(roles.ElementAt(0)))
             {
-                throw new ApiException("Invalid Token!", System.Net.HttpStatusCode.Unauthorized);
+                throw new ApiException("Invalid Token!", System.Net.HttpStatusCode.Forbidden);
             }
             return user;
         }

@@ -6,6 +6,7 @@
 @inject NavigationManager navManager
 @inject IJSRuntime jsRuntime
 @inject RentService rentService;
+@inject DiscountService discountService;
 
 @if (currCar != null)
 {
@@ -43,7 +44,9 @@
                     <div class="d-flex justify-content-between mb-3">
                         <p class="textmuted fw-bold">Price</p>
                         <div class="d-flex align-text-top ">
-                            <span class="fas fa-dollar-sign mt-1 pe-1 fs-14 "></span><span class="h4">@currCar.Price / Day</span>
+                            <span class="fas fa-dollar-sign mt-1 pe-1 fs-14 "></span><span class="h4">@currCar.Price
+                                
+                                / Day</span>
                         </div>
                     </div>
 

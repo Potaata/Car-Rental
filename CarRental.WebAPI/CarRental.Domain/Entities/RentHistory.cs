@@ -27,7 +27,7 @@ namespace CarRental.Domain.Entities
 
         public StatusEnums Status { get; set; } = StatusEnums.Pending;
 
-        public int Price { get; set; }
+        public float Price { get; set; }
 
     } 
 }

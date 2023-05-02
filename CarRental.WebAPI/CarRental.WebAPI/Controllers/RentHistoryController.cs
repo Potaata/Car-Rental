@@ -3,8 +3,10 @@ using CarRental.Application.DTOs.CarDTOs;
 using CarRental.Application.DTOs.RentHistoryDTOs;
 using CarRental.Domain.Entities;
 using CarRental.Domain.Enums;
+using CarRental.Infrastructure.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using CarRental.Application.DTOs;
 
 namespace CarRental.WebAPI.Controllers
 {
@@ -20,20 +22,28 @@ namespace CarRental.WebAPI.Controllers
         {
             _rentHistory = rentHistory;
             _dbcontext = dbcontext;
+            _authService = authService;
         }
 
         [HttpGet]
         [Route("/api/admin/renthistory")]
-        public async Task<List<RentHistoryResponseDTO>> GetRentHistories()
+        public async Task<RentHistoryListResponseDTO> GetRentHistories()
         {
-            return await _rentHistory.GetRentHistories();
+            var allHistories = await _rentHistory.GetRentHistories();
+            var response = new RentHistoryListResponseDTO { rents = allHistories };
+            return response;
         }
 
         [HttpPost]
         [Route("api/user/add-rent")]
         public async Task<MessageResponse> AddRentHistory(RentHistory newRent)
         {
-            newRent.UserId = (await _authService.GetSessionUser()).Id;
+            Users user = await _authService.GetSessionUser(new List<string> { "User", "Admin", "Staff" });
+            if (string.IsNullOrEmpty(user.Documenturl))
+            {
+                throw new ApiException("Please Upload your documents to Rent a car.");
+            }
+            newRent.UserId = user.Id;
             return await _rentHistory.AddRentHistory(newRent);
         }
 
@@ -41,7 +51,7 @@ namespace CarRental.WebAPI.Controllers
         [Route("api/admin/approve-request/{rentId}")]
         public async Task<MessageResponse> ApproveRequest(int rentId)
         {
-            return await _rentHistory.ApproveRequest(rentId);   
+            return await _rentHistory.ApproveRequest(rentId);
         }
 
         [HttpPost]
@@ -53,9 +63,9 @@ namespace CarRental.WebAPI.Controllers
 
         [HttpGet]
         [Route("api/user/rent-history/{userId}")]
-        public async Task<List<RentHistory>> GetRentHistoriesByUserId(string userId)
+        public async Task<UserRentHistoryListResponse> GetRentHistoriesByUserId(string userId)
         {
-            return await _rentHistory.GetRentHistoriesByUserId(userId);
+            return new UserRentHistoryListResponse { rents = await _rentHistory.GetRentHistoriesByUserId(userId) };
         }
 
         [HttpPost]
@@ -65,10 +75,26 @@ namespace CarRental.WebAPI.Controllers
             return await _rentHistory.CarTaken(rentId);
         }
 
+        [HttpGet]
+        [Route("/api/user/discount")]
+        public async Task<DiscountOfferResponse> GetDiscounts()
+        {
+            return new DiscountOfferResponse { offer = await _rentHistory.GetValidDiscount() };
+        }
 
+        [HttpPost]
+        [Route("/api/user/add-offer")]
 
+        public async Task<MessageResponse> CreateDiscountOffer(DiscountOfferResponse offer)
+        {
+            Offers o = await _rentHistory.GetValidDiscount();
+            if (o != null)
+            {
+                throw new ApiException("A discount is already on offers.");
+            }
 
-
-
+            await _rentHistory.AddOffer(offer.offer);
+            return new MessageResponse { message = "Offer added successfullly!!" };
+        }
     }
 }

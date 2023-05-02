@@ -4,7 +4,7 @@ using CarRental.BlazorWasm.Models.Items;
 
 namespace CarRental.BlazorWasm.Services.ItemService
 {
-    public class UserService : IItemService<User, UserRequest>
+    public class UserService
     {
         private readonly ApiService _apiService;
 
@@ -39,6 +39,19 @@ namespace CarRental.BlazorWasm.Services.ItemService
             MessageResponse message = await _apiService.PUT<UserRequest, MessageResponse>(EndPoint + '/' + id, user);
 
             return message.message;
+        }
+        public async Task<List<User>> GetRegularUsers()
+        {
+            UserResponse users = await _apiService.GET<UserResponse>(EndPoint + "/regular");
+
+            return users.users;
+        }
+
+        public async Task<List<User>> GetInactiveUsers()
+        {
+            UserResponse users = await _apiService.GET<UserResponse>(EndPoint + "/inactive");
+
+            return users.users;
         }
 
         public UserRequest GetDefaultRequest()

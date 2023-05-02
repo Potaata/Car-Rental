@@ -16,7 +16,7 @@ namespace CarRental.Application.DTOs.RentHistoryDTOs
         public string CarNumberPlate { get; set; }
         public DateTime FromDate { get; set; }
         public DateTime ToDate { get; set; }
-        public StatusEnums Status;
-        public int Price { get; set; }
+        public StatusEnums Status { get; set; }
+        public float Price { get; set; }
     }
 }

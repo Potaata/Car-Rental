@@ -33,24 +33,75 @@ namespace CarRental.BlazorWasm.Services
 
         public async Task<ResponseDTO> GET<ResponseDTO>(string endpoint) where ResponseDTO : SuccessResponse
         {
+            //string fullQualifiedEndpoint = API_URL + endpoint;
+            //var response = await _httpClient.GetAsync(fullQualifiedEndpoint);
+            //return await ParseResponse<ResponseDTO>(response);
             string fullQualifiedEndpoint = API_URL + endpoint;
-            var response = await _httpClient.GetAsync(fullQualifiedEndpoint);
+            var request = new HttpRequestMessage(HttpMethod.Get, fullQualifiedEndpoint);
+            string token = await _sessService.getTokenFromLocalStorage();
+            if (!string.IsNullOrEmpty(token))
+            {
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            }
+            var response = await _httpClient.SendAsync(request);
             return await ParseResponse<ResponseDTO>(response);
         }
 
+        //public async Task<ResponseDTO> POST<RequestDTO, ResponseDTO>(string endpoint, RequestDTO body) where ResponseDTO : SuccessResponse
+        //{
+        //    string fullQualifiedEndpoint = API_URL + endpoint;
+        //    var bodyJSON = JsonConvert.SerializeObject(body);
+        //    var content = new StringContent(bodyJSON, Encoding.UTF8, "application/json");
+        //    var response = await _httpClient.PostAsync(fullQualifiedEndpoint, content);
+        //    return await ParseResponse<ResponseDTO>(response);
+        //}
         public async Task<ResponseDTO> POST<RequestDTO, ResponseDTO>(string endpoint, RequestDTO body) where ResponseDTO : SuccessResponse
         {
             string fullQualifiedEndpoint = API_URL + endpoint;
             var bodyJSON = JsonConvert.SerializeObject(body);
             var content = new StringContent(bodyJSON, Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync(fullQualifiedEndpoint, content);
+            var request = new HttpRequestMessage(HttpMethod.Post, fullQualifiedEndpoint);
+            string token = await _sessService.getTokenFromLocalStorage();
+            if (!string.IsNullOrEmpty(token))
+            {
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            }
+            request.Content = content;
+            var response = await _httpClient.SendAsync(request);
             return await ParseResponse<ResponseDTO>(response);
         }
 
+        //public async Task<ResponseDTO> DELETE<ResponseDTO>(string endpoint) where ResponseDTO : SuccessResponse
+        //{
+        //    string fullQualifiedEndpoint = API_URL + endpoint;
+        //    var response = await _httpClient.DeleteAsync(fullQualifiedEndpoint);
+        //    return await ParseResponse<ResponseDTO>(response);
+        //}
+
+        //public async Task<ResponseDTO> PUT<RequestDTO, ResponseDTO>(string endpoint, RequestDTO body) where ResponseDTO : SuccessResponse
+        //{
+        //    string fullQualifiedEndpoint = API_URL + endpoint;
+        //    var bodyJSON = JsonConvert.SerializeObject(body);
+        //    var content = new StringContent(bodyJSON, Encoding.UTF8, "application/json");
+        //    var response = await _httpClient.PutAsync(fullQualifiedEndpoint, content);
+        //    return await ParseResponse<ResponseDTO>(response);
+        //}
+
+        //public async Task<UrlResponse> FileUpload(MultipartFormDataContent content) {
+        //    string fullQualifiedEndpoint = API_URL + "/api/FileUpload";
+        //    var response = await _httpClient.PostAsync(fullQualifiedEndpoint, content);
+        //    return await ParseResponse<UrlResponse>(response);
+        //}
         public async Task<ResponseDTO> DELETE<ResponseDTO>(string endpoint) where ResponseDTO : SuccessResponse
         {
             string fullQualifiedEndpoint = API_URL + endpoint;
-            var response = await _httpClient.DeleteAsync(fullQualifiedEndpoint);
+            var request = new HttpRequestMessage(HttpMethod.Delete, fullQualifiedEndpoint);
+            string token = await _sessService.getTokenFromLocalStorage();
+            if (!string.IsNullOrEmpty(token))
+            {
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            }
+            var response = await _httpClient.SendAsync(request);
             return await ParseResponse<ResponseDTO>(response);
         }
 
@@ -59,13 +110,28 @@ namespace CarRental.BlazorWasm.Services
             string fullQualifiedEndpoint = API_URL + endpoint;
             var bodyJSON = JsonConvert.SerializeObject(body);
             var content = new StringContent(bodyJSON, Encoding.UTF8, "application/json");
-            var response = await _httpClient.PutAsync(fullQualifiedEndpoint, content);
+            var request = new HttpRequestMessage(HttpMethod.Put, fullQualifiedEndpoint);
+            string token = await _sessService.getTokenFromLocalStorage();
+            if (!string.IsNullOrEmpty(token))
+            {
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            }
+            request.Content = content;
+            var response = await _httpClient.SendAsync(request);
             return await ParseResponse<ResponseDTO>(response);
         }
 
-        public async Task<UrlResponse> FileUpload(MultipartFormDataContent content) {
+        public async Task<UrlResponse> FileUpload(MultipartFormDataContent content)
+        {
             string fullQualifiedEndpoint = API_URL + "/api/FileUpload";
-            var response = await _httpClient.PostAsync(fullQualifiedEndpoint, content);
+            var request = new HttpRequestMessage(HttpMethod.Post, fullQualifiedEndpoint);
+            string token = await _sessService.getTokenFromLocalStorage();
+            if (!string.IsNullOrEmpty(token))
+            {
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            }
+            request.Content = content;
+            var response = await _httpClient.SendAsync(request);
             return await ParseResponse<UrlResponse>(response);
         }
 
@@ -82,11 +148,18 @@ namespace CarRental.BlazorWasm.Services
                 }
                 else
                 {
-                    if(response.StatusCode == HttpStatusCode.Unauthorized)
+                    if(response.StatusCode == HttpStatusCode.Forbidden)
                     {
-                        _navManager.NavigateTo("404", true);
+                        _navManager.NavigateTo("/404", true);
                         throw new Exception("This exception should not occur.");
                     }
+
+                    if (response.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        _navManager.NavigateTo("/login", true);
+                        throw new Exception("This exception should not occur.");
+                    }
+
                     ErrorResponse errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(responseContent);
 
                     if (errorResponse != null && errorResponse.ErrorMessage != null)

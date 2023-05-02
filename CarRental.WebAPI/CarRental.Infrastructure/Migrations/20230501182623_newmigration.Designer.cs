@@ -3,6 +3,7 @@ using System;
 using CarRental.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CarRental.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20230501182623_newmigration")]
+    partial class newmigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -165,50 +168,6 @@ namespace CarRental.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Notification");
-                });
-
-            modelBuilder.Entity("CarRental.Domain.Entities.Offers", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreateTime")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("CreatedBy")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("DeletedBy")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime?>("DeletedTime")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<float>("DiscountPercent")
-                        .HasColumnType("real");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<int>("LastModifiedBy")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("UpdateTime")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime>("ValidTill")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Offers");
                 });
 
             modelBuilder.Entity("CarRental.Domain.Entities.RentHistory", b =>
@@ -370,21 +329,21 @@ namespace CarRental.Infrastructure.Migrations
                         new
                         {
                             Id = "1",
-                            ConcurrencyStamp = "8e2f8779-1a73-40ba-90e8-d35012e70328",
+                            ConcurrencyStamp = "9b62c203-d144-4d5c-8af8-04eccacec326",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = "2",
-                            ConcurrencyStamp = "e175f108-f877-4e4a-b8d9-978c7fea369c",
+                            ConcurrencyStamp = "55cf6a2e-175e-4c3a-81c8-67cfb33d4a46",
                             Name = "Staff",
                             NormalizedName = "STAFF"
                         },
                         new
                         {
                             Id = "3",
-                            ConcurrencyStamp = "7ff6150a-0b78-45bd-8fe4-ce3f8787d928",
+                            ConcurrencyStamp = "5bd1b728-916b-405b-9b27-2fccbc204f4d",
                             Name = "User",
                             NormalizedName = "USER"
                         });

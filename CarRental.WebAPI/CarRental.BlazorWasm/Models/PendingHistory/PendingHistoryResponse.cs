@@ -2,7 +2,7 @@
 {
     public class PendingHistoryResponse: SuccessResponse
     {
-        public List<PendingHistory> pendingHistories { get; set; }
+        public List<PendingHistory> rents { get; set; }
 
     }
 }

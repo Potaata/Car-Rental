@@ -15,9 +15,9 @@ namespace CarRental.BlazorWasm.Services
 {
     public class SessionService
     {
-        public string? Token { get; set; }
-        public string? Username { get; set; }
-        public string? Role { get; set; }
+        public static string? Token { get; set; }
+        public static string? Username { get; set; }
+        public static string? Role { get; set; }
 
         private readonly IJSRuntime _jsRuntime;
         private readonly HttpClient _httpClient;
@@ -106,6 +106,12 @@ namespace CarRental.BlazorWasm.Services
                 _navManager.NavigateTo("404", true);
                 throw new Exception("This exception should not occur.");
             }
+        }
+
+        public async Task<string> getTokenFromLocalStorage()
+        {
+            string token = await _jsRuntime.InvokeAsync<string>("localStorage.getItem", "$$token$$");
+            return token;
         }
     }
 }

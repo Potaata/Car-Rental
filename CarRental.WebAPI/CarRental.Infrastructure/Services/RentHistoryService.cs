@@ -17,7 +17,7 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace CarRental.Infrastructure.Services
 {
-    
+
     public class RentHistoryService : IRentHistory
     {
         private readonly IApplicationDBContext _dbcontext;
@@ -32,11 +32,13 @@ namespace CarRental.Infrastructure.Services
 
         public async Task<MessageResponse> AddRentHistory(RentHistory newRent)
         {
+            newRent.FromDate = newRent.FromDate.ToUniversalTime();
+            newRent.ToDate = newRent.ToDate.ToUniversalTime();
             if (DateTime.Compare(newRent.ToDate, newRent.FromDate) < 0)
             {
                 throw new ApiException("To Date is earlier than From Date");
             }
-            
+
             bool isOverlap = await _dbcontext.RentHistory
                          .Where(rh => rh.CarId == newRent.CarId &&
                                       (rh.Status == StatusEnums.Approved || rh.Status == StatusEnums.Rented) &&
@@ -45,37 +47,36 @@ namespace CarRental.Infrastructure.Services
                          .AnyAsync();
 
             var unpaidDamage = from rh in _dbcontext.RentHistory
-                           join dr in _dbcontext.DamageRequest on rh.Id equals dr.RentID
-                           where (dr.isPaid == false && rh.UserId == newRent.UserId)
-                           select new DamageRequest
-                           {
-                               Id = dr.Id,
-                               Description = dr.Description,
-                               RentID = dr.RentID,
-                               Cost = dr.Cost,
-                               isPaid = dr.isPaid
+                               join dr in _dbcontext.DamageRequest on rh.Id equals dr.RentID
+                               where (dr.isPaid == false && rh.UserId == newRent.UserId)
+                               select new DamageRequest
+                               {
+                                   Id = dr.Id,
+                                   Description = dr.Description,
+                                   RentID = dr.RentID,
+                                   Cost = dr.Cost,
+                                   isPaid = dr.isPaid
 
 
-                           };
+                               };
 
-            if (unpaidDamage.Count() > 0) {
+            if ((await unpaidDamage.ToListAsync()).Count > 0)
+            {
                 throw new ApiException("Pay your damage cost first");
             }
-            
+
             if (isOverlap)
             {
-                return new MessageResponse { message = "Rent history overlaps with existing entries." };
+                throw new ApiException("This car is already on rent for the selected date.");
             }
             else
             {
-                
-
                 _dbcontext.RentHistory.Add(newRent);
                 await _dbcontext.SaveChangesAsync();
                 return new MessageResponse { message = "Rent history added successfully." };
             }
         }
-        
+
         public async Task<List<RentHistoryResponseDTO>> GetRentHistories()
         {
             var result = from rh in _dbcontext.RentHistory
@@ -96,13 +97,14 @@ namespace CarRental.Infrastructure.Services
                              Price = rh.Price
                          };
 
-
-            return await result.ToListAsync();
+            //TODO
+            var a =  await result.ToListAsync();
+            return a;
         }
 
-        public async Task<MessageResponse> ApproveRequest(int rentId) 
+        public async Task<MessageResponse> ApproveRequest(int rentId)
         {
-            var sessionUser = await _authService.GetSessionUser();
+            var sessionUser = await _authService.GetSessionUser(new List<string> { "Admin", "Staff", "User" });
             var rentHistory = await _dbcontext.RentHistory.FindAsync(rentId);
             if (rentHistory == null)
             {
@@ -141,10 +143,10 @@ namespace CarRental.Infrastructure.Services
 
             return rentHistories;
         }
-        
-        public async Task<MessageResponse> DeclineRequest(int id) 
+
+        public async Task<MessageResponse> DeclineRequest(int id)
         {
-            var sessionUser = await _authService.GetSessionUser();
+            var sessionUser = await _authService.GetSessionUser(new List<string> { "User", "Admin", "Staff" });
             var rentHistory = await _dbcontext.RentHistory.FindAsync(id);
             if (rentHistory == null)
             {
@@ -186,7 +188,8 @@ namespace CarRental.Infrastructure.Services
             return new MessageResponse { message = "Car marked taken." };
         }
 
-        public async Task<MessageResponse> CancelCarRequest(int rentId) {
+        public async Task<MessageResponse> CancelCarRequest(int rentId)
+        {
 
             var rentHistory = await _dbcontext.RentHistory.FindAsync(rentId);
             if (rentHistory == null)
@@ -205,6 +208,20 @@ namespace CarRental.Infrastructure.Services
 
             return new MessageResponse { message = "Rent request cancelled successfully." };
         }
+
+        public async Task<MessageResponse> AddOffer(Offers offer) 
+        { 
+            _dbcontext.Offers.Add(offer);
+            await _dbcontext.SaveChangesAsync();
+
+            return new MessageResponse { message = " Offer added sucessfully." };
+
+        }
+
+        public async Task<Offers> GetValidDiscount() 
+        { 
+            return (await _dbcontext.Offers.ToListAsync()).Where(x=> x.ValidTill > DateTime.Now).ToList().FirstOrDefault();
+        }
     }
-    
+
 }

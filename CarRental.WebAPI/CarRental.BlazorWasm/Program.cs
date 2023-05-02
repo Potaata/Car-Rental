@@ -22,6 +22,8 @@ builder.Services.AddSingleton<AuthService>();
 builder.Services.AddSingleton<RentService>();
 builder.Services.AddSingleton<PendingHistoryService>();
 builder.Services.AddSingleton<CarService>();
+builder.Services.AddSingleton<UserService>();
+builder.Services.AddSingleton<DiscountService>();
 
 
 builder.Services.AddSyncfusionBlazor();

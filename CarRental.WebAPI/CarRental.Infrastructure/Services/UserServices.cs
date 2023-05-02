@@ -81,7 +81,7 @@ namespace CarRental.Infrastructure.Services
 
         public async Task<UserListResponseDTO> GetRegularUsers()
         {
-            DateTime oneMonthAgo = DateTime.Now.AddDays(-30);
+            DateTime oneMonthAgo = DateTime.Now.ToUniversalTime().AddDays(-30);
             var regularUsers = from u in _dbcontext.Users
                                join rh in _dbcontext.RentHistory
                                on u.Id equals rh.UserId
@@ -111,7 +111,8 @@ namespace CarRental.Infrastructure.Services
 
         public async Task<UserListResponseDTO> GetInactiveUsers()
         {
-            DateTime threeMonthsAgo = DateTime.Now.AddDays(-90);
+            DateTime threeMonthsAgo = DateTime.Now.ToUniversalTime().AddDays(-90);
+
             var threeeMonthsRentingUsers = from u in _dbcontext.Users
                                            join rh in _dbcontext.RentHistory
                                            on u.Id equals rh.UserId

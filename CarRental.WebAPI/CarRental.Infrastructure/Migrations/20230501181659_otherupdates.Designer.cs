@@ -3,6 +3,7 @@ using System;
 using CarRental.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CarRental.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20230501181659_otherupdates")]
+    partial class otherupdates
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -167,50 +170,6 @@ namespace CarRental.Infrastructure.Migrations
                     b.ToTable("Notification");
                 });
 
-            modelBuilder.Entity("CarRental.Domain.Entities.Offers", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreateTime")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("CreatedBy")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("DeletedBy")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime?>("DeletedTime")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<float>("DiscountPercent")
-                        .HasColumnType("real");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<int>("LastModifiedBy")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("UpdateTime")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime>("ValidTill")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Offers");
-                });
-
             modelBuilder.Entity("CarRental.Domain.Entities.RentHistory", b =>
                 {
                     b.Property<int>("Id")
@@ -246,8 +205,8 @@ namespace CarRental.Infrastructure.Migrations
                     b.Property<int>("LastModifiedBy")
                         .HasColumnType("integer");
 
-                    b.Property<float>("Price")
-                        .HasColumnType("real");
+                    b.Property<int>("Price")
+                        .HasColumnType("integer");
 
                     b.Property<int>("Status")
                         .HasColumnType("integer");
@@ -370,21 +329,21 @@ namespace CarRental.Infrastructure.Migrations
                         new
                         {
                             Id = "1",
-                            ConcurrencyStamp = "8e2f8779-1a73-40ba-90e8-d35012e70328",
+                            ConcurrencyStamp = "733b8526-c7cf-4f41-b729-1ab721dc94b9",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = "2",
-                            ConcurrencyStamp = "e175f108-f877-4e4a-b8d9-978c7fea369c",
+                            ConcurrencyStamp = "15ddbe66-e35e-4229-abcd-d227e9b437d1",
                             Name = "Staff",
                             NormalizedName = "STAFF"
                         },
                         new
                         {
                             Id = "3",
-                            ConcurrencyStamp = "7ff6150a-0b78-45bd-8fe4-ce3f8787d928",
+                            ConcurrencyStamp = "a4ee1169-35a9-493e-96b8-447e1b4ff431",
                             Name = "User",
                             NormalizedName = "USER"
                         });
