@@ -9,8 +9,6 @@ namespace CarRental.BlazorWasm.Services.ItemService
     {
         private readonly ApiService _apiService;
 
-        public string EndPoint = "/api/damages";
-
 
         public DamageService(ApiService apiService)
         {
@@ -19,22 +17,21 @@ namespace CarRental.BlazorWasm.Services.ItemService
 
         public async Task<List<Damage>> GetDamages()
         {
-            DamageResponse damages = await _apiService.GET<DamageResponse>(EndPoint);
+            DamageResponse damages = await _apiService.GET<DamageResponse>("");
 
             return damages.damages;
         }
-       
-        public async Task<string> CreateDamage(DamageRequest damage)
+
+        public async Task<string> CreateDamage(string Description, int RentId)
         {
-            MessageResponse message = await _apiService.POST<DamageRequest, MessageResponse>(EndPoint, damage);
+            CreateDamageRequest damage = new CreateDamageRequest
+            {
+                Description = Description,
+                RentId = RentId
+            };
+            MessageResponse message = await _apiService.POST<CreateDamageRequest, MessageResponse>("/api/users/damage-request", damage);
             return message.message;
         }
 
-        public DamageRequest GetDefaultRequest()
-        {
-            return new DamageRequest();
-        }
     }
-
-
 }

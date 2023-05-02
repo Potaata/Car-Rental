@@ -8,14 +8,14 @@
 @inject IJSRuntime jsRuntime;
 
 <div class="container">
-	<div class="row">
-		<div class="col-lg-8 offset-lg-2 text-center">
+    <div class="row">
+        <div class="col-lg-8 offset-lg-2 text-center">
             <h3 style="font-family:'Arial Rounded MT';">Cars</h3>
         </div>
     </div>
 </div>
 <div class="button-container">
-<button class ="btn btn-dark" @onclick='() => showInsertModal()'>Insert</button>
+    <button class="btn btn-dark" @onclick='() => showInsertModal()'>Insert</button>
 </div>
 <div class="modal fade" id="carInsertionModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -61,7 +61,7 @@
             </div>
         </div>
     </div>
-    </div>
+</div>
 <TableTemplate TItem=Car ItemService=@carService TItemRequest=@CarRequest Editable=true Deletable=true Insertable=false />
 
 <style>
@@ -71,7 +71,7 @@
 </style>
 
 @code {
-    string errorMessage { get; set;}
+    string errorMessage { get; set; }
     bool showInsert = false;
 
     string InsertionModel = "", InsertionNumberPlate = "", InsertionRentPrice = "", InsertionColor = "", InsertionPhotoUrl = "";
@@ -88,7 +88,7 @@
             });
     }
 
-    List<Car> allCars = new List<Car>(); 
+    List<Car> allCars = new List<Car>();
 
     public async void UploadCarPhoto(InputFileChangeEventArgs e)
     {

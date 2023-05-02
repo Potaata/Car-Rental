@@ -1,6 +1,7 @@
 ﻿@page "/car-requests"
 
 @using CarRental.BlazorWasm.Services.ItemService;
+@using CarRental.BlazorWasm.Models.Enums;
 
 @inject PendingHistoryService pendingHistoryService
 
@@ -28,10 +29,20 @@
                 <td>@request.Price</td>
                 <td>@request.FromDate.ToShortDateString()</td>
                 <td>@request.ToDate.ToShortDateString()</td>
-                <td>
-                    <button class="btn btn-success" @onclick="() => ApproveRequest(request.Id)">Approve</button>
-                    <button class="btn btn-danger" @onclick="() => DenyRequest(request.Id)">Deny</button>
-                </td>
+                @if (request.Status == StatusEnums.Pending)
+                {
+
+                    <td>
+                        <button class="btn btn-success" @onclick="() => ApproveRequest(request.Id)">Approve</button>
+                        <button class="btn btn-danger" @onclick="() => DenyRequest(request.Id)">Deny</button>
+                    </td>
+                }
+                else
+                {
+                    <td>
+                        <button class="btn btn-danger" @onclick="() => CarTaken(request.Id)">Mark Taken</button>
+                    </td>
+                }
             </tr>
         }
     </tbody>
@@ -77,6 +88,20 @@
         catch (ApiException ex)
         {
             errorMessage = ex.Message;
+        }
+    }
+
+    private async Task CarTaken(int id)
+    {
+        try
+        {
+            await pendingHistoryService.MarkCarTaken(id);
+            await FetchAllPending();
+        }
+        catch (ApiException ex)
+        {
+            errorMessage = ex.Message;
+
         }
     }
 

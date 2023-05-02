@@ -1,4 +1,9 @@
 ﻿@page "/upload";
+@using System.Net.Http.Headers
+@using CarRental.BlazorWasm.Services.ItemService
+
+@inject ApiService apiService
+@inject UserService userService
 
 <section class="h-custom">
     <div class="container-fluid">
@@ -12,8 +17,15 @@
 </section>
 
 <section class="uplcls">
-    <button class="btn"><i class="fa fa-upload"></i></button>
+    <InputFile max-file-size="1536000" accept=".png,.jpg,.jpeg" OnChange="@UploadPhoto" single />
+    <button class="btn" @onclick="UploadDocument">Upload Document</button>
 </section>
+<p>@successMessage</p>
+<p>@errorMessage</p>
+
+<div style="display: none">
+    <input @bind="PhotoUrl" type="text" />
+</div>
 
 <style>
     .uplcls {
@@ -28,6 +40,7 @@
         margin-left: auto;
         margin-right: auto;
     }
+
     .btn {
         border-radius: 20px;
         background: whitesmoke;
@@ -39,5 +52,42 @@
 </style>
 
 @code {
+    private string PhotoUrl { get; set; }
 
+    private string errorMessage { get; set; }
+    private string successMessage { get; set; }
+    public async void UploadPhoto(InputFileChangeEventArgs e)
+    {
+        try
+        {
+            var file = e.File;
+            var filename = file.Name;
+            var fileContent = new StreamContent(file.OpenReadStream(maxAllowedSize: 1024 * 1000));
+            fileContent.Headers.ContentDisposition = new("form-data") { Name = "file", FileName = filename };
+            fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
+
+            using var content = new MultipartFormDataContent();
+            content.Add(content: fileContent, name: "image");
+
+            var response = await apiService.FileUpload(content);
+            PhotoUrl = response.Url;
+        }
+        catch (ApiException ex)
+        {
+            errorMessage = ex.Message;
+        }
+    }
+
+    public async void UploadDocument()
+    {
+        try
+        {
+            string message = await userService.UpdatePhotoUrl(PhotoUrl);
+            successMessage = message;
+        }
+        catch (ApiException ex)
+        {
+            errorMessage = ex.Message;
+        }
+    }
 }

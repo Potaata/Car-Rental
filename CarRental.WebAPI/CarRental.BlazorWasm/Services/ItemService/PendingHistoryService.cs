@@ -16,7 +16,7 @@ namespace CarRental.BlazorWasm.Services.ItemService
         public async Task<List<PendingHistory>> GetAll()
         {
             PendingHistoryResponse pendingHistories = await _apiService.GET<PendingHistoryResponse>(EndPoint);
-            List<PendingHistory> pendingHistoryList = pendingHistories.rents.Where(x => x.Status == StatusEnums.Pending).ToList();
+            List<PendingHistory> pendingHistoryList = pendingHistories.rents.Where(x => x.Status == StatusEnums.Pending || x.Status == StatusEnums.Approved).ToList();
             return pendingHistoryList;
         }
         public async Task<string> ApproveRequest(int id)
@@ -31,6 +31,20 @@ namespace CarRental.BlazorWasm.Services.ItemService
 
             return message.message;
         }
-    }
 
+        public async Task<string> MarkCarTaken(int id)
+        {
+            MessageResponse message = await _apiService.POST<EmptyRequest, MessageResponse>("/api/admin/car-taken" + '/' + id, new EmptyRequest { });
+            
+            return message.message;
+        }
+
+
+        public async Task<List<PendingHistory>> GetUserRentedRequests()
+        {
+            PendingHistoryResponse pendingHistories = await _apiService.GET<PendingHistoryResponse>("/api/user/rent-history");
+            List<PendingHistory> userTakenCars = pendingHistories.rents.Where(x => x.Status == StatusEnums.Rented).ToList();
+            return userTakenCars;
+        }
+    }
 }

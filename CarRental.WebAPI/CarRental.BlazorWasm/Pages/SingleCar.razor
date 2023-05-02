@@ -18,7 +18,6 @@
             <div class="card">
                 <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
                     <img src="@currCar.PhotoUrl" class="img-fluid" />
-
                 </div>
                 <hr />
                 <div class="card-body">
@@ -65,7 +64,6 @@
                             <button @onclick="()=> showRentModal()" class="btn btn-primary" data-toggle="modal" data-target="#rentModal">Rent<span class="fas fa-arrow-right ps-2"></span></button>
                         </div>
                     </div>
-                    <div>@errorMessage</div>
                 </div>
             </div>
 
@@ -90,6 +88,7 @@
                         <label for="rentTo" class="form-label">Rent To</label>
                         <input type='date' @onchange="(ChangeEventArgs e) => setToDate(e.Value.ToString())" id="rentTo" placeholder="Select Date" />
                     </div>
+                    <div>@errorMessage</div>
                 </form>
             </div>
             <div class="modal-footer">

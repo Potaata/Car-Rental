@@ -2,15 +2,16 @@
 
 namespace CarRental.BlazorWasm.Models.Damages
 {
-    public class DamageRequest
+    public class CreateDamageRequest
     {
-        public string Title { get; set; }
 
         public string Description { get; set; }
 
-        public DamageRequest GetDefault()
+        public int RentId { get; set; }
+
+        public CreateDamageRequest GetDefault()
         {
-            return new DamageRequest();
+            return new CreateDamageRequest();
         }
     }
 }

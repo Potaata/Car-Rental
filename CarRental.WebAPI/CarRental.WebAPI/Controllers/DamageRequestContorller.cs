@@ -8,14 +8,14 @@ using Microsoft.AspNetCore.Mvc;
 namespace CarRental.WebAPI.Controllers
 {
     [ApiController]
-    public class DamageRequestContorller : ControllerBase
+    public class DamageRequestController : ControllerBase
     {
         private readonly IDamageRequest _damageRequest;
         private readonly IApplicationDBContext _dbcontext;
         private readonly IAuthService _authService;
 
 
-        public DamageRequestContorller(IDamageRequest damageRequest, IApplicationDBContext dbcontext, IAuthService authService)
+        public DamageRequestController(IDamageRequest damageRequest, IApplicationDBContext dbcontext, IAuthService authService)
         {
             _damageRequest = damageRequest;
             _dbcontext = dbcontext;

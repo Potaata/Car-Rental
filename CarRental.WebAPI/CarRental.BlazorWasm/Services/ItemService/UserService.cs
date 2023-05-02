@@ -54,6 +54,12 @@ namespace CarRental.BlazorWasm.Services.ItemService
             return users.users;
         }
 
+        public async Task<string> UpdatePhotoUrl(string PhotoUrl)
+        {
+            MessageResponse message = await _apiService.POST<UrlResponse, MessageResponse>("/api/users/document", new UrlResponse { Url = PhotoUrl});
+            return message.message;
+        }
+        
         public UserRequest GetDefaultRequest()
         {
             return new UserRequest();

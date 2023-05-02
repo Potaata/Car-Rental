@@ -6,6 +6,8 @@
 
 
 @inject DamageService damageService
+@inject PendingHistoryService pendingHistoryService
+@inject CarService carService
 
 <div class="container">
     <div class="row d-flex justify-content-center align-items-center h-100">
@@ -14,54 +16,88 @@
         </div>
     </div>
 </div>
+@if (loaded)
+{
 
-<div class="container-fluid pt-5">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-6 pb-5">
-                <img src="https://png.pngtree.com/png-vector/20220707/ourmid/pngtree-broken-car-automobile-smoke-vector-png-image_5634323.png"
+    @if (UserRents.Count == 0)
+    {
+        <h1>You have not rented any cars yet. Please visit the home page to rent a car!</h1>
+    }
+    else
+    {
+
+        <div class="container-fluid pt-5">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6 pb-5">
+                        <img src="https://png.pngtree.com/png-vector/20220707/ourmid/pngtree-broken-car-automobile-smoke-vector-png-image_5634323.png"
                      class="img-fluid" alt="Image">
-            </div>
-            <div class="col-md-6 pb-5">
-                <form>
-
-
-                    <div class="form-group row">
-                        <label for="title" class="form-label mt-4">Title</label>
-                        <input type="text" class="form-control" id="title" placeholder="Enter the title of the damage" @bind="@Title">
                     </div>
+                    <div class="col-md-6 pb-5">
 
 
+                        <div class="form-group">
+                            <label for="CarRents" class="form-label mt-4">Number Plate</label>
+                            <select @bind="RentId">
+                                @foreach (var item in UserRents)
+                                {
+                                    <option value="@item.Id">@item.CarNumberPlate from @item.FromDate.ToLongDateString() to @item.ToDate.ToLongDateString()</option>
+                                }
+                            </select>
+                        </div>
 
-                    <div class="form-group">
-                        <label for="description" class="form-label mt-4">Description</label>
-                        <textarea class="form-control" id="description" rows="3" placeholder="Enter the description of the damage" @bind="@Description"></textarea>
+                        <div class="form-group">
+                            <label for="description" class="form-label mt-4">Description</label>
+                            <textarea class="form-control" id="description" rows="3" placeholder="Enter the description of the damage" @bind="@Description"></textarea>
+                        </div>
+                        <div class="form-group py-3">
+                            @successMessage
+                        </div>
+                        <div class="form-group py-3">
+                            @errorMessage
+                        </div>
+                        <div class="form-group py-3">
+                            <button type="submit" class="btn btn-dark" @onclick="HandleSubmit">Submit</button>
+                        </div>
                     </div>
-
-                    <div class="form-group py-3">
-                        <button type="submit" class="btn btn-dark" @onclick="HandleSubmit">Submit</button>
-                    </div>
-                </form>
+                </div>
             </div>
         </div>
-    </div>
-</div>
-
-
-
+    }
+}
 
 @code {
     private string Title { get; set; }
     private string Description { get; set; }
+    private int RentId { get; set; }
+
+    private List<PendingHistory> UserRents = new List<PendingHistory>();
+
+    private string errorMessage, successMessage;
+    bool loaded = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            UserRents = await pendingHistoryService.GetUserRentedRequests();
+            List<Car> allCars = await carService.GetItems();
+            foreach (PendingHistory h in UserRents)
+            {
+                h.CarNumberPlate = allCars.Find(x => x.Id == h.CarId).NumberPlate;
+            }
+            loaded = true;
+        }
+        catch (ApiException ex)
+        {
+            errorMessage = ex.Message;
+        }
+    }
 
     private async void HandleSubmit()
     {
-        var damageRequest = new DamageRequest
-            {
-                Title = Title,
-                Description = Description
-            };
-
-        await damageService.CreateDamage(damageRequest);
+        string message = await damageService.CreateDamage(Description, RentId);
+        successMessage = message;
+        StateHasChanged();
     }
 }

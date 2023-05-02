@@ -13,6 +13,7 @@ namespace CarRental.BlazorWasm.Models.Items
         public DateTime FromDate { get; set; }
         public DateTime ToDate { get; set; }
         public StatusEnums Status;
+        public int CarId { get; set; }
         public int Price { get; set; }
     }
 }

@@ -97,9 +97,13 @@ namespace CarRental.WebAPI.Controllers
             return new UserRoleResponseDTO { Role = role };
         }
 
-        
-
-        
+        [HttpPost]
+        [Route("/api/users/document")]
+        public async Task<MessageResponse> UpdatePhotoUrl(UpdateDocumentDTO document)
+        {
+            Users user = await _authService.GetSessionUser(new List<string> { "Admin", "User", "Staff" });
+            return await _users.UpdatePhotoUrl(user.Id,document.URL);
+        }
     }
 }
 

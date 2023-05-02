@@ -77,7 +77,7 @@
         try
         {
             bool login = await authService.Login(Email, Password);
-            navManager.NavigateTo("/Cars", true);
+            navManager.NavigateTo("/Home", true);
 
         }
         catch (ApiException e)

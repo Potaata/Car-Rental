@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CarRental.Infrastructure.Exceptions;
 
 namespace CarRental.Infrastructure.Services
 {
@@ -24,8 +25,10 @@ namespace CarRental.Infrastructure.Services
 
         public async Task<MessageResponse> AddDamageRequest(DamageRequest damageRequest)
         {
+            if (string.IsNullOrEmpty(damageRequest.Description))
+                throw new ApiException("Description cannot be empty.");
             _dbcontext.DamageRequest.Add(damageRequest);
-
+            await _dbcontext.SaveChangesAsync();
             return new MessageResponse { message = "Damage Request Added to the database." };
         }
 

@@ -103,6 +103,7 @@ namespace CarRental.Infrastructure.Services
             var regularUsers = from u in _dbcontext.Users
                                select new Users
                                {
+                                   Id = u.Id,
                                    Address = u.Address,
                                    Name = u.Name,
                                    PhoneNumber = u.PhoneNumber,
@@ -115,36 +116,48 @@ namespace CarRental.Infrastructure.Services
         {
             DateTime threeMonthsAgo = DateTime.Now.ToUniversalTime().AddDays(-90);
 
-            var threeeMonthsRentingUsers = from u in _dbcontext.Users
-                                           join rh in _dbcontext.RentHistory
-                                           on u.Id equals rh.UserId
-                                           where rh.ToDate >= threeMonthsAgo
-                                           select new Users
-                                           {
-                                               Address = u.Address,
-                                               Name = u.Name,
-                                               PhoneNumber = u.PhoneNumber,
-                                               Email = u.Email
-                                           };
+            var threeeMonthsRentingUsersDB = from u in _dbcontext.Users
+                                             join rh in _dbcontext.RentHistory
+                                             on u.Id equals rh.UserId
+                                             where rh.ToDate >= threeMonthsAgo
+                                             select new Users
+                                             {
+                                                 Id = u.Id,
+                                                 Address = u.Address,
+                                                 Name = u.Name,
+                                                 PhoneNumber = u.PhoneNumber,
+                                                 Email = u.Email
+                                             };
 
-            UserListResponseDTO regularUsers = await GetRegularUsers();
+            UserListResponseDTO allUsers = await GetAllUsers();
 
-            var inactiveUsers = regularUsers.users.Except(await threeeMonthsRentingUsers.ToListAsync());
-            return new UserListResponseDTO { users = (inactiveUsers.ToList()) };
+            var threeeMonthsRentingUsers = await threeeMonthsRentingUsersDB.ToListAsync();
+            var inactiveUsers = allUsers.users
+                                .Where(user => !threeeMonthsRentingUsers.Any(activeUser => activeUser.Id == user.Id))
+                                .ToList();
+
+            return new UserListResponseDTO { users = inactiveUsers };
         }
-        
-        public async Task<MessageResponse> ChangePassword(ChangePasswordDTO passwords) 
+
+        public async Task<MessageResponse> ChangePassword(ChangePasswordDTO passwords)
         {
-            var result = await _userManager.ChangePasswordAsync((await _authService.GetSessionUser(new List<string> { "User", "Staff", "Admin"})), passwords.currentPassword, passwords.newPassword);
+            var result = await _userManager.ChangePasswordAsync((await _authService.GetSessionUser(new List<string> { "User", "Staff", "Admin" })), passwords.currentPassword, passwords.newPassword);
             if (!result.Succeeded)
             {
                 string error = result.Errors.ElementAt(0).Description;
                 throw new ApiException(error);
             }
-            
+
             return new MessageResponse { message = "Password Changed Succeessfully!" };
 
         }
-        
+
+        public async Task<MessageResponse> UpdatePhotoUrl(string userId, string photoUrl)
+        {
+            var user = await _dbcontext.Users.FindAsync(userId);
+            user.Documenturl = photoUrl;
+            await _dbcontext.SaveChangesAsync();
+            return new MessageResponse { message = "Photo Updated Successfully!" };
+        }
     }
 }

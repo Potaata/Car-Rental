@@ -35,7 +35,7 @@ catch (HttpRequestException e){
     };
     List<string> pagesWithoutLogin = new List<string>
     {
-        "login", "register", "home", "404", "upload"
+        "login", "register", "home", "404"
     };
 
     List<string> pagesInaccessibleAfterLogin = new List<string>{
@@ -60,16 +60,6 @@ catch (HttpRequestException e){
         if (await checkRedirectToLogin())
         {
             navManager.NavigateTo("/login", true);
-        }
-        else if (string.IsNullOrEmpty(await sessService.getTokenFromLocalStorage()))
-        {
-            foreach (string page in pagesInaccessibleAfterLogin)
-            {
-                if (navManager.Uri.ToLower().EndsWith(page))
-                {
-                    navManager.NavigateTo("/cars", true);
-                }
-            }
         }
     }
 

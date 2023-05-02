@@ -3,6 +3,5 @@
     public class PendingHistoryResponse: SuccessResponse
     {
         public List<PendingHistory> rents { get; set; }
-
     }
 }

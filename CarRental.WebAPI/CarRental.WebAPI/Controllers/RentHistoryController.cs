@@ -65,11 +65,11 @@ namespace CarRental.WebAPI.Controllers
         }
 
         [HttpGet]
-        [Route("api/user/rent-history/{userId}")]
-        public async Task<UserRentHistoryListResponse> GetRentHistoriesByUserId(string userId)
+        [Route("api/user/rent-history")]
+        public async Task<UserRentHistoryListResponse> GetRentHistoriesByUserId()
         {
-            await _authService.GetSessionUser(new List<string> { "Admin", "Staff", "User" });
-            return new UserRentHistoryListResponse { rents = await _rentHistory.GetRentHistoriesByUserId(userId) };
+            Users user = await _authService.GetSessionUser(new List<string> { "User", "Admin", "Staff" });
+            return new UserRentHistoryListResponse { rents = await _rentHistory.GetRentHistoriesByUserId(user.Id) };
         }
 
         [HttpPost]

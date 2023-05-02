@@ -2,6 +2,7 @@
 
 
 @inject AuthService userService
+@inject NavigationManager navManager
 
 <section class="h-custom">
     <div class="container-fluid">
@@ -89,7 +90,7 @@
         try
         {
             await userService.Register(Name, Username, Email, Address, Password, PhoneNumber);
-            int a = 0;
+            navManager.NavigateTo("/upload", true);
         }
         catch (ApiException e)
         {
