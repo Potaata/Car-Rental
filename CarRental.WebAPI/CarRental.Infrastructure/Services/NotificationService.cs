@@ -62,6 +62,9 @@ namespace CarRental.Infrastructure.Services
             // Find all notifications for a user by UserId
             List<Notification> notifications = await _dbContext.Notification.Where(n => n.UserId == id).ToListAsync();
 
+            // read notification
+            ReadNotification(id);
+
             // Return the list of notifications
             return notifications;
         }

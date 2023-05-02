@@ -122,6 +122,15 @@ namespace CarRental.Infrastructure.Services
             _dbcontext.RentHistory.Update(rentHistory);
             await _dbcontext.SaveChangesAsync();
 
+            // add notification
+            var notification = new Notification
+            {
+                UserId = rentHistory.UserId,
+                Message = $"Your rent request for {rentHistory.FromDate} has been approved.",
+            };
+            _dbcontext.Notification.Add(notification);
+            await _dbcontext.SaveChangesAsync();
+
             return new MessageResponse { message = "Rent request approved successfully." };
 
 
@@ -165,6 +174,14 @@ namespace CarRental.Infrastructure.Services
             _dbcontext.RentHistory.Update(rentHistory);
             await _dbcontext.SaveChangesAsync();
 
+            var notification = new Notification
+            {
+                UserId = rentHistory.UserId,
+                Message = $"Your rent request for {rentHistory.FromDate} has been declined.",
+            };
+            _dbcontext.Notification.Add(notification);
+            await _dbcontext.SaveChangesAsync();
+
             return new MessageResponse { message = "Rent request denied successfully." };
         }
 
@@ -183,6 +200,14 @@ namespace CarRental.Infrastructure.Services
 
             rentHistory.Status = StatusEnums.Rented;
             _dbcontext.RentHistory.Update(rentHistory);
+            await _dbcontext.SaveChangesAsync();
+
+            var notification = new Notification
+            {
+                UserId = rentHistory.UserId,
+                Message = $"Your rent request for {rentHistory.FromDate} has been marked taken.",
+            };
+            _dbcontext.Notification.Add(notification);
             await _dbcontext.SaveChangesAsync();
 
             return new MessageResponse { message = "Car marked taken." };
@@ -214,6 +239,19 @@ namespace CarRental.Infrastructure.Services
             _dbcontext.Offers.Add(offer);
             await _dbcontext.SaveChangesAsync();
 
+            var userIds = await _dbcontext.Users.Select(u => u.Id).ToListAsync();
+            
+            foreach (var userId in userIds)
+            {
+                var notification = new Notification
+                {
+                    UserId = userId,
+                    Message = $"New offer of {offer.DiscountPercent} is available. Valid Till only {offer.ValidTill.ToLongDateString()}.",
+                };
+                _dbcontext.Notification.Add(notification);
+            }
+            
+
             return new MessageResponse { message = " Offer added sucessfully." };
 
         }
@@ -238,6 +276,13 @@ namespace CarRental.Infrastructure.Services
 
             rentHistory.Status = StatusEnums.Returned;
             _dbcontext.RentHistory.Update(rentHistory);
+            await _dbcontext.SaveChangesAsync();
+            var notification = new Notification
+            {
+                UserId = rentHistory.UserId,
+                Message = $"Your rent request for {rentHistory.FromDate} has been marked Returned.",
+            };
+            _dbcontext.Notification.Add(notification);
             await _dbcontext.SaveChangesAsync();
 
             return new MessageResponse { message = "Car marked returned." };

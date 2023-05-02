@@ -26,5 +26,7 @@ namespace CarRental.WebAPI.Controllers
             await _notification.ReadNotification(user.Id);
             return await _notification.GetNotificationsByUserId(user.Id);
         }
+
+        
     }
 }

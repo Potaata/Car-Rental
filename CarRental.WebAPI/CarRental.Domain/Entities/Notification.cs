@@ -15,7 +15,7 @@ namespace CarRental.Domain.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public string Message { get; set; }
-        public bool IsSeen { get; set; }
+        public bool IsSeen { get; set; } = false;
 
         [ForeignKey("Users")]
         public string UserId { get; set; }

@@ -40,6 +40,23 @@ namespace CarRental.Infrastructure.Services
             
             await _dbcontext.SaveChangesAsync();
 
+            // add notification
+
+            var userId = _dbcontext.DamageRequest
+    .Join(_dbcontext.RentHistory, dr => dr.RentID, rh => rh.Id, (dr, rh) => new { DamageRequest = dr, RentHistory = rh })
+    .Where(joined => joined.DamageRequest.RentID == joined.RentHistory.Id)
+    .Select(joined => joined.RentHistory.UserId).FirstOrDefault();
+
+            var notification = new Notification
+            {
+                UserId = userId,
+                Message = "Your damage request has been quoted."
+            };
+
+            _dbcontext.Notification.Add(notification);
+            await _dbcontext.SaveChangesAsync();
+
+
             return new MessageResponse { message = "Damage Cost updated successfully" };
 
         }
