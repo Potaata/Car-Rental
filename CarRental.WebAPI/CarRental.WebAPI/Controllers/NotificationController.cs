@@ -2,6 +2,7 @@
 using CarRental.Application.DTOs.CarDTOs;
 using CarRental.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
+using CarRental.Application.DTOs;
 
 namespace CarRental.WebAPI.Controllers
 {
@@ -19,14 +20,15 @@ namespace CarRental.WebAPI.Controllers
 
 
         [HttpGet]
-        [Route("/api/user/notifications/")]
-        public async Task<List<Notification>> GetNotifications()
+        [Route("/api/user/notifications")]
+        public async Task<NotificationListResponseDTO> GetNotifications()
         {
             Users user = await _authService.GetSessionUser(new List<string> { "User", "Admin", "Staff" });
-            await _notification.ReadNotification(user.Id);
-            return await _notification.GetNotificationsByUserId(user.Id);
-        }
 
-        
+            var notifications = await _notification.GetNotificationsByUserId(user.Id);
+            var response = new NotificationListResponseDTO { notifications = notifications };
+
+            return response;
+        }
     }
 }

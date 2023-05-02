@@ -4,6 +4,5 @@
     {
         public string Message { get; set; }
 
-        public Boolean IsSeen { get; set; }
     }
 }

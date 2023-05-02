@@ -63,5 +63,23 @@ namespace CarRental.WebAPI.Controllers
             var message = await _cars.DeleteCar(id);
             return message;
         }
+
+        [HttpGet]
+        [Route("/api/cars-available")]
+        public async Task<ListCarResponse> GetAvailableCars()
+        {
+            await _authService.GetSessionUser(new List<string> { "Admin", "Staff" });
+            var cars = await _cars.GetAvailableCars();
+            return cars;
+        }
+
+        [HttpGet]
+        [Route("/api/cars-rented")]
+        public async Task<ListCarResponse> GetRentedCars()
+        {
+            await _authService.GetSessionUser(new List<string> { "Admin", "Staff" });
+            var cars = await _cars.GetRentedCars();
+            return cars;
+        }
     }
 }

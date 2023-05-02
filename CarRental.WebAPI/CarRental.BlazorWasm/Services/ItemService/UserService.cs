@@ -61,12 +61,20 @@ namespace CarRental.BlazorWasm.Services.ItemService
             return message.message;
         }
 
-        public async Task<string> RegisterStaff(string username, string phoneNumber, string email, string password, string address)
+        public async Task<string> RegisterStaff(string username, string phoneNumber, string email, string password, string address, string name)
         {
-            RegisterRequest req = new RegisterRequest { Address = address, Username = username, Email = email, RawPassword = password, PhoneNumber = phoneNumber };
+            RegisterRequest req = new RegisterRequest { Name = name, Address = address, Username = username, Email = email, RawPassword = password, PhoneNumber = phoneNumber };
             MessageResponse res = await _apiService.POST<RegisterRequest, MessageResponse>("/api/admin/add-staff", req);
             return res.message;
         }
+
+        public async Task<string> RegisterAdmin(string username, string phoneNumber, string email, string password, string address, string name)
+        {
+            RegisterRequest req = new RegisterRequest { Name = name, Address = address, Username = username, Email = email, RawPassword = password, PhoneNumber = phoneNumber };
+            MessageResponse res = await _apiService.POST<RegisterRequest, MessageResponse>("/api/admin/add-admin", req);
+            return res.message;
+        }
+        
 
         public UserRequest GetDefaultRequest()
         {

@@ -14,10 +14,11 @@ namespace CarRental.Infrastructure.Services
 
         public void ValidateDateTime()
         {
-            if(DateTime.Now.Hour < 9 && DateTime.Now.Hour > 17)
+            if (DateTime.Now.Hour >= 9 && DateTime.Now.Hour < 17)
             {
-                throw new ApiException("You are not allowed to perform this action at this time.");
+                return;
             }
+            throw new ApiException("You are not allowed to perform this action at this time.");
         }
     }
 }

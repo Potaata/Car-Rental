@@ -6,7 +6,7 @@ namespace CarRental.BlazorWasm.Services.ItemService
     public class NotificationService {
         private readonly ApiService _apiService;
 
-        public string EndPoint = "/api/notifications";
+        public string EndPoint = "/api/user/notifications";
         public NotificationService(ApiService apiService)
         {
             _apiService = apiService;

@@ -14,5 +14,8 @@ namespace CarRental.Application.Common.Interface
         public Task<MessageResponse> UpdateCar(int id, AddCarRequestDTO car);
         public Task<MessageResponse> DeleteCar(int id);
         public Task<MessageResponse> AddCar(AddCarRequestDTO car);
+        public Task<ListCarResponse> GetRentedCars();
+        public Task<ListCarResponse> GetAvailableCars();
+
     }
 }

@@ -12,7 +12,7 @@
 <div class="button-container">
     <button class="btn btn-dark" @onclick='() => showInsertModal()'>Insert</button>
 </div>
-<p>@message</p>
+<p>@errorMessage</p>
 <div class="modal fade" id="carInsertionModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -24,18 +24,23 @@
                 <div>
                     <div id="insertion">
                         <div class="form-outline mb-4">
+                            <label class="form-label" for="form3Example3">Username</label>
+                            <input @bind="InsertionUsername" type="text" id="form3Example" class="form-control form-control-lg"
+                                   placeholder="Please enter an username" />
+                        </div>
+                        <div class="form-outline mb-4">
                             <label class="form-label" for="form3Example3">Email</label>
-                            <input @bind="InsertionName" type="text" id="form3Example" class="form-control form-control-lg"
+                            <input @bind="InsertionEmail" type="text" id="form3Example" class="form-control form-control-lg"
                                    placeholder="Please enter an email" />
                         </div>
                         <div class="form-outline mb-4">
                             <label class="form-label" for="form3Example3">Phone Number</label>
-                            <input @bind="InsertionEmail" type="text" id="form3Example" class="form-control form-control-lg"
+                            <input @bind="InsertionPhoneNumber" type="text" id="form3Example" class="form-control form-control-lg"
                                    placeholder="Please enter a phone number" />
                         </div>
                         <div class="form-outline mb-4">
                             <label class="form-label" for="form3Example3">Address</label>
-                            <input @bind="InsertionName" type="text" id="form3Example" class="form-control form-control-lg"
+                            <input @bind="InsertionAddress" type="text" id="form3Example" class="form-control form-control-lg"
                                    placeholder="Please enter an address" />
                         </div>
                         <div class="form-outline mb-4">
@@ -45,11 +50,17 @@
                         </div>
                         <div class="form-outline mb-4">
                             <label class="form-label" for="form3Example3">Password</label>
-                            <input @bind="InsertionName" type="password" id="form3Example" class="form-control form-control-lg"
+                            <input @bind="InsertionPassword" type="password" id="form3Example" class="form-control form-control-lg"
                                    placeholder="Please enter a password" />
                         </div>
+                        <div class="form-outline mb-4">
+                            <label>
+                                <input type="checkbox" name="checkbox-name" @bind-value="isAdmin">
+                                Is Admin?
+                            </label>
+                        </div>
                         <div>@errorMessage</div>
-                        <button class="btn btn-light" @onclick="() => RegisterStaff()">Save</button>
+                        <button class="btn btn-light" @onclick="() => RegisterSomeone()">Save</button>
                     </div>
                 </div>
             </div>
@@ -57,15 +68,41 @@
     </div>
 </div>
 
-<TableTemplate TItem=Staff ItemService=@staffService TItemRequest=@StaffRequest Editable=false Deletable=false Insertable=false />
+<table class="table table-striped table-dark">
+    <thead>
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Address</th>
+            <th scope="col">Role</th>
+            <th scope="col">Phone Number</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var staff in allStaffs)
+        {
+            <tr>
+                <td>@staff.Name</td>
+                <td>@staff.Address</td>
+                <td>@staff.Role</td>
+                <td>@staff.PhoneNumber</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@*
+<TableTemplate TItem=Staff ItemService=@staffService TItemRequest=@StaffRequest Editable=false Deletable=false Insertable=false />*@
 
 @code {
-    string InsertionEmail, InsertionPhoneNumber, InsertionAddress, InsertionName, InsertionPassword, errorMessage;
-    string message;
+    string InsertionEmail, InsertionPhoneNumber, InsertionAddress, InsertionUsername, InsertionName, InsertionPassword, errorMessage;
+    bool isAdmin = false;
+
+    List<Staff> allStaffs = new List<Staff>();
 
     protected override async Task OnInitializedAsync()
     {
         await jsRuntime.InvokeVoidAsync("import", "/js/modalScript.js");
+        allStaffs = await staffService.GetItems();
     }
 
     private void showInsertModal()
@@ -73,8 +110,38 @@
         jsRuntime.InvokeVoidAsync("showModal", "carInsertionModal");
     }
 
-    private async void RegisterStaff()
+    private async Task RegisterStaff()
     {
-        message = await userService.RegisterStaff(InsertionEmail, InsertionAddress, InsertionName, InsertionPassword, InsertionPhoneNumber);
+        try
+        {
+            errorMessage = await userService.RegisterStaff(InsertionUsername, InsertionPhoneNumber, InsertionEmail, InsertionPassword, InsertionAddress, InsertionName);
+        }
+        catch (ApiException ex)
+        {
+            errorMessage = ex.Message;
+        }
+    }
+    private async Task RegisterAdmin()
+    {
+        try
+        {
+            errorMessage = await userService.RegisterAdmin(InsertionUsername, InsertionPhoneNumber, InsertionEmail, InsertionPassword, InsertionAddress, InsertionName);
+        }
+        catch (ApiException ex)
+        {
+            errorMessage = ex.Message;
+        }
+    }
+
+    private async void RegisterSomeone()
+    {
+        if (isAdmin)
+        {
+            await RegisterAdmin();
+        }
+        else
+        {
+            await RegisterStaff();
+        }
     }
 }

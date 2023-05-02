@@ -57,7 +57,7 @@
                     }
                 </li>
 
-                @if (role == "Admin" && role == "Staff")
+                @if (role == "Admin" || role == "Staff")
                 {
 
                     <li class="nav-item">
@@ -76,20 +76,28 @@
                         </NavLink>
                     </li>
                     <li class="nav-item">
-                        <NavLink class="nav-link custom-nav-item" href="staffs">
-                            <span aria-hidden="true"></span> Staffs
-                        </NavLink>
-                    </li>
-                    <li class="nav-item">
                         <NavLink class="nav-link custom-nav-item" href="car-requests">
                             <span aria-hidden="true"></span> Car Requests
                         </NavLink>
                     </li>
                     <li class="nav-item">
-                        <NavLink class="nav-link custom-nav-item" href="rent-history">
+                        <NavLink class="nav-link custom-nav-item" href="staff-rent-history">
                             <span aria-hidden="true"></span> Rents
                         </NavLink>
                     </li>
+                    <li class="nav-item">
+                        <NavLink class="nav-link custom-nav-item" href="car-active">
+                            <span aria-hidden="true"></span> Car Stats
+                        </NavLink>
+                    </li>
+                }
+                @if(role == "Admin")
+                {
+                <li class="nav-item">
+                    <NavLink class="nav-link custom-nav-item" href="staffs">
+                        <span aria-hidden="true"></span> Staffs
+                    </NavLink>
+                </li>
                 }
             </ul>
         </div>
@@ -127,7 +135,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var response = await apiService.GET<UserRoleResponse>("/api/user/role");
+        var response = await apiService.GET<UserRoleResponse>("/api/users/role");
         role = response.Role;
     }
 

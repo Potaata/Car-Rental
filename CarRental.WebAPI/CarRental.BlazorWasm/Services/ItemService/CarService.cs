@@ -56,5 +56,19 @@ namespace CarRental.BlazorWasm.Services.ItemService
         {
             return new CarRequest();
         }
+
+        public async Task<List<Car>> GetAvailableCars()
+        {
+            CarResponse cars = await _apiService.GET<CarResponse>(EndPoint + "-available");
+
+            return cars.cars;
+        }
+
+        public async Task<List<Car>> GetRentedCars()
+        {
+            CarResponse cars = await _apiService.GET<CarResponse>(EndPoint + "-rented");
+
+            return cars.cars;
+        }
     }
 }

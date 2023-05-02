@@ -118,6 +118,7 @@ namespace CarRental.WebAPI.Controllers
         [Route("/api/admin/add-staff")]
         public async Task<MessageResponse> AddStaff(UserRegisterRequestDTO userRequestDTO)
         {
+            Users user = await _authService.GetSessionUser(new List<string> { "Admin"});
             var registeredUser = await _users.AddStaff(userRequestDTO);
             return registeredUser;
         }
@@ -126,6 +127,7 @@ namespace CarRental.WebAPI.Controllers
         [Route("/api/admin/add-admin")]
         public async Task<MessageResponse> AddAdmin(UserRegisterRequestDTO userRequestDTO)
         {
+            Users user = await _authService.GetSessionUser(new List<string> { "Admin" });
             var registeredUser = await _users.AddAdmin(userRequestDTO);
             return registeredUser;
         }

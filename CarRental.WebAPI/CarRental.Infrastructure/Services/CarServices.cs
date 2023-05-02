@@ -11,10 +11,12 @@ using Microsoft.EntityFrameworkCore;
 using CarRental.Infrastructure.Exceptions;
 using System.Runtime.InteropServices;
 using Microsoft.AspNetCore.Authorization;
+using CarRental.Domain.Enums;
+using CarRental.Infrastructure.Migrations;
 
 namespace CarRental.Infrastructure.Services
 {
-    public class CarServices: ICars
+    public class CarServices : ICars
     {
         private readonly IApplicationDBContext _dbcontext;
         private readonly IAuthService _authService;
@@ -62,7 +64,7 @@ namespace CarRental.Infrastructure.Services
                 Color = car.Color,
                 PhotoUrl = car.PhotoUrl
             };
-                
+
             _dbcontext.Cars.Add(newCar);
             await _dbcontext.SaveChangesAsync();
 
@@ -71,7 +73,7 @@ namespace CarRental.Infrastructure.Services
 
         public async Task<MessageResponse> UpdateCar(int id, AddCarRequestDTO car)
         {
-            await _authService.GetSessionUser(new List<string>{ "Admin"});
+            await _authService.GetSessionUser(new List<string> { "Admin" });
             Cars carToUpdate = await _dbcontext.Cars.FindAsync(id);
 
             if (carToUpdate == null)
@@ -104,5 +106,57 @@ namespace CarRental.Infrastructure.Services
 
             return new MessageResponse { message = "Car deleted successfully." };
         }
+
+        public async Task<ListCarResponse> GetAvailableCars()
+        {
+            var availableCars = await (
+             from rh in _dbcontext.RentHistory
+             join c in _dbcontext.Cars on rh.CarId equals c.Id
+             where rh.Status != StatusEnums.Rented  
+             select new Cars
+             {
+                 Id = c.Id,
+                 Model = c.Model,
+                 Price = c.Price,
+                 NumberPlate = c.NumberPlate,
+                 Color = c.Color,
+                 PhotoUrl = c.PhotoUrl,
+             }
+                     ).ToListAsync();
+
+            ListCarResponse response = new ListCarResponse
+            {
+                cars = availableCars
+            };
+            return response;
+        }
+
+        public async Task<ListCarResponse> GetRentedCars()
+        {
+            var rentedCars = await (
+            from rh in _dbcontext.RentHistory
+            join c in _dbcontext.Cars on rh.CarId equals c.Id
+            where rh.Status == StatusEnums.Rented
+                select new Cars
+                    {
+                        Id = c.Id,
+                        Model = c.Model,
+                        Price = c.Price,
+                        NumberPlate = c.NumberPlate,
+                        Color = c.Color,
+                        PhotoUrl = c.PhotoUrl,
+                    }
+                    ).ToListAsync();
+
+            ListCarResponse response = new ListCarResponse
+            {
+                cars = rentedCars
+            };
+            return response;
+
+
+        }
+
+
     }
 }
