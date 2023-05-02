@@ -1,6 +1,7 @@
 ﻿using CarRental.BlazorWasm.Models;
 using CarRental.BlazorWasm.Models.Users;
 using CarRental.BlazorWasm.Models.Items;
+using CarRental.BlazorWasm.Models.Register;
 
 namespace CarRental.BlazorWasm.Services.ItemService
 {
@@ -56,10 +57,17 @@ namespace CarRental.BlazorWasm.Services.ItemService
 
         public async Task<string> UpdatePhotoUrl(string PhotoUrl)
         {
-            MessageResponse message = await _apiService.POST<UrlResponse, MessageResponse>("/api/users/document", new UrlResponse { Url = PhotoUrl});
+            MessageResponse message = await _apiService.POST<UrlResponse, MessageResponse>("/api/users/document", new UrlResponse { Url = PhotoUrl });
             return message.message;
         }
-        
+
+        public async Task<string> RegisterStaff(string username, string phoneNumber, string email, string password, string address)
+        {
+            RegisterRequest req = new RegisterRequest { Address = address, Username = username, Email = email, RawPassword = password, PhoneNumber = phoneNumber };
+            MessageResponse res = await _apiService.POST<RegisterRequest, MessageResponse>("/api/admin/add-staff", req);
+            return res.message;
+        }
+
         public UserRequest GetDefaultRequest()
         {
             return new UserRequest();

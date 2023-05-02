@@ -6,12 +6,13 @@
 
 @inject StaffService staffService
 @inject IJSRuntime jsRuntime
-
+@inject UserService userService
 
 
 <div class="button-container">
     <button class="btn btn-dark" @onclick='() => showInsertModal()'>Insert</button>
 </div>
+<p>@message</p>
 <div class="modal fade" id="carInsertionModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -23,9 +24,29 @@
                 <div>
                     <div id="insertion">
                         <div class="form-outline mb-4">
-                            <label class="form-label" for="form3Example3">Car Model</label>
+                            <label class="form-label" for="form3Example3">Email</label>
                             <input @bind="InsertionName" type="text" id="form3Example" class="form-control form-control-lg"
-                                   placeholder="Please enter a model name" />
+                                   placeholder="Please enter an email" />
+                        </div>
+                        <div class="form-outline mb-4">
+                            <label class="form-label" for="form3Example3">Phone Number</label>
+                            <input @bind="InsertionEmail" type="text" id="form3Example" class="form-control form-control-lg"
+                                   placeholder="Please enter a phone number" />
+                        </div>
+                        <div class="form-outline mb-4">
+                            <label class="form-label" for="form3Example3">Address</label>
+                            <input @bind="InsertionName" type="text" id="form3Example" class="form-control form-control-lg"
+                                   placeholder="Please enter an address" />
+                        </div>
+                        <div class="form-outline mb-4">
+                            <label class="form-label" for="form3Example3">Name</label>
+                            <input @bind="InsertionName" type="text" id="form3Example" class="form-control form-control-lg"
+                                   placeholder="Please enter a name" />
+                        </div>
+                        <div class="form-outline mb-4">
+                            <label class="form-label" for="form3Example3">Password</label>
+                            <input @bind="InsertionName" type="password" id="form3Example" class="form-control form-control-lg"
+                                   placeholder="Please enter a password" />
                         </div>
                         <div>@errorMessage</div>
                         <button class="btn btn-light" @onclick="() => RegisterStaff()">Save</button>
@@ -39,7 +60,8 @@
 <TableTemplate TItem=Staff ItemService=@staffService TItemRequest=@StaffRequest Editable=false Deletable=false Insertable=false />
 
 @code {
-    string InsertionEmail, InsertionPhoneNumber, InsertionAddress, InsertionName, InsertionPassword, InsertionRole ,errorMessage;
+    string InsertionEmail, InsertionPhoneNumber, InsertionAddress, InsertionName, InsertionPassword, errorMessage;
+    string message;
 
     protected override async Task OnInitializedAsync()
     {
@@ -51,7 +73,8 @@
         jsRuntime.InvokeVoidAsync("showModal", "carInsertionModal");
     }
 
-    private void RegisterStaff(){
-        //await user
+    private async void RegisterStaff()
+    {
+        message = await userService.RegisterStaff(InsertionEmail, InsertionAddress, InsertionName, InsertionPassword, InsertionPhoneNumber);
     }
 }
