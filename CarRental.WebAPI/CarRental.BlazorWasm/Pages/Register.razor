@@ -42,7 +42,7 @@
                         <div class="input-group">
                             <div class="input-group-text">+977 </div>
                             <input @bind="PhoneNumber" type="text" id="form3Example" class="form-control form-control-lg"
-                               placeholder="Please enter valid phone number" />
+                                   placeholder="Please enter valid phone number" />
                         </div>
                     </div>
                     <div class="text-center text-lg-center mt-4 pt-2 container">
@@ -72,7 +72,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        height:95vh;
+        height: 95vh;
     }
 
     h3 {
@@ -86,10 +86,13 @@
 
     private async void RegisterUser()
     {
-        try{
+        try
+        {
             await userService.Register(Name, Username, Email, Address, Password, PhoneNumber);
             int a = 0;
-        }catch(ApiException e){
+        }
+        catch (ApiException e)
+        {
             errorMessage = e.Message;
             StateHasChanged();
         }

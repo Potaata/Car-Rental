@@ -54,7 +54,7 @@
                             <label class="form-label" for="form3Example3">Upload Car Photo</label>
                             <InputFile max-file-size="1536000" accept=".png,.jpg,.jpeg" OnChange="@UploadCarPhoto" single />
                         </div>
-
+                        <div>@errorMessage</div>
                         <button class="btn btn-light" @onclick="() => InsertCar()">Save</button>
                     </div>
                 </div>
@@ -71,6 +71,7 @@
 </style>
 
 @code {
+    string errorMessage { get; set;}
     bool showInsert = false;
 
     string InsertionModel = "", InsertionNumberPlate = "", InsertionRentPrice = "", InsertionColor = "", InsertionPhotoUrl = "";
@@ -106,9 +107,9 @@
             Console.WriteLine(response.Url);
             InsertionPhotoUrl = response.Url;
         }
-        catch (Exception ex)
+        catch (ApiException ex)
         {
-            //ErrorMessage = ex.Message;
+            errorMessage = ex.Message;
         }
     }
 

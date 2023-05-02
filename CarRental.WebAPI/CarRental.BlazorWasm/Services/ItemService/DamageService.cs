@@ -21,22 +21,10 @@ namespace CarRental.BlazorWasm.Services.ItemService
         {
             throw new Exception("We don't need this here");
         }
-
-        public async Task<string> DeleteItem(int id)
-        {
-            throw new Exception("We don't need this here");
-
-        }
+       
         public async Task<string> CreateItem(DamageRequest staff)
         {
             throw new Exception("We don't need this here");
-        }
-
-        public async Task<string> EditItem(int id, DamageRequest damage)
-        {
-            MessageResponse message = await _apiService.PUT<DamageRequest, MessageResponse>(EndPoint + '/' + id, damage);
-
-            return message.message;
         }
 
         public DamageRequest GetDefaultRequest()

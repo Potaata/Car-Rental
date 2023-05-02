@@ -6,6 +6,8 @@
 
 <h3>Car Request</h3>
 
+<div>@errorMessage</div>
+
 <table class="table table-striped table-dark">
     <thead>
         <tr>
@@ -36,24 +38,41 @@
 </table>
 
 @code {
+    string errorMessage { get; set; }
     List<PendingHistory> allPendingRequest = new List<PendingHistory>();
 
     protected override async Task OnInitializedAsync()
     {
-        await FetchAllPending();
+        try
+        {
+            await FetchAllPending();
+        }
+        catch (ApiException ex)
+        {
+            errorMessage = ex.Message;
+        }
     }
 
     private async Task ApproveRequest(int id)
     {
-        await pendingHistoryService.ApproveRequest(id);
-        await FetchAllPending();
+        try
+        {
+            await pendingHistoryService.ApproveRequest(id);
+            await FetchAllPending();
 
+    }
+        catch (ApiException ex)
+        {
+            errorMessage = ex.Message;
+        }
     }
 
     private async Task DenyRequest(int id)
     {
-        await pendingHistoryService.DenyRequest(id);
-        await FetchAllPending();
+        try
+        {
+            await pendingHistoryService.DenyRequest(id);
+            await FetchAllPending();
 
     }
 
@@ -61,5 +80,10 @@
     {
         allPendingRequest = await pendingHistoryService.GetAll();
         StateHasChanged();
+    }
+        catch (ApiException ex)
+        {
+            errorMessage = ex.Message;
+        }
     }
 }

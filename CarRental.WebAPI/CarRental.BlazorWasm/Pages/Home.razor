@@ -36,6 +36,7 @@
     <a href="/register" class="btn btn-outline-secondary">Register</a>
 </div>
 
+<div>@errorMessage</div>
 
 <div class="container">
     <div class="row">
@@ -47,13 +48,14 @@
         </div>
     </div>
 </div>
-@for (int i = 0; i <= allCars.Count / 3; i ++)
+@for (int i = 0; i <= allCars.Count / 3; i++)
 {
     <div class="row">
         @for (int j = 0; j < 3; j++)
         {
             int ind = j + i * 3;
-            @if(ind >= allCars.Count){
+            @if (ind >= allCars.Count)
+            {
                 continue;
             }
             CarInsertRequest curCar = allCars[ind];
@@ -98,10 +100,20 @@
 </style>
 
 @code {
+    string errorMessage { get; set; }
+
     private List<CarInsertRequest> allCars = new List<CarInsertRequest>();
 
     protected override async Task OnInitializedAsync()
     {
-        allCars = await carService.GetCarsWithFile();
+        try
+        {
+            allCars = await carService.GetCarsWithFile();
+
+        }
+        catch (ApiException ex)
+        {
+            errorMessage = ex.Message;
+        }
     }
 }

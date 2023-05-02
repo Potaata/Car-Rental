@@ -55,6 +55,7 @@
                             <button @onclick="()=> showRentModal()" class="btn btn-primary" data-toggle="modal" data-target="#rentModal">Rent<span class="fas fa-arrow-right ps-2"></span></button>
                         </div>
                     </div>
+                    <div>@errorMessage</div>
                 </div>
             </div>
 
@@ -82,7 +83,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button @onclick = "SubmitRentForm" type="button" class="btn btn-primary">Rent</button>
+                <button @onclick="SubmitRentForm" type="button" class="btn btn-primary">Rent</button>
             </div>
         </div>
     </div>
@@ -98,6 +99,7 @@
 </style>
 
 @code {
+    string errorMessage { get; set; }
     [Parameter]
     public int Id { get; set; }
     int a = 0;
@@ -108,12 +110,19 @@
 
     protected override async Task OnInitializedAsync()
     {
-        currCar = (await carService.GetCarsWithFile()).FirstOrDefault(x => x.Id == Id);
-        if (currCar == null)
+        try
         {
-            navManager.NavigateTo("/home", true);
+            currCar = (await carService.GetCarsWithFile()).FirstOrDefault(x => x.Id == Id);
+            if (currCar == null)
+            {
+                navManager.NavigateTo("/home", true);
+            }
+            await jsRuntime.InvokeVoidAsync("import", "/js/modalScript.js");
         }
-        await jsRuntime.InvokeVoidAsync("import", "/js/modalScript.js");
+        catch (ApiException ex)
+        {
+            errorMessage = ex.Message;
+        }
     }
 
     private void showRentModal()
@@ -134,10 +143,13 @@
 
     private async void SubmitRentForm()
     {
-        try{
+        try
+        {
             await rentService.RentCar(Id, from, to, currCar.Price);
-        }catch(ApiException ex){
-
+        }
+        catch (ApiException ex)
+        {
+            errorMessage = ex.Message;
         }
     }
 }
