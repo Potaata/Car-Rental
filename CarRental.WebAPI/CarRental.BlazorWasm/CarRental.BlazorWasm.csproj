@@ -11,7 +11,7 @@
     <None Remove="Pages\DamageForm.razor.css" />
     <None Remove="Pages\Home.razor.css" />
     <None Remove="Pages\Index.razor.css" />
-    <None Remove="Pages\Notification.razor.css" />
+    <None Remove="Pages\UserNotification.razor.css" />
     <None Remove="Pages\SingleCar.razor.css" />
     <None Remove="Shared\MainLayout.razor.css" />
     <None Remove="Shared\NavMenu.razor.css" />

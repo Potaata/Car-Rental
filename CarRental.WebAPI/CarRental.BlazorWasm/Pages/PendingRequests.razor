@@ -60,7 +60,7 @@
             await pendingHistoryService.ApproveRequest(id);
             await FetchAllPending();
 
-    }
+        }
         catch (ApiException ex)
         {
             errorMessage = ex.Message;
@@ -73,14 +73,20 @@
         {
             await pendingHistoryService.DenyRequest(id);
             await FetchAllPending();
-
+        }
+        catch (ApiException ex)
+        {
+            errorMessage = ex.Message;
+        }
     }
 
     private async Task FetchAllPending()
     {
-        allPendingRequest = await pendingHistoryService.GetAll();
-        StateHasChanged();
-    }
+        try
+        {
+            allPendingRequest = await pendingHistoryService.GetAll();
+            StateHasChanged();
+        }
         catch (ApiException ex)
         {
             errorMessage = ex.Message;
