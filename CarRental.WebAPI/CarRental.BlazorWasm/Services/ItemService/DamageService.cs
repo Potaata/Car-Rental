@@ -5,7 +5,7 @@ using CarRental.BlazorWasm.Models.Staffs;
 
 namespace CarRental.BlazorWasm.Services.ItemService
 {
-    public class DamageService : IItemService<Damage, DamageRequest>
+    public class DamageService
     {
         private readonly ApiService _apiService;
 
@@ -17,14 +17,17 @@ namespace CarRental.BlazorWasm.Services.ItemService
             _apiService = apiService;
         }
 
-        public async Task<List<Damage>> GetItems()
+        public async Task<List<Damage>> GetDamages()
         {
-            throw new Exception("We don't need this here");
+            DamageResponse damages = await _apiService.GET<DamageResponse>(EndPoint);
+
+            return damages.damages;
         }
        
-        public async Task<string> CreateItem(DamageRequest staff)
+        public async Task<string> CreateDamage(DamageRequest damage)
         {
-            throw new Exception("We don't need this here");
+            MessageResponse message = await _apiService.POST<DamageRequest, MessageResponse>(EndPoint, damage);
+            return message.message;
         }
 
         public DamageRequest GetDefaultRequest()

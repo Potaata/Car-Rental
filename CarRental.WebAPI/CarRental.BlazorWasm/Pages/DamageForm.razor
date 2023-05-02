@@ -1,47 +1,53 @@
 ﻿<!-- DamageRequest.razor -->
 @page "/damage-request"
+@using CarRental.BlazorWasm.Services.ItemService
+@using CarRental.BlazorWasm.Models.Damages
+
+
+
+@inject DamageService damageService
 
 <div class="container">
     <div class="row d-flex justify-content-center align-items-center h-100">
         <div class="col-lg-8 mb-5 mb-lg-0 text-center">
-            <h1 style= "font-family: Arial Rounded MT; padding: 10px 24px;">Damage Request Form</h1>
+            <h1 style="font-family: Arial Rounded MT; padding: 10px 24px;">Damage Request Form</h1>
         </div>
     </div>
 </div>
 
-  <div class="container-fluid pt-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6 pb-5">
-                    <img src="https://png.pngtree.com/png-vector/20220707/ourmid/pngtree-broken-car-automobile-smoke-vector-png-image_5634323.png"
+<div class="container-fluid pt-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 pb-5">
+                <img src="https://png.pngtree.com/png-vector/20220707/ourmid/pngtree-broken-car-automobile-smoke-vector-png-image_5634323.png"
                      class="img-fluid" alt="Image">
-                </div>
-        <div class="col-md-6 pb-5">
-           <form>
-
-       
-            <div class="form-group row">
-                <label for="title" class="form-label mt-4">Title</label>
-                <input type="text" class="form-control" id="title" placeholder="Enter the title of the damage" @bind="@Title">
             </div>
-      
+            <div class="col-md-6 pb-5">
+                <form>
 
-   
-            <div class="form-group">
-                <label for="description" class="form-label mt-4">Description</label>
-                <textarea class="form-control" id="description" rows="3" placeholder="Enter the description of the damage" @bind="@Description"></textarea>
+
+                    <div class="form-group row">
+                        <label for="title" class="form-label mt-4">Title</label>
+                        <input type="text" class="form-control" id="title" placeholder="Enter the title of the damage" @bind="@Title">
+                    </div>
+
+
+
+                    <div class="form-group">
+                        <label for="description" class="form-label mt-4">Description</label>
+                        <textarea class="form-control" id="description" rows="3" placeholder="Enter the description of the damage" @bind="@Description"></textarea>
+                    </div>
+
+                    <div class="form-group py-3">
+                        <button type="submit" class="btn btn-dark" @onclick="HandleSubmit">Submit</button>
+                    </div>
+                </form>
             </div>
-        
-          <div class="form-group py-3"> 
-               <button type="submit" class="btn btn-dark" @onclick="HandleSubmit">Submit</button>
-          </div>
-    </form>
-</div> 
-</div>
-</div>
+        </div>
+    </div>
 </div>
 
- 
+
 
 
 @code {
@@ -50,6 +56,12 @@
 
     private void HandleSubmit()
     {
-        // Save the damage request to the system
+        var damageRequest = new DamageRequest
+            {
+                Title = Title,
+                Description = Description
+            };
+
+        damageService.CreateDamage(damageRequest);
     }
 }

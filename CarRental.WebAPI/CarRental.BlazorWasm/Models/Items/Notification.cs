@@ -1,6 +1,6 @@
 ﻿namespace CarRental.BlazorWasm.Models.Items
 {
-    public class Notification: TableItem
+    public class Notification
     {
         public string Message { get; set; }
 

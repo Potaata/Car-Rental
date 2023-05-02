@@ -4,8 +4,7 @@ using CarRental.BlazorWasm.Models.Items;
 
 namespace CarRental.BlazorWasm.Services.ItemService
 {
-    public class CarService : IItemService<Car, CarRequest>
-    {
+    public class CarService : IItemService<Car, CarRequest>    {
         private readonly ApiService _apiService;
 
         public string EndPoint = "/api/cars";
