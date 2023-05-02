@@ -1,8 +1,10 @@
-﻿namespace CarRental.BlazorWasm.Models.Items
+﻿using CarRental.BlazorWasm.Models.Enums;
+
+namespace CarRental.BlazorWasm.Models.Items
 {
     public class RentHistory
     {
-        public int id { get; set; }
+        public int Id { get; set; }
 
         public string CarModel { get; set; }
 
@@ -11,6 +13,6 @@
 
         public DateTime ToDate { get; set; }
 
-        public string Status { get; set; }
+        public StatusEnums Status { get; set; }
     }
 }

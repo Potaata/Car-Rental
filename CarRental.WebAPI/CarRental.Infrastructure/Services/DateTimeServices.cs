@@ -4,11 +4,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CarRental.Infrastructure.Exceptions;
 
 namespace CarRental.Infrastructure.Services
 {
     public class DateTimeServices : IDateTime
     {
         public DateTime Now => DateTime.UtcNow;
+
+        public void ValidateDateTime()
+        {
+            if(DateTime.Now.Hour < 9 && DateTime.Now.Hour > 17)
+            {
+                throw new ApiException("You are not allowed to perform this action at this time.");
+            }
+        }
     }
 }

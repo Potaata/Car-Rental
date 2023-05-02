@@ -250,7 +250,7 @@ namespace CarRental.Infrastructure.Services
                 };
                 _dbcontext.Notification.Add(notification);
             }
-            
+            await _dbcontext.SaveChangesAsync();
 
             return new MessageResponse { message = " Offer added sucessfully." };
 

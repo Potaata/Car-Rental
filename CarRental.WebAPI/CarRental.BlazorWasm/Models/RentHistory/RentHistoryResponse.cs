@@ -2,6 +2,6 @@
 {
     public class RentHistoryResponse : SuccessResponse
     {
-        public List<RentHistory> rentHistories { get; set; }
+        public List<RentHistory> rents { get; set; }
     }
 }

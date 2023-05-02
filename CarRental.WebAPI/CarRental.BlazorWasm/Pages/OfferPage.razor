@@ -1,51 +1,43 @@
-﻿@*@page "/publish-offer"
+﻿@page "/publish-offer"
+
+@inject DiscountService discountService
 
 <div class="container mt-4">
     <h1 class="mb-4">Publish an Offer</h1>
-    <form>
-        <div class="form-group">
-            <label for="title">Offer Title</label>
-            <input type="text" class="form-control" id="title" name="title" required>
-        </div>
-        <div class="form-group">
-            <label for="description">Offer Description</label>
-            <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
-        </div>
-        <div class="form-group">
-            <label for="discount">Discount (%)</label>
-            <input type="number" class="form-control" id="discount" name="discount" min="0" max="100" required>
-        </div>
-        <button type="submit" class="btn btn-primary">Publish Offer</button>
-    </form>
-</div>
-    </div>
-</div>
-
-<EditForm Model="@model" OnValidSubmit="HandleValidSubmit">
     <div class="form-group">
-        <label class="form-label" for="offerTitle">Offer Title</label>
-        <InputText class="form-control" id="offerTitle" placeholder="Title" @bind-Value="model.Title" />
-        <ValidationMessage For="@(() => model.Title)" />
-    </div>
-    <div class="form-group">
-        <label class="form-label" for="offerDescription">Offer Description</label>
-        <InputTextArea class="form-control" id="offerDescription" @bind-Value="model.Description" />
-        <ValidationMessage For="@(() => model.Description)" />
+        <label for="title">Offer Title</label>
+        <input type="text" class="form-control" id="title" name="title" @bind="Name" required>
     </div>
     <div class="form-group">
         <label for="discount">Discount (%)</label>
-        <InputTextArea type="number" class="form-control" id="discount" name="discount" min="0" max="100" required @bind-Value="model.Discount" />
-        <ValidationMessage For="@(() => model.Discount)" />
+        <input type="text" class="form-control" id="discount" name="discount" min="0" max="100" @bind="Discount" required>
     </div>
-     <div class="form-group py-3"> 
-    <button type="submit" class="btn btn-dark">Publish</button>
+    <div class="form-group">
+        <label for="discount">Discount (%)</label>
+        <input type="datetime-local" class="form-control" id="discount" name="discount" min="0" max="100" @bind="ValidTill" required>
     </div>
-</EditForm>
+    <p>@message</p>
+    <button type="submit" class="btn btn-primary" @onclick="() => PublishOffer()">Publish Offer</button>
+</div>
 
-@code{
+@code {
 
-        public string Description { get; set; }
+    public string Name { get; set; }
 
-        public string Discount { get; set; }
+    public string Discount { get; set; }
+    public string message;
+    public DateTime ValidTill { get; set; }
+
+    public async Task PublishOffer()
+    {
+        try
+        {
+            string msg = await discountService.PublishOffer(Name, float.Parse(Discount), ValidTill);
+            message = msg;
+        }
+        catch (ApiException ex)
+        {
+            message = ex.Message;
+        }
     }
-}*@
+}

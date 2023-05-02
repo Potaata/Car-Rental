@@ -83,20 +83,7 @@
             errorMessage = ex.Message;
         }
     }
-
-    private async Task CarTaken(int id)
-    {
-        try
-        {
-            await pendingHistoryService.MarkCarTaken(id);
-            await FetchAllPending();
-        }
-        catch (ApiException ex)
-        {
-            errorMessage = ex.Message;
-
-        }
-    }
+    
 
     private async Task FetchAllPending()
     {

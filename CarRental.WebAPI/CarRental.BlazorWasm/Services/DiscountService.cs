@@ -1,4 +1,5 @@
-﻿using CarRental.BlazorWasm.Models.DiscountOffers;
+﻿using CarRental.BlazorWasm.Models;
+using CarRental.BlazorWasm.Models.DiscountOffers;
 using CarRental.BlazorWasm.Models.Users;
 
 
@@ -17,7 +18,7 @@ namespace CarRental.BlazorWasm.Services
         {
             DiscountOfferResponse dor = await _apiService.GET<DiscountOfferResponse>("/api/users/discount");
 
-            if(dor.offer == null)
+            if (dor.offer == null)
             {
                 dor.offer = new DiscountOffer
                 {
@@ -40,6 +41,21 @@ namespace CarRental.BlazorWasm.Services
             }
 
             return dor.offer;
+        }
+
+        public async Task<string> PublishOffer(string Name, float discount, DateTime validTill)
+        {
+            MessageResponse resp = await _apiService.POST<DiscountOfferResponse, MessageResponse>("/api/admin/add-offer",
+                new DiscountOfferResponse
+                {
+                    offer = new DiscountOffer
+                    {
+                        DiscountPercent = discount,
+                        Name = Name,
+                        ValidTill = validTill
+                    }
+                });
+            return resp.message;
         }
     }
 }

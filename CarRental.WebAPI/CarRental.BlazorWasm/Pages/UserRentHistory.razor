@@ -1,4 +1,4 @@
-﻿@page "/rent-history"
+﻿@page "/user-rent-history"
 @using System.Net.Http
 @using System.Net.Http.Json
 @using CarRental.BlazorWasm.Services.ItemService
@@ -51,7 +51,7 @@
     {
         try
         {
-            allRentHistory = await rentHistoryService.GetUserRentHistory();
+            userRentHistory = await rentHistoryService.GetUserRentHistory();
         }
         catch (ApiException ex)
         {

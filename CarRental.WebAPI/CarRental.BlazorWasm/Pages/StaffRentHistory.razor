@@ -1,8 +1,8 @@
-﻿@page "/rent-history"
+﻿@page "/staff-rent-history"
 @using System.Net.Http
 @using System.Net.Http.Json
 @using CarRental.BlazorWasm.Services.ItemService
-@using CarRental.BlazorWasm.Models.Items
+@using Models.Enums
 
 @inject RentHistoryService rentHistoryService
 
@@ -35,8 +35,14 @@
                 <td>@rent.ToDate</td>
                 <td>@rent.Status</td>
                 <td>
-                    <button class="btn btn-danger">Something</button>
-                    <button class="btn btn-danger">Something</button>
+                    @if (rent.Status == StatusEnums.Approved)
+                    {
+                        <button class="btn btn-danger" @onclick="()=> MarkCarTaken(rent.Id)">Mark Taken</button>
+                    }
+                    else if (rent.Status == StatusEnums.Rented)
+                    {
+                        <button class="btn btn-danger" @onclick="() => ReturnCar(rent.Id)">Return Car</button>
+                    }
                 </td>
             </tr>
         }
@@ -52,6 +58,31 @@
         try
         {
             allRentHistory = await rentHistoryService.GetAll();
+        }
+        catch (ApiException ex)
+        {
+            errorMessage = ex.Message;
+        }
+        StateHasChanged();
+    }
+
+    private async void MarkCarTaken(int rentId)
+    {
+        try
+        {
+            await rentHistoryService.MarkCarTaken(rentId);
+            await OnInitializedAsync();
+        }catch(ApiException ex){
+            errorMessage = ex.Message;
+        }
+    }
+
+    private async void ReturnCar(int rentId)
+    {
+        try
+        {
+            await rentHistoryService.ReturnCar(rentId);
+            await OnInitializedAsync();
         }
         catch (ApiException ex)
         {

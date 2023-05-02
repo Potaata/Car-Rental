@@ -16,13 +16,14 @@ namespace CarRental.WebAPI.Controllers
         private readonly IRentHistory _rentHistory;
         private readonly IApplicationDBContext _dbcontext;
         private readonly IAuthService _authService;
+        private readonly IDateTime _dateTime;
 
-
-        public RentHistoryController(IRentHistory rentHistory, IApplicationDBContext dbcontext, IAuthService authService)
+        public RentHistoryController(IRentHistory rentHistory, IApplicationDBContext dbcontext, IAuthService authService, IDateTime dateTime)
         {
             _rentHistory = rentHistory;
             _dbcontext = dbcontext;
             _authService = authService;
+            _dateTime = dateTime;
         }
 
         [HttpGet]
@@ -52,6 +53,7 @@ namespace CarRental.WebAPI.Controllers
         [Route("api/admin/approve-request/{rentId}")]
         public async Task<MessageResponse> ApproveRequest(int rentId)
         {
+            _dateTime.ValidateDateTime();
             await _authService.GetSessionUser(new List<string> { "Admin", "Staff" });
             return await _rentHistory.ApproveRequest(rentId);
         }
@@ -60,6 +62,8 @@ namespace CarRental.WebAPI.Controllers
         [Route("api/admin/deny-request/{rentId}")]
         public async Task<MessageResponse> DenyRequest(int rentId)
         {
+            _dateTime.ValidateDateTime();
+
             await _authService.GetSessionUser(new List<string> { "Admin", "Staff" });
             return await _rentHistory.DeclineRequest(rentId);
         }
@@ -76,6 +80,8 @@ namespace CarRental.WebAPI.Controllers
         [Route("api/admin/car-taken/{rentId}")]
         public async Task<MessageResponse> MarkCarTaken(int rentId)
         {
+            _dateTime.ValidateDateTime();
+
             await _authService.GetSessionUser(new List<string> { "Admin", "Staff" });
             return await _rentHistory.CarTaken(rentId);
         }
@@ -89,17 +95,18 @@ namespace CarRental.WebAPI.Controllers
         }
 
         [HttpPost]
-        [Route("/api/users/add-offer")]
-
+        [Route("/api/admin/add-offer")]
         public async Task<MessageResponse> CreateDiscountOffer(DiscountOfferResponse offer)
         {
+            _dateTime.ValidateDateTime();
+
             await _authService.GetSessionUser(new List<string> { "Admin", "Staff" });
             Offers o = await _rentHistory.GetValidDiscount();
             if (o != null)
             {
                 throw new ApiException("A discount is already on offers.");
             }
-
+            offer.offer.ValidTill = offer.offer.ValidTill.ToUniversalTime();
             await _rentHistory.AddOffer(offer.offer);
             return new MessageResponse { message = "Offer added successfullly!!" };
         }
@@ -108,6 +115,8 @@ namespace CarRental.WebAPI.Controllers
         [Route("api/admin/car-returned/{rentId}")]
         public async Task<MessageResponse> CarReturned(int rentId)
         {
+            _dateTime.ValidateDateTime();
+
             await _authService.GetSessionUser(new List<string> { "Admin", "Staff" });
             return await _rentHistory.CarReturned(rentId);
         }

@@ -8,12 +8,12 @@ namespace CarRental.Domain.Shared
 {
     public abstract class BaseEntity
     {
-        public DateTime CreateTime { get; set; } 
+        public DateTime? CreateTime { get; set; } = DateTime.Now.ToUniversalTime();
         public DateTime? UpdateTime { get; set; } 
         public DateTime? DeletedTime { get; set; }
         public bool IsDeleted { get; set; } = false;
         public int? CreatedBy { get; set; }
-        public int LastModifiedBy { get; set; }
+        public int? LastModifiedBy { get; set; }
         public int? DeletedBy { get; set; }
     }
 }

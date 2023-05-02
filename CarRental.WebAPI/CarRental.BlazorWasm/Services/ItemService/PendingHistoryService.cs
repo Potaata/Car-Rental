@@ -32,12 +32,6 @@ namespace CarRental.BlazorWasm.Services.ItemService
             return message.message;
         }
 
-        public async Task<string> MarkCarTaken(int id)
-        {
-            MessageResponse message = await _apiService.POST<EmptyRequest, MessageResponse>("/api/admin/car-taken" + '/' + id, new EmptyRequest { });
-            
-            return message.message;
-        }
 
 
         public async Task<List<PendingHistory>> GetUserRentedRequests()

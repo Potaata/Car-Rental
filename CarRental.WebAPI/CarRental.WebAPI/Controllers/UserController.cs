@@ -63,7 +63,7 @@ namespace CarRental.WebAPI.Controllers
 
 
         [HttpGet]
-        [Route("/api/users/")]
+        [Route("/api/users")]
         public async Task<UserListResponseDTO> GetAllUsers()
         {
             await _authService.GetSessionUser(new List<string> { "Admin", "Staff" });

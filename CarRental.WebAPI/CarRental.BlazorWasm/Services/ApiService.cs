@@ -71,27 +71,6 @@ namespace CarRental.BlazorWasm.Services
             return await ParseResponse<ResponseDTO>(response);
         }
 
-        //public async Task<ResponseDTO> DELETE<ResponseDTO>(string endpoint) where ResponseDTO : SuccessResponse
-        //{
-        //    string fullQualifiedEndpoint = API_URL + endpoint;
-        //    var response = await _httpClient.DeleteAsync(fullQualifiedEndpoint);
-        //    return await ParseResponse<ResponseDTO>(response);
-        //}
-
-        //public async Task<ResponseDTO> PUT<RequestDTO, ResponseDTO>(string endpoint, RequestDTO body) where ResponseDTO : SuccessResponse
-        //{
-        //    string fullQualifiedEndpoint = API_URL + endpoint;
-        //    var bodyJSON = JsonConvert.SerializeObject(body);
-        //    var content = new StringContent(bodyJSON, Encoding.UTF8, "application/json");
-        //    var response = await _httpClient.PutAsync(fullQualifiedEndpoint, content);
-        //    return await ParseResponse<ResponseDTO>(response);
-        //}
-
-        //public async Task<UrlResponse> FileUpload(MultipartFormDataContent content) {
-        //    string fullQualifiedEndpoint = API_URL + "/api/FileUpload";
-        //    var response = await _httpClient.PostAsync(fullQualifiedEndpoint, content);
-        //    return await ParseResponse<UrlResponse>(response);
-        //}
         public async Task<ResponseDTO> DELETE<ResponseDTO>(string endpoint) where ResponseDTO : SuccessResponse
         {
             string fullQualifiedEndpoint = API_URL + endpoint;

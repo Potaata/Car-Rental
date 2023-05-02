@@ -9,5 +9,7 @@ namespace CarRental.Application.Common.Interface
     public interface IDateTime
     {
         DateTime Now { get; }
+
+        public void ValidateDateTime();
     }
 }

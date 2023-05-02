@@ -165,7 +165,6 @@
         {
             await rentService.RentCar(Id, from, to, GetDiscountedPrice());
         }
-        
         catch  (ApiException ex)
         {
             errorMessage = ex.Message;
