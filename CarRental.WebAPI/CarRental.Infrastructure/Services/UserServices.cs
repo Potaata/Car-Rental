@@ -159,5 +159,49 @@ namespace CarRental.Infrastructure.Services
             await _dbcontext.SaveChangesAsync();
             return new MessageResponse { message = "Photo Updated Successfully!" };
         }
+
+        public async Task<List<UserWithRoleDTO>> GetAllStaffs() 
+        {
+            var allUsers = await GetAllUsers();
+
+            var staffs = new List<UserWithRoleDTO>();
+            foreach (var user in allUsers.users)
+            {
+                if (await _userManager.IsInRoleAsync(user, "Staff") || await _userManager.IsInRoleAsync(user, "Admin"))
+                {
+                    user.Role = (await _userManager.GetRolesAsync(user)).First();
+                    staffs.Add(user);
+                }
+            }
+            return staffs;
+        }
+        public async Task<MessageResponse> AddStaff(UserRegisterRequestDTO users) 
+        {
+            var DBUser = new Users { UserName = users.Username, Email = users.Email, Address = users.Address, Name = users.Name };
+            var result = await _userManager.CreateAsync(DBUser, users.RawPassword);
+            if (!result.Succeeded)
+            {
+                string error = result.Errors.ElementAt(0).Description;
+                throw new ApiException(error);
+            }
+
+            await _userManager.AddToRoleAsync(DBUser, "Staff");
+            return new MessageResponse { message = "Registration succeessful!" };
+        }
+        
+        public async Task<MessageResponse> AddAdmin(UserRegisterRequestDTO users)
+        {
+            var DBUser = new Users { UserName = users.Username, Email = users.Email, Address = users.Address, Name = users.Name };
+            var result = await _userManager.CreateAsync(DBUser, users.RawPassword);
+            if (!result.Succeeded)
+            {
+                string error = result.Errors.ElementAt(0).Description;
+                throw new ApiException(error);
+            }
+
+            await _userManager.AddToRoleAsync(DBUser, "Admin");
+            return new MessageResponse { message = "Registration succeessful!" };
+        }
+
     }
 }

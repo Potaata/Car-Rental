@@ -28,7 +28,9 @@ namespace CarRental.Application.Common.Interface
         public Task<MessageResponse> CancelCarRequest(int rentId);
 
         public Task<MessageResponse> AddOffer(Offers offer);
-        public Task<Offers> GetValidDiscount(); 
+        public Task<Offers> GetValidDiscount();
+
+        public Task<MessageResponse> CarReturned(int rentId);
 
     }
 }

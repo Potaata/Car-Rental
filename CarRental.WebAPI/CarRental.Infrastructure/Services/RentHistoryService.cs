@@ -222,6 +222,26 @@ namespace CarRental.Infrastructure.Services
         { 
             return (await _dbcontext.Offers.ToListAsync()).Where(x=> x.ValidTill > DateTime.Now).ToList().FirstOrDefault();
         }
+
+        public async Task<MessageResponse> CarReturned(int rentId)
+        {
+            var rentHistory = await _dbcontext.RentHistory.FindAsync(rentId);
+            if (rentHistory == null)
+            {
+                return new MessageResponse { message = "Rent request not found." };
+            }
+            
+            if (rentHistory.Status != StatusEnums.Rented)
+            {
+                return new MessageResponse { message = "Rent request not taken yet." };
+            }
+
+            rentHistory.Status = StatusEnums.Returned;
+            _dbcontext.RentHistory.Update(rentHistory);
+            await _dbcontext.SaveChangesAsync();
+
+            return new MessageResponse { message = "Car marked returned." };
+        }
     }
 
 }

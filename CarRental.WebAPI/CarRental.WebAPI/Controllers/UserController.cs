@@ -104,6 +104,34 @@ namespace CarRental.WebAPI.Controllers
             Users user = await _authService.GetSessionUser(new List<string> { "Admin", "User", "Staff" });
             return await _users.UpdatePhotoUrl(user.Id,document.URL);
         }
+
+        [HttpGet]
+        [Route("/api/staffs")]
+        public async Task<UserListResponseDTO> GetAllStaffs()
+        {
+            Users user = await _authService.GetSessionUser(new List<string> { "Admin", "Staff" });
+            return new UserListResponseDTO { users = await _users.GetAllStaffs() };
+        }
+        [Route("/api/admin/add-staff")]
+        public async Task<MessageResponse> AddStaff(UserRegisterRequestDTO userRequestDTO)
+        {
+            var registeredUser = await _users.AddStaff(userRequestDTO);
+            return registeredUser;
+        }
+        
+        [HttpPost]
+        [Route("/api/admin/add-admin")]
+        public async Task<MessageResponse> AddAdmin(UserRegisterRequestDTO userRequestDTO)
+        {
+            var registeredUser = await _users.AddAdmin(userRequestDTO);
+            return registeredUser;
+        }
+
+
+
+
+
+
     }
 }
 

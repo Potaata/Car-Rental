@@ -103,5 +103,15 @@ namespace CarRental.WebAPI.Controllers
             await _rentHistory.AddOffer(offer.offer);
             return new MessageResponse { message = "Offer added successfullly!!" };
         }
+
+        [HttpPost]
+        [Route("api/admin/car-returned/{rentId}")]
+        public async Task<MessageResponse> CarReturned(int rentId)
+        {
+            await _authService.GetSessionUser(new List<string> { "Admin", "Staff" });
+            return await _rentHistory.CarReturned(rentId);
+        }
+
+
     }
 }
