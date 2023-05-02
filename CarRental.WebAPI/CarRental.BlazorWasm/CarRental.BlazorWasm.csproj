@@ -23,7 +23,7 @@
     <Content Include="Pages\DamageForm.razor.css" />
     <Content Include="Pages\Home.razor.css" />
     <Content Include="Pages\Index.razor.css" />
-    <Content Include="Pages\Notification.razor.css" />
+    <Content Include="Pages\UserNotification.razor.css" />
     <Content Include="Pages\SingleCar.razor.css" />
     <Content Include="Shared\MainLayout.razor.css" />
     <Content Include="Shared\NavMenu.razor.css" />

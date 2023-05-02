@@ -66,6 +66,14 @@ namespace CarRental.WebAPI.Controllers
             return await _users.GetAllUsers();
         }
 
+        [HttpPost]
+        [Route("/api/users/change-password")]
+        public async Task<MessageResponse> ChangePassword(ChangePasswordDTO passwords)
+        {
+            return await _users.ChangePassword(passwords);
+        }
+
+
         [HttpGet]
         [Route("/api/users/isRegular")]
         public async Task<IsRegularUserResponseDTO> CheckRegularUser()
@@ -85,4 +93,5 @@ namespace CarRental.WebAPI.Controllers
         }
     }
 }
+
 

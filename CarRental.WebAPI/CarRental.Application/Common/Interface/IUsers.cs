@@ -15,5 +15,6 @@ namespace CarRental.Application.Common.Interface
         public Task<UserListResponseDTO> GetRegularUsers();
         public Task<UserListResponseDTO> GetAllUsers();
         public Task<UserListResponseDTO> GetInactiveUsers();
+        public Task<MessageResponse> ChangePassword(ChangePasswordDTO passwords);
     }
 }

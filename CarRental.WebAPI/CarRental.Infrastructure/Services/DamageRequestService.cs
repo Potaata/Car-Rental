@@ -3,6 +3,7 @@ using CarRental.Application.DTOs;
 using CarRental.Application.DTOs.CarDTOs;
 using CarRental.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
@@ -49,6 +50,13 @@ namespace CarRental.Infrastructure.Services
             await _dbcontext.SaveChangesAsync();
 
             return new MessageResponse { message = "Damage Request Marked Paid" };
+        }
+
+        public async Task<DamageRequestListDTO> GetAllRequests() {
+            var requests = await _dbcontext.DamageRequest.ToListAsync();
+
+            return new DamageRequestListDTO { damageRequests = requests };
+
         }
     }
 }

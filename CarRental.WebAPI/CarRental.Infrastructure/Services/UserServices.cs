@@ -22,11 +22,13 @@ namespace CarRental.Infrastructure.Services
     {
         private readonly IApplicationDBContext _dbcontext;
         private readonly UserManager<Users> _userManager;
+        private readonly IAuthService _authService;
 
-        public UserServices(IApplicationDBContext dbContext, UserManager<Users> userManager)
+        public UserServices(IApplicationDBContext dbContext, UserManager<Users> userManager, IAuthService authService)
         {
             _dbcontext = dbContext;
             _userManager = userManager;
+            _authService = authService;
         }
         public async Task<MessageResponse> RegisterUser(UserRegisterRequestDTO users)
         {
@@ -130,5 +132,19 @@ namespace CarRental.Infrastructure.Services
             var inactiveUsers = regularUsers.users.Except(await threeeMonthsRentingUsers.ToListAsync());
             return new UserListResponseDTO { users = (inactiveUsers.ToList()) };
         }
+        
+        public async Task<MessageResponse> ChangePassword(ChangePasswordDTO passwords) 
+        {
+            var result = await _userManager.ChangePasswordAsync((await _authService.GetSessionUser(new List<string> { "User", "Staff", "Admin"})), passwords.currentPassword, passwords.newPassword);
+            if (!result.Succeeded)
+            {
+                string error = result.Errors.ElementAt(0).Description;
+                throw new ApiException(error);
+            }
+            
+            return new MessageResponse { message = "Password Changed Succeessfully!" };
+
+        }
+        
     }
 }

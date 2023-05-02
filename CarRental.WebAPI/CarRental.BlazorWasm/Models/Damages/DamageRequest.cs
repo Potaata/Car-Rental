@@ -2,7 +2,7 @@
 
 namespace CarRental.BlazorWasm.Models.Damages
 {
-    public class DamageRequest: TableItemRequest
+    public class DamageRequest
     {
         public string Title { get; set; }
 
