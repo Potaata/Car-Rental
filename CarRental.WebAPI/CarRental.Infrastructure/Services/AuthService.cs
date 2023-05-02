@@ -97,5 +97,41 @@ namespace CarRental.Infrastructure.Services
             }
             return user;
         }
+
+        public async Task<string> GetUserRole()
+        {
+            string token = _httpContext.Request.Headers.Authorization;
+
+            if (token != null)
+            {
+                token = token.Split(" ").ElementAt(1);
+            }
+
+            if (string.IsNullOrEmpty(token))
+                throw new ApiException("Invalid Token!", System.Net.HttpStatusCode.Unauthorized);
+
+            // the token is in table: aspnetusertokens
+            // join with aspnetusers to get user details
+            // if not found throw exception
+            // if found create a IdntityUsr and return
+            var user = await _dbContext.Users
+                                .FromSqlInterpolated($@"
+                                    SELECT anu.* 
+                                    FROM ""AspNetUserTokens"" anut 
+                                    JOIN ""AspNetUsers"" anu 
+                                    ON anut.""UserId"" = anu.""Id"" 
+                                    WHERE anut.""Value"" = {token}
+                                    ").FirstOrDefaultAsync();
+
+
+
+            if (user == null)
+            {
+                throw new ApiException("Invalid Token!", System.Net.HttpStatusCode.Unauthorized);
+            }
+
+            var roles = await _userManager.GetRolesAsync(user);
+            return roles.ElementAt(0);
+        }
     }
 }

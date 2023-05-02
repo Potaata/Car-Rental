@@ -76,14 +76,14 @@ namespace CarRental.WebAPI.Controllers
         }
 
         [HttpGet]
-        [Route("/api/user/discount")]
+        [Route("/api/users/discount")]
         public async Task<DiscountOfferResponse> GetDiscounts()
         {
             return new DiscountOfferResponse { offer = await _rentHistory.GetValidDiscount() };
         }
 
         [HttpPost]
-        [Route("/api/user/add-offer")]
+        [Route("/api/users/add-offer")]
 
         public async Task<MessageResponse> CreateDiscountOffer(DiscountOfferResponse offer)
         {

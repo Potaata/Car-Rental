@@ -1,6 +1,7 @@
 ﻿@page "/car/{Id:int}"
 @using CarRental.BlazorWasm.Services.ItemService
 @using CarRental.BlazorWasm.Models.Cars
+@using CarRental.BlazorWasm.Models.DiscountOffers
 
 @inject CarService carService
 @inject NavigationManager navManager
@@ -44,9 +45,18 @@
                     <div class="d-flex justify-content-between mb-3">
                         <p class="textmuted fw-bold">Price</p>
                         <div class="d-flex align-text-top ">
-                            <span class="fas fa-dollar-sign mt-1 pe-1 fs-14 "></span><span class="h4">@currCar.Price
-                                
-                                / Day</span>
+                            @if (discountPercent == 0)
+                            {
+                                <span class="fas fa-dollar-sign mt-1 pe-1 fs-14 "></span>
+                                <span class="h4">@currCar.Price / Day</span>
+                            }
+                            else
+                            {
+                                <span class="fas fa-dollar-sign mt-1 pe-1 fs-14 "></span>
+                                <div class="display-flex">
+                                    <span class="h4"><del>@currCar.Price </del><p>@GetDiscountedPrice()</p> / Day</span>
+                                </div>
+                            }
                         </div>
                     </div>
 
@@ -105,6 +115,7 @@
     int a = 0;
 
     private CarInsertRequest currCar;
+    private float discountPercent = 0;
 
     DateTime from, to;
 
@@ -117,6 +128,14 @@
             {
                 navManager.NavigateTo("/home", true);
             }
+
+        DiscountOffer offer = await discountService.GetOffer();
+
+        if (offer != null)
+        {
+            discountPercent = offer.DiscountPercent;
+        }
+
             await jsRuntime.InvokeVoidAsync("import", "/js/modalScript.js");
         }
         catch (ApiException ex)
@@ -145,11 +164,17 @@
     {
         try
         {
-            await rentService.RentCar(Id, from, to, currCar.Price);
+            await rentService.RentCar(Id, from, to, GetDiscountedPrice());
         }
-        catch (ApiException ex)
+        
+        catch  (ApiException ex)
         {
             errorMessage = ex.Message;
         }
+    }
+
+    private float GetDiscountedPrice()
+    {
+        return currCar.Price - (discountPercent * currCar.Price / 100);
     }
 }

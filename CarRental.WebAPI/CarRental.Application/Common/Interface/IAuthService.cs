@@ -13,5 +13,6 @@ namespace CarRental.Application.Common.Interface
     {
         public Task<UserLoginResponseDTO> ValidateToken(string token);
         public Task<Users> GetSessionUser(List<string> Roles);
+        public Task<string> GetUserRole();
     }
 }

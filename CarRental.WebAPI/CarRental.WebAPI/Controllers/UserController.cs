@@ -65,6 +65,24 @@ namespace CarRental.WebAPI.Controllers
         {
             return await _users.GetAllUsers();
         }
+
+        [HttpGet]
+        [Route("/api/users/isRegular")]
+        public async Task<IsRegularUserResponseDTO> CheckRegularUser()
+        {
+            Users user = await _authService.GetSessionUser(new List<string> { "Admin", "User", "Staff" });
+            var regularUsers = (await GetRegularUsers()).users;
+            bool isRegular = regularUsers.Where(x => x.Id == user.Id).ToList().Count > 0;
+            return new IsRegularUserResponseDTO { IsRegular = isRegular };
+        }
+
+        [HttpGet]
+        [Route("/api/users/role")]
+        public async Task<UserRoleResponseDTO> GetUserRole()
+        {
+            string role = await _authService.GetUserRole();
+            return new UserRoleResponseDTO { Role = role };
+        }
     }
 }
 
