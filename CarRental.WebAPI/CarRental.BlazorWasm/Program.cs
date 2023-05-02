@@ -25,6 +25,7 @@ builder.Services.AddSingleton<CarService>();
 builder.Services.AddSingleton<UserService>();
 builder.Services.AddSingleton<DiscountService>();
 builder.Services.AddSingleton<DamageService>();
+builder.Services.AddSingleton<StaffService>();
 
 
 builder.Services.AddSyncfusionBlazor();

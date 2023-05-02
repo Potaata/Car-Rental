@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace CarRental.Application.DTOs
 {
-    public class QuoteCostDTO
+    public class DamageRequestListResponseDTO
     {
-        public float Cost { get; set; }
+        public List<DamageRequestJoinedDTO>? damageRequests { get; set; }
     }
 }

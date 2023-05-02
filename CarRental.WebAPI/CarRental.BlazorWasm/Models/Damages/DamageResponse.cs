@@ -2,6 +2,6 @@
 {
     public class DamageResponse: SuccessResponse
     {
-        public List<Damage> damages { get; set; }
+        public List<Damage> damageRequests { get; set; }
     }
 }

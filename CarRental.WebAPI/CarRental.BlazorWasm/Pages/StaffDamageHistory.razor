@@ -1,5 +1,11 @@
 ﻿@page "/damage-history"
 
+@using CarRental.BlazorWasm.Services.ItemService
+@using CarRental.BlazorWasm.Models.Damages
+
+@inject DamageService damageService
+@inject IJSRuntime jsRuntime
+
 <div class="container">
     <div class="row d-flex justify-content-center align-items-center h-100">
         <div class="col-lg-8 mb-5 mb-lg-0 text-center">
@@ -23,17 +29,13 @@
                 <form>
                     <div class="form-group">
                         <label for="price">Price:</label>
-                        <input type="number" class="form-control" id="price" placeholder="Enter price">
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="isPaid">
-                        <label class="form-check-label" for="isPaid">Is Paid</label>
+                        <input type="number" class="form-control" id="price" placeholder="Enter price" @bind="Cost">
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary">Save</button>
+                <button type="button" class="btn btn-primary" @onclick="() => SetDamageCost()">Save</button>
             </div>
         </div>
     </div>
@@ -43,29 +45,61 @@
     <thead>
         <tr>
             <th scope="col">Car Model</th>
-            <th scope="col">Damage Type</th>
             <th scope="col">Description</th>
             <th scope="col">Status</th>
-            <th scope="col">Price</th>
-            <th scope="col">Checked By</th>
-            <th scope="col">Action</th>
+            <th scope="col">Cost</th>
+            <th scope="col">Actions</th>
         </tr>
     </thead>
     <tbody>
-        <tr>
-            <td>Hyundai Ioniq</td>
-            <td>Something</td>
-            <td>Something</td>
-            <td>Paid</td>
-            <td>Some Price</td>
-            <td>Someone</td>
-            <td>
-                <button class="btn btn-success" data-toggle="modal" data-target="#setPriceModal">Set Price</button>
-            </td>
-        </tr>
+        @foreach (var d in allDamages)
+        {
+            <tr>
+                <td>@d.CarModel</td>
+                <td>@d.Description</td>
+                <td>@(d.IsPaid ? "Paid" : "Unpaid")</td>
+                <td>@d.Cost</td>
+                <td>
+                    @if (d.Cost == null)
+                    {
+                        <button class="btn btn-success" @onclick="() => ShowPriceModal(d.Id)">Set Price</button>
+                    }
+                    else if (!d.IsPaid)
+                    {
+                        <button class="btn btn-success" @onclick="() => MarkAsPaid(d.Id)">Mark as Paid</button>
+                    }
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
 
 @code {
+    List<DamageTableItem> allDamages = new List<DamageTableItem>();
 
+    int selectedId;
+    float Cost;
+
+    protected override async Task OnInitializedAsync()
+    {
+        allDamages = await damageService.GetDamages();
+        await jsRuntime.InvokeVoidAsync("import", "/js/modalScript.js");
+    }
+
+    private void ShowPriceModal(int id)
+    {
+        selectedId = id;
+        jsRuntime.InvokeVoidAsync("showModal", "setPriceModal");
+    }
+
+    private async Task MarkAsPaid(int id)
+    {
+        await damageService.MarkPaid(id);
+    }
+
+    private async Task SetDamageCost()
+    {
+        string message = await damageService.SetDamageCost(selectedId, Cost);
+        jsRuntime.InvokeVoidAsync("hideModal", "setPriceModal");
+    }
 }

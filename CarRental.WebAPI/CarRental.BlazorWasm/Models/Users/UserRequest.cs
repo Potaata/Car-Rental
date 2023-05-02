@@ -7,7 +7,7 @@ namespace CarRental.BlazorWasm.Models.Users
     {
         public string UserName { get; set; }
         public string Address { get; set; }
-        public string MobileNumber { get; set; }
+        public string PhoneNumber { get; set; }
         public UserRequest GetDefault()
         {
             return new UserRequest();

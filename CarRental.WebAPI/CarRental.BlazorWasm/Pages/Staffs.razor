@@ -1,0 +1,57 @@
+﻿@page "/staffs"
+<h3>Staffs</h3>
+
+@using CarRental.BlazorWasm.Services.ItemService
+@using CarRental.BlazorWasm.Models.Staffs
+
+@inject StaffService staffService
+@inject IJSRuntime jsRuntime
+
+
+
+<div class="button-container">
+    <button class="btn btn-dark" @onclick='() => showInsertModal()'>Insert</button>
+</div>
+<div class="modal fade" id="carInsertionModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <div id="insertion">
+                        <div class="form-outline mb-4">
+                            <label class="form-label" for="form3Example3">Car Model</label>
+                            <input @bind="InsertionName" type="text" id="form3Example" class="form-control form-control-lg"
+                                   placeholder="Please enter a model name" />
+                        </div>
+                        <div>@errorMessage</div>
+                        <button class="btn btn-light" @onclick="() => RegisterStaff()">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<TableTemplate TItem=Staff ItemService=@staffService TItemRequest=@StaffRequest Editable=false Deletable=false Insertable=false />
+
+@code {
+    string InsertionEmail, InsertionPhoneNumber, InsertionAddress, InsertionName, InsertionPassword, InsertionRole ,errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await jsRuntime.InvokeVoidAsync("import", "/js/modalScript.js");
+    }
+
+    private void showInsertModal()
+    {
+        jsRuntime.InvokeVoidAsync("showModal", "carInsertionModal");
+    }
+
+    private void RegisterStaff(){
+        //await user
+    }
+}

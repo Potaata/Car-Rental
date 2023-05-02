@@ -29,6 +29,24 @@ namespace CarRental.Infrastructure.Services
             _dbcontext = dbContext;
             _userManager = userManager;
             _authService = authService;
+
+            var allUsers = from u in _dbcontext.Users
+                           select new Users
+                           {
+                               Address = u.Address,
+                               Name = u.Name,
+                               PhoneNumber = u.PhoneNumber,
+                               Email = u.Email
+                           };
+
+            if (allUsers.Count() < 1)
+            {
+                // create User
+                var DBUser = new Users { UserName = "admin", Email = "admin@admin.com", Address = "admin home", Name = "Seed Admin" };
+                var result = _userManager.CreateAsync(DBUser, "Password@123");
+                _userManager.AddToRoleAsync(DBUser, "Admin");
+
+            }
         }
         public async Task<MessageResponse> RegisterUser(UserRegisterRequestDTO users)
         {
@@ -88,12 +106,12 @@ namespace CarRental.Infrastructure.Services
                                join rh in _dbcontext.RentHistory
                                on u.Id equals rh.UserId
                                where rh.ToDate >= oneMonthAgo
-                               select new Users
+                               select new UserWithRoleDTO
                                {
                                    Address = u.Address,
                                    Name = u.Name,
                                    PhoneNumber = u.PhoneNumber,
-                                   Email = u.Email
+                                   Email = u.Email,
                                };
             return new UserListResponseDTO { users = (await regularUsers.ToListAsync()) };
         }
@@ -101,7 +119,7 @@ namespace CarRental.Infrastructure.Services
         public async Task<UserListResponseDTO> GetAllUsers()
         {
             var regularUsers = from u in _dbcontext.Users
-                               select new Users
+                               select new UserWithRoleDTO
                                {
                                    Id = u.Id,
                                    Address = u.Address,

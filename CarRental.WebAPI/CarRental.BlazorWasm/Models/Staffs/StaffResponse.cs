@@ -4,6 +4,6 @@ namespace CarRental.BlazorWasm.Models.Staffs
 {
     public class StaffResponse: SuccessResponse
     {
-        public List<Staff> staffs { get; set; }
+        public List<Staff> users { get; set; }
     }
 }

@@ -9,6 +9,6 @@ namespace CarRental.Application.DTOs
 {
     public class UserListResponseDTO
     {
-        public List<Users> users { get; set; }
+        public List<UserWithRoleDTO> users { get; set; }
     }
 }

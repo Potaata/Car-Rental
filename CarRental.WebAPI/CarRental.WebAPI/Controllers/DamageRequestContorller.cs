@@ -31,30 +31,28 @@ namespace CarRental.WebAPI.Controllers
         }
 
         [HttpPost]
-        [Route("/api/admin/quote-price")]
-        public async Task<MessageResponse> QuoteCost(QuoteCostDTO quoteCost)
+        [Route("/api/admin/quote-price/{damageId}")]
+        public async Task<MessageResponse> QuoteCost(int damageId, QuoteCostDTO quoteCost)
         {
             await _authService.GetSessionUser(new List<string> { "Admin", "Staff" });
-            return await _damageRequest.QuoteCost(quoteCost);
+            return await _damageRequest.QuoteCost(damageId, quoteCost.Cost);
         }
         
         [HttpPost]
         [Route("/api/admin/mark-paid/{damageID}")]
-        public async Task<MessageResponse> MarkPaid(int id)
+        public async Task<MessageResponse> MarkPaid(int damageId)
         {
             await _authService.GetSessionUser(new List<string> { "Admin", "Staff" });
-            return await _damageRequest.MarkPaid(id);
+            return await _damageRequest.MarkPaid(damageId);
         }
 
-        public async Task<DamageRequestListDTO> GetDamageRequests()
+        [HttpGet]
+        [Route("/api/admin/damage-requests")]
+        public async Task<DamageRequestListResponseDTO> GetDamageRequests()
         {
             await _authService.GetSessionUser(new List<string> { "Admin", "Staff" });
             
             return await _damageRequest.GetAllRequests();
         }
-
-
-
-
     }
 }

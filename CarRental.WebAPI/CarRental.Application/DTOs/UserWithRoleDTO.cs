@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CarRental.Domain.Entities;
 
 namespace CarRental.Application.DTOs
 {
-    public class QuoteCostDTO
+    public class UserWithRoleDTO: Users
     {
-        public float Cost { get; set; }
+        public string Role { get; set; }
     }
 }

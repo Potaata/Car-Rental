@@ -18,7 +18,7 @@ namespace CarRental.BlazorWasm.Services.ItemService
         {
             StaffResponse staffs = await _apiService.GET<StaffResponse>(EndPoint);
 
-            return staffs.staffs;
+            return staffs.users;
         }
 
         public async Task<string> DeleteItem(int id)
@@ -44,6 +44,11 @@ namespace CarRental.BlazorWasm.Services.ItemService
         public StaffRequest GetDefaultRequest()
         {
             return new StaffRequest();
+        }
+
+        public async Task RegisterStaff()
+        {
+            
         }
     }
 }

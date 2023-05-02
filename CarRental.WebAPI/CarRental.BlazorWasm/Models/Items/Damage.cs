@@ -1,6 +1,6 @@
 ﻿namespace CarRental.BlazorWasm.Models.Items
 {
-    public class Damage: TableItem
+    public class Damage
     {
         public string Title { get; set; }
 

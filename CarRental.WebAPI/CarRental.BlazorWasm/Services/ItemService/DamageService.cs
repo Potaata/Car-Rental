@@ -15,11 +15,11 @@ namespace CarRental.BlazorWasm.Services.ItemService
             _apiService = apiService;
         }
 
-        public async Task<List<Damage>> GetDamages()
+        public async Task<List<DamageTableItem>> GetDamages()
         {
-            DamageResponse damages = await _apiService.GET<DamageResponse>("");
+            DamageTableListResponse damages = await _apiService.GET<DamageTableListResponse>("/api/admin/damage-requests");
 
-            return damages.damages;
+            return damages.damageRequests;
         }
 
         public async Task<string> CreateDamage(string Description, int RentId)
@@ -33,5 +33,16 @@ namespace CarRental.BlazorWasm.Services.ItemService
             return message.message;
         }
 
+        public async Task<string> MarkPaid(int id)
+        {
+            MessageResponse resp = await _apiService.POST<EmptyRequest, MessageResponse>("/api/admin/mark-paid/" + id, new EmptyRequest { });
+            return resp.message;
+        }
+
+        public async Task<string> SetDamageCost(int id, float cost)
+        {
+            MessageResponse resp = await _apiService.POST<DamageQuoteRequest, MessageResponse>("/api/admin/quote-price/" + id, new DamageQuoteRequest { Cost = cost });
+            return resp.message;
+        }
     }
 }

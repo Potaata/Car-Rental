@@ -5,6 +5,7 @@ using CarRental.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Reflection.Metadata;
 
 namespace CarRental.WebAPI.Controllers
 {
@@ -112,6 +113,8 @@ namespace CarRental.WebAPI.Controllers
             Users user = await _authService.GetSessionUser(new List<string> { "Admin", "Staff" });
             return new UserListResponseDTO { users = await _users.GetAllStaffs() };
         }
+
+        [HttpPost]
         [Route("/api/admin/add-staff")]
         public async Task<MessageResponse> AddStaff(UserRegisterRequestDTO userRequestDTO)
         {

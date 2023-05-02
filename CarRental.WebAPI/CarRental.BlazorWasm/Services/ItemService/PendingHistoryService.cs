@@ -16,7 +16,7 @@ namespace CarRental.BlazorWasm.Services.ItemService
         public async Task<List<PendingHistory>> GetAll()
         {
             PendingHistoryResponse pendingHistories = await _apiService.GET<PendingHistoryResponse>(EndPoint);
-            List<PendingHistory> pendingHistoryList = pendingHistories.rents.Where(x => x.Status == StatusEnums.Pending || x.Status == StatusEnums.Approved).ToList();
+            List<PendingHistory> pendingHistoryList = pendingHistories.rents.Where(x => x.Status == StatusEnums.Pending || x.Status == StatusEnums.Approved || x.Status == StatusEnums.Rented).ToList();
             return pendingHistoryList;
         }
         public async Task<string> ApproveRequest(int id)

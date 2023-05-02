@@ -32,12 +32,12 @@ namespace CarRental.Infrastructure.Services
             return new MessageResponse { message = "Damage Request Added to the database." };
         }
 
-        public async Task<MessageResponse> QuoteCost(QuoteCostDTO quoteCost)
+        public async Task<MessageResponse> QuoteCost(int damageId, float quoteCost)
         {
-            var damageRequest = await _dbcontext.DamageRequest.FindAsync(quoteCost.Id);
+            var damageRequest = await _dbcontext.DamageRequest.FindAsync(damageId);
 
-            damageRequest.Cost = quoteCost.Cost;
-
+            damageRequest.Cost = quoteCost;
+            
             await _dbcontext.SaveChangesAsync();
 
             return new MessageResponse { message = "Damage Cost updated successfully" };
@@ -55,12 +55,23 @@ namespace CarRental.Infrastructure.Services
             return new MessageResponse { message = "Damage Request Marked Paid" };
         }
 
-        public async Task<DamageRequestListDTO> GetAllRequests() {
+        public async Task<DamageRequestListResponseDTO> GetAllRequests() {
 
-            var requests = await _dbcontext.DamageRequest.ToListAsync();
+            var requestsDB = from dr in _dbcontext.DamageRequest
+                           join rh in _dbcontext.RentHistory on dr.RentID equals rh.Id
+                           join c in _dbcontext.Cars on rh.CarId equals c.Id
+                           select new DamageRequestJoinedDTO
+                           {
+                               CarModel = c.Model,
+                               Description = dr.Description,
 
-            return new DamageRequestListDTO { damageRequests = requests };
-
+                               Id = dr.Id,
+                               Cost = dr.Cost,
+                               IsPaid = dr.isPaid
+                           };
+            var requests = await requestsDB.ToListAsync();
+            return new DamageRequestListResponseDTO { damageRequests = requests};
+            
         }
     }
 }
