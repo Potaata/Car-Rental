@@ -128,12 +128,12 @@
                 navManager.NavigateTo("/home", true);
             }
 
-        DiscountOffer offer = await discountService.GetOffer();
+            DiscountOffer offer = await discountService.GetOffer();
 
-        if (offer != null)
-        {
-            discountPercent = offer.DiscountPercent;
-        }
+            if (offer != null)
+            {
+                discountPercent = offer.DiscountPercent;
+            }
 
             await jsRuntime.InvokeVoidAsync("import", "/js/modalScript.js");
         }
@@ -163,12 +163,13 @@
     {
         try
         {
-            await rentService.RentCar(Id, from, to, GetDiscountedPrice());
+            errorMessage = await rentService.RentCar(Id, from, to, GetDiscountedPrice());
         }
         catch  (ApiException ex)
         {
             errorMessage = ex.Message;
         }
+        StateHasChanged();
     }
 
     private float GetDiscountedPrice()

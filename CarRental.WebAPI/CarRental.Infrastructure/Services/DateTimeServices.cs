@@ -14,6 +14,7 @@ namespace CarRental.Infrastructure.Services
 
         public void ValidateDateTime()
         {
+            return;
             if (DateTime.Now.Hour >= 9 && DateTime.Now.Hour < 17)
             {
                 return;

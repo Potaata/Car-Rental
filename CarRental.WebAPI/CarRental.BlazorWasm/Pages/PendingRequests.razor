@@ -29,13 +29,13 @@
                 <td>@request.Price</td>
                 <td>@request.FromDate.ToShortDateString()</td>
                 <td>@request.ToDate.ToShortDateString()</td>
-                @if (request.Status == StatusEnums.Pending)
-                {
-                    <td>
+                <td>
+                    @if (request.Status == StatusEnums.Pending)
+                    {
                         <button class="btn btn-success" @onclick="() => ApproveRequest(request.Id)">Approve</button>
                         <button class="btn btn-danger" @onclick="() => DenyRequest(request.Id)">Deny</button>
-                    </td>
-                }
+                    }
+                </td>
             </tr>
         }
     </tbody>
@@ -83,7 +83,7 @@
             errorMessage = ex.Message;
         }
     }
-    
+
 
     private async Task FetchAllPending()
     {
